@@ -1,4 +1,5 @@
 import os
+import argparse
 import pandas as pd
 
 output_file_name = "zury_V3_V4"
@@ -30,3 +31,24 @@ files_dataframe = pd.merge(left=pd.DataFrame(left_name_reads_list),
 files_dataframe[["name", "left_reads", "right_reads"]].to_csv("{}.files".format(output_file_name),
                                                               sep="\t",
                                                              index=False)
+
+
+def main():
+    parser = argparse.ArgumentParser(description = "mothur files creator",
+                                     version = "tests")
+    parser.add_argument("--input",
+                        action = "store",
+                        dest = "files_directory",
+                        required = True)
+    parser.add_argument("--output",
+                        action = "store",
+                        dest = "output_file_name",
+                        default = "./")
+    parser.add_argument("--split-sign",
+                        action = "store",
+                        dest = "split_sign",
+                        default = "_")
+    parser.add_argument()
+
+if __name__ == "__main__":
+    main()
