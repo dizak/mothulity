@@ -6,7 +6,9 @@ import pandas as pd
 
 
 def main():
-    parser = argparse.ArgumentParser(description = "mothur files creator",
+    parser = argparse.ArgumentParser(description = "creates mothur-suitable\
+                                                    <.files> file just upon the\
+                                                    input file names",
                                      version = "tests")
     parser.add_argument("--input",
                         action = "store",
