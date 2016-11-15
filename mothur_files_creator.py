@@ -55,7 +55,8 @@ def main():
                                on="name")
     files_dataframe[["name", "left_reads", "right_reads"]].to_csv(args.output_file_name,
                                                                   sep="\t",
-                                                                  index=False)
+                                                                  index = False,
+                                                                  header = False)
 
 if __name__ == "__main__":
     main()
