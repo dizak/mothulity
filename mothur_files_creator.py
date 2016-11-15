@@ -16,14 +16,14 @@ def main():
     parser.add_argument("--output",
                         action = "store",
                         dest = "output_file_name",
-                        default = "./",
+                        default = "mothur.files",
                         help = "path to output directory. Default:\
                                 working directory")
     parser.add_argument("--split-sign",
                         action = "store",
                         dest = "split_sign",
                         required = True)
-    parser.add_argument("--files_extension",
+    parser.add_argument("--files-extension",
                         action = "store",
                         dest = "files_extension",
                         required = True)
@@ -31,9 +31,9 @@ def main():
                         action = "store",
                         dest = "left_reads_sign",
                         required = True)
-    parser.add_argument("--right_reads_sign",
+    parser.add_argument("--right-reads-sign",
                         action = "store",
-                        dest = "right-reads-sign",
+                        dest = "right_reads_sign",
                         required = True)
     args = parser.parse_args()
 
@@ -53,7 +53,7 @@ def main():
     files_dataframe = pd.merge(left=pd.DataFrame(left_name_reads_list),
                                right=pd.DataFrame(right_name_reads_list),
                                on="name")
-    files_dataframe[["name", "left_reads", "right_reads"]].to_csv("{}.files".format(args.output_file_name),
+    files_dataframe[["name", "left_reads", "right_reads"]].to_csv(args.output_file_name,
                                                                   sep="\t",
                                                                   index=False)
 
