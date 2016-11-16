@@ -27,7 +27,8 @@ def render_template(template_loaded,
                     screen_criteria = 95,
                     precluster_diffs = 4,
                     chimera_dereplicate = "T",
-                    classify_seqs_cutoff = 80):
+                    classify_seqs_cutoff = 80,
+                    cluster_cutoff = 0.15):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"job_name": job_name,
                      "partition": partition,
@@ -44,7 +45,8 @@ def render_template(template_loaded,
                      "screen_criteria": screen_criteria,
                      "precluster_diffs": precluster_diffs,
                      "chimera_dereplicate": chimera_dereplicate,
-                     "classify_seqs_cutoff": classify_seqs_cutoff}
+                     "classify_seqs_cutoff": classify_seqs_cutoff,
+                     "cluster_cutoff": cluster_cutoff}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
