@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import jinja2 as jj2
+import argparse
 
 
 def load_template(template_file):
@@ -43,6 +44,7 @@ def render_template(template_loaded,
                      "precluster_diffs": precluster_diffs,
                      "chimera_dereplicate": chimera_dereplicate}
     template_rendered = template_loaded.render(template_vars)
+    return template_rendered
 
 
 def save_template(out_file_name):
@@ -51,7 +53,23 @@ def save_template(out_file_name):
 
 
 def main():
-    pass
+    parser = argparse.ArgumentParser(description = "creates headnode-suitable\
+                                                    mothur script",
+                                     version = "tests")
+    parser.add_argument("--input",
+                        required = True,
+                        help = "specifies template file")
+    parser.add_argument("--job-name",
+                        required = True,
+                        help = "specifies job name")
+    parser.add_argument("--output",
+                        required = True,
+                        help = "specifies output file name")
+    args = parser.parse_args()
+
+    loaded_template = load_template(args.input)
+    rendered_template = render_template(loaded_template)
+    save_template(args.output)
 
 if __name__ == "__main__":
     main()
