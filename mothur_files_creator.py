@@ -5,6 +5,16 @@ import argparse
 import pandas as pd
 
 
+def names_sanitizer(unwanted_sign,
+                    files_directory):
+    for i in os.listdir(files_directory):
+        if unwanted_sign in i:
+            os.rename("{0}/{1}".format(files_directory,
+                                       i),
+                      "{0}/{1}".format(files_directory,
+                                       i.replace(unwanted_sign, "")))
+
+
 def left_n_right_generator(files_directory,
                            split_sign,
                            files_extension,
@@ -31,7 +41,8 @@ def left_n_right_generator(files_directory,
 def main():
     parser = argparse.ArgumentParser(description = "creates mothur-suitable\
                                                     <.files> file just upon the\
-                                                    input file names",
+                                                    input file names. removes\
+                                                    <-> from file names",
                                      version = "tests")
     parser.add_argument("--input",
                         action = "store",
@@ -60,8 +71,18 @@ def main():
                         action = "store",
                         dest = "right_reads_sign",
                         required = True)
+    parser.add_argument("--original-names",
+                        action = "store_true",
+                        dest = "original_names",
+                        default = False,
+                        help = "use if you do not want to modify file names")
     args = parser.parse_args()
 
+    if args.original_names == False:
+        names_sanitizer("-",
+                        args.files_directory)
+    else:
+        pass
     left_n_right = left_n_right_generator(args.files_directory,
                                           args.split_sign,
                                           args.files_extension,
