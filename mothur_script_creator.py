@@ -24,7 +24,7 @@ def render_template(template_loaded,
                     min_length = 400,
                     max_length = 500,
                     min_overlap = 25,
-                    screen_criteria,
+                    screen_criteria = 95,
                     precluster_diffs = 4,
                     chimera_dereplicate = "T"):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
