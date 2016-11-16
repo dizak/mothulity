@@ -68,7 +68,8 @@ def main():
     args = parser.parse_args()
 
     loaded_template = load_template(args.input)
-    rendered_template = render_template(loaded_template)
+    rendered_template = render_template(loaded_template,
+                                        args.job_name)
     save_template(args.output)
 
 if __name__ == "__main__":
