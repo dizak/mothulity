@@ -47,8 +47,9 @@ def render_template(template_loaded,
     return template_rendered
 
 
-def save_template(out_file_name):
-    with open("{0}.html".format(out_file_name), "w") as fout:
+def save_template(out_file_name,
+                  template_rendered):
+    with open(out_file_name, "w") as fout:
         fout.write(template_rendered)
 
 
@@ -70,7 +71,8 @@ def main():
     loaded_template = load_template(args.input)
     rendered_template = render_template(loaded_template,
                                         args.job_name)
-    save_template(args.output)
+    save_template(args.output,
+                  rendered_template)
 
 if __name__ == "__main__":
     main()
