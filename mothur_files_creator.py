@@ -44,10 +44,9 @@ def main():
                                                     input file names. removes\
                                                     <-> from file names",
                                      version = "tests")
-    parser.add_argument("--input",
-                        action = "store",
+    parser.add_argument(action = "store",
                         dest = "files_directory",
-                        required = True,
+                        metavar = "path/to/files",
                         help = "input directory path.")
     parser.add_argument("--output",
                         action = "store",
