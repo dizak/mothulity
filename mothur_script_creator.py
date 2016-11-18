@@ -13,6 +13,7 @@ def load_template(template_file):
 
 def render_template(template_loaded,
                     job_name,
+                    mock,
                     partition = "long",
                     nodes = 1,
                     ntasks_per_node = 6,
@@ -31,6 +32,7 @@ def render_template(template_loaded,
                     cluster_cutoff = 0.15):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"job_name": job_name,
+                     "mock": mock,
                      "partition": partition,
                      "nodes": nodes,
                      "ntasks_per_node": ntasks_per_node,
@@ -70,11 +72,16 @@ def main():
     parser.add_argument("--output",
                         required = True,
                         help = "specifies output file name")
+    parser.add_argument("-m",
+                        action = "store_true",
+                        dest = "mock",
+                        default = False)
     args = parser.parse_args()
 
     loaded_template = load_template(args.input)
     rendered_template = render_template(loaded_template,
-                                        args.job_name)
+                                        args.job_name,
+                                        args.mock)
     save_template(args.output,
                   rendered_template)
 
