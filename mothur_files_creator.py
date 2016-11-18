@@ -48,13 +48,12 @@ def main():
                         action = "store",
                         dest = "files_directory",
                         required = True,
-                        help = "path to input directory.")
+                        help = "input directory path.")
     parser.add_argument("--output",
                         action = "store",
                         dest = "output_file_name",
                         default = "mothur.files",
-                        help = "path to output directory. Default:\
-                                working directory")
+                        help = "output file name")
     parser.add_argument("--split-sign",
                         action = "store",
                         dest = "split_sign",
