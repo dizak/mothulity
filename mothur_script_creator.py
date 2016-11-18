@@ -63,15 +63,17 @@ def main():
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
                                      version = "tests")
-    parser.add_argument("--input",
-                        required = True,
-                        help = "specifies template file")
-    parser.add_argument("--job-name",
-                        required = True,
-                        help = "specifies job name")
+    parser.add_argument(action = "store",
+                        dest = "files_directory",
+                        metavar = "path/to/files",
+                        help = "input directory path.")
     parser.add_argument("--output",
                         required = True,
                         help = "specifies output file name")
+    parser.add_argument("--job-name",
+                        required = True,
+                        help = "specifies job name")
+
     parser.add_argument("-m",
                         action = "store_true",
                         dest = "mock",
