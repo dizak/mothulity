@@ -54,7 +54,7 @@ def main():
                         dest = "output_file_name",
                         metavar = "",
                         default = "mothur.files",
-                        help = "output file name")
+                        help = "output file name. Default <mothur.files>")
     parser.add_argument("-s",
                         "--split-sign",
                         action = "store",
@@ -68,19 +68,25 @@ def main():
                         action = "store",
                         dest = "files_extension",
                         metavar = "",
-                        default = "fastq")
+                        default = "fastq",
+                        help = "reads files are recognized by this. Default\
+                                <fastq>")
     parser.add_argument("-l",
                         "--left-reads-sign",
                         action = "store",
                         dest = "left_reads_sign",
                         metavar = "",
-                        default = "R1")
+                        default = "R1",
+                        help = "left reads files are recognized by this.\
+                                Default <R1>")
     parser.add_argument("-r",
                         "--right-reads-sign",
                         action = "store",
                         dest = "right_reads_sign",
                         metavar = "",
-                        default = "R2")
+                        default = "R2",
+                        help = "right reads files are recognized by this.\
+                                Default <R2>")
     parser.add_argument("--original-names",
                         action = "store_true",
                         dest = "original_names",
