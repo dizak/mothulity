@@ -57,7 +57,9 @@ def main():
     parser.add_argument("--split-sign",
                         action = "store",
                         dest = "split_sign",
-                        required = True)
+                        required = True,
+                        help = "first group of characters before this sign is\
+                                recognized as sample name.")
     parser.add_argument("--files-extension",
                         action = "store",
                         dest = "files_extension",
