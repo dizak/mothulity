@@ -48,29 +48,39 @@ def main():
                         dest = "files_directory",
                         metavar = "path/to/files",
                         help = "input directory path.")
-    parser.add_argument("--output",
+    parser.add_argument("-o",
+                        "--output",
                         action = "store",
                         dest = "output_file_name",
+                        metavar = "",
                         default = "mothur.files",
                         help = "output file name")
-    parser.add_argument("--split-sign",
+    parser.add_argument("-s",
+                        "--split-sign",
                         action = "store",
                         dest = "split_sign",
-                        required = True,
+                        metavar = "",
+                        default = "_",
                         help = "first group of characters before this sign is\
-                                recognized as sample name.")
-    parser.add_argument("--files-extension",
+                                recognized as sample name. Default <_>")
+    parser.add_argument("-e",
+                        "--files-extension",
                         action = "store",
                         dest = "files_extension",
-                        required = True)
-    parser.add_argument("--left-reads-sign",
+                        metavar = "",
+                        default = "fastq")
+    parser.add_argument("-l",
+                        "--left-reads-sign",
                         action = "store",
                         dest = "left_reads_sign",
-                        required = True)
-    parser.add_argument("--right-reads-sign",
+                        metavar = "",
+                        default = "R1")
+    parser.add_argument("-r",
+                        "--right-reads-sign",
                         action = "store",
                         dest = "right_reads_sign",
-                        required = True)
+                        metavar = "",
+                        default = "R2")
     parser.add_argument("--original-names",
                         action = "store_true",
                         dest = "original_names",
