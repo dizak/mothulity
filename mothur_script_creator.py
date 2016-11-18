@@ -63,10 +63,6 @@ def main():
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
                                      version = "tests")
-    parser.add_argument(action = "store",
-                        dest = "template_file_name",
-                        metavar = "path/to/template",
-                        help = "template directory path.")
     parser.add_argument("-o",
                         "--output",
                         action = "store",
@@ -90,9 +86,20 @@ def main():
                         help = "use if you have mock community group and\
                                 want to calculate sequencing errors, classify\
                                 mock OTUs and draw mock rarefaction curve")
+    parser.add_argument("-t",
+                        "--template",
+                        action = "store",
+                        dest = "template_file_name",
+                        metavar = "path/to/template",
+                        default = None,
+                        help = "use if you want to use other template than\
+                                default")
     args = parser.parse_args()
 
-    loaded_template = load_template(args.template_file_name)
+    if args.template_file_name != None:
+        loaded_template = load_template(args.template_file_name)
+    else:
+        loaded_template = load_template("mothur_script_template")
     rendered_template = render_template(loaded_template,
                                         args.job_name,
                                         args.mock)
