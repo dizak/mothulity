@@ -64,27 +64,39 @@ def main():
                                                     mothur script",
                                      version = "tests")
     parser.add_argument(action = "store",
-                        dest = "files_directory",
-                        metavar = "path/to/files",
-                        help = "input directory path.")
-    parser.add_argument("--output",
-                        required = True,
-                        help = "specifies output file name")
-    parser.add_argument("--job-name",
-                        required = True,
-                        help = "specifies job name")
-
+                        dest = "template_file_name",
+                        metavar = "path/to/template",
+                        help = "template directory path.")
+    parser.add_argument("-o",
+                        "--output",
+                        action = "store",
+                        dest = "output_file_name",
+                        metavar = "",
+                        default = "mothur.sh",
+                        help = "output file name. Default <mothur.sh>")
+    parser.add_argument("-n",
+                        "--job-name",
+                        action = "store",
+                        dest = "job_name",
+                        metavar = "",
+                        default = "mothur.job",
+                        help = "job name. MUST be same as <name>.files.\
+                                Default <mothur>.")
     parser.add_argument("-m",
+                        "--mock",
                         action = "store_true",
                         dest = "mock",
-                        default = False)
+                        default = False,
+                        help = "use if you have mock community group and\
+                                want to calculate sequencing errors, classify\
+                                mock OTUs and draw mock rarefaction curve")
     args = parser.parse_args()
 
-    loaded_template = load_template(args.input)
+    loaded_template = load_template(args.template_file_name)
     rendered_template = render_template(loaded_template,
                                         args.job_name,
                                         args.mock)
-    save_template(args.output,
+    save_template(args.output_file_name,
                   rendered_template)
 
 if __name__ == "__main__":
