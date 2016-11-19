@@ -19,7 +19,7 @@ def load_template(template_file):
 def render_template(template_loaded,
                     job_name,
                     mock,
-                    partition = "long",
+                    partition,
                     nodes = 1,
                     ntasks_per_node = 6,
                     mem_per_cpu = 24,
@@ -118,7 +118,8 @@ def main():
         loaded_template = load_template_str(templ_str)
     rendered_template = render_template(loaded_template,
                                         args.job_name,
-                                        args.mock)
+                                        args.mock,
+                                        args.partition)
     save_template(args.output_file_name,
                   rendered_template)
 
