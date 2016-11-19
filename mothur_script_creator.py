@@ -20,7 +20,7 @@ def render_template(template_loaded,
                     job_name,
                     mock,
                     partition,
-                    nodes = 1,
+                    nodes,
                     ntasks_per_node = 6,
                     mem_per_cpu = 24,
                     node_list = None,
@@ -99,9 +99,16 @@ def main():
                         dest = "partition",
                         metavar = "",
                         default = "long",
-                        help = "headnode partition. Values: test, short, big,\
+                        help = "headnode's partition. Values: test, short, big,\
                                 long, accel. Accel necessary for phi/gpu nodes\
                                 Default <long>.")
+    parser.add_argument("-n",
+                        "--nodes",
+                        action = store,
+                        dest = nodes,
+                        metavar = "",
+                        default = 1,
+                        help = "headnode's nodes number. Default: <1>.")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
