@@ -77,7 +77,7 @@ def main():
                         metavar = "",
                         default = "mothur.sh",
                         help = "output file name. Default <mothur.sh>")
-    parser.add_argument("-n",
+    parser.add_argument("-j",
                         "--job-name",
                         action = "store",
                         dest = "job_name",
