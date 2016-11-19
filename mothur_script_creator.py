@@ -93,6 +93,15 @@ def main():
                         help = "use if you have mock community group and\
                                 want to calculate sequencing errors, classify\
                                 mock OTUs and draw mock rarefaction curve")
+    parser.add_argument("-p",
+                        "--partition",
+                        action = "store",
+                        dest = "partition",
+                        metavar = "",
+                        default = "long",
+                        help = "headnode partition. Values: test, short, big,\
+                                long, accel. Accel necessary for phi/gpu nodes\
+                                Default <long>.")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
