@@ -109,6 +109,13 @@ def main():
                         metavar = "",
                         default = 1,
                         help = "headnode's nodes number. Default: <1>.")
+    parser.add_argument("--ntasks-per-node",
+                        action = "store",
+                        dest = "ntask_per_node",
+                        metavar = "",
+                        default = 6,
+                        help = "number of tasks to invoke on each headnode's\
+                                node")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
