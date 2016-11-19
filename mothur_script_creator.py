@@ -70,6 +70,7 @@ def main():
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
                                      version = "tests")
+    headnode = parser.add_argument_group("headnode options")
     parser.add_argument("-o",
                         "--output",
                         action = "store",
@@ -77,7 +78,7 @@ def main():
                         metavar = "",
                         default = "mothur.sh",
                         help = "output file name. Default <mothur.sh>")
-    parser.add_argument("-j",
+    parser.add_argument("-n",
                         "--job-name",
                         action = "store",
                         dest = "job_name",
@@ -93,29 +94,45 @@ def main():
                         help = "use if you have mock community group and\
                                 want to calculate sequencing errors, classify\
                                 mock OTUs and draw mock rarefaction curve")
-    parser.add_argument("-p",
-                        "--partition",
-                        action = "store",
-                        dest = "partition",
-                        metavar = "",
-                        default = "long",
-                        help = "headnode's partition. Values: test, short, big,\
-                                long, accel. Accel necessary for phi/gpu nodes\
-                                Default <long>.")
-    parser.add_argument("-n",
-                        "--nodes",
-                        action = store,
-                        dest = nodes,
-                        metavar = "",
-                        default = 1,
-                        help = "headnode's nodes number. Default: <1>.")
-    parser.add_argument("--ntasks-per-node",
-                        action = "store",
-                        dest = "ntask_per_node",
-                        metavar = "",
-                        default = 6,
-                        help = "number of tasks to invoke on each headnode's\
-                                node")
+    headnode.add_argument("--partition",
+                          action = "store",
+                          dest = "partition",
+                          metavar = "",
+                          default = "long",
+                          help = "headnode's partition. Values: test, short, big,\
+                                  long, accel. Accel necessary for phi/gpu nodes\
+                                  Default <long>.")
+    headnode.add_argument("--nodes",
+                          action = "store",
+                          dest = "nodes",
+                          metavar = "",
+                          default = 1,
+                          help = "number of nodes. Default: <1>.")
+    headnode.add_argument("--ntasks-per-node",
+                          action = "store",
+                          dest = "ntask_per_node",
+                          metavar = "",
+                          default = 6,
+                          help = "number of tasks to invoke on each node")
+    headnode.add_argument("--mem-per-cpu",
+                          action = "store",
+                          dest = "mem_per_cpu",
+                          meatvar = "",
+                          default = 24,
+                          help = "maximum amount of real memory per node.\
+                                 Default <24>")
+    headnode.add_argument("--node-list",
+                          action = "store",
+                          dest = "node_list",
+                          metavar = "",
+                          default = None,
+                          help = "request a specific list of nodes")
+    headnode.add_argument("--processors",
+                          action = "store",
+                          dest = "processors",
+                          metavar = "",
+                          default = 12,
+                          help = "number of logical processors")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
