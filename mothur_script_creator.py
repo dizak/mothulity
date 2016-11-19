@@ -17,10 +17,10 @@ def load_template(template_file):
 
 
 def render_template(template_loaded,
-                    job_name,
-                    mock,
-                    partition,
-                    nodes,
+                    job_name = "mothur.job",
+                    mock = False,
+                    partition = "long",
+                    nodes = 1,
                     ntasks_per_node = 6,
                     mem_per_cpu = 24,
                     node_list = None,
