@@ -96,13 +96,13 @@ def main():
                         help = "use if you have mock community group and\
                                 want to calculate sequencing errors, classify\
                                 mock OTUs and draw mock rarefaction curve.")
-    parser.add_argument("-s",
-                        "--sequence-processing",
+    parser.add_argument("-r",
+                        "--run",
                         action = "store_true",
-                        dest = "sequence_processing",
+                        dest = "run",
                         default = False,
-                        help = "use if you want to run the sequnce processing\
-                                mothur script immediately. Default <False>.")
+                        help = "use if you want to run the mothur script\
+                                immediately. Default <False>.")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
@@ -248,7 +248,7 @@ def main():
                                         cluster_cutoff = args.cluster_cutoff)
     save_template(args.output_file_name,
                   rendered_template)
-    if args.sequence_processing == True:
+    if args.run == True:
         os.system("sbatch {0}".format(args.output_file_name))
 
 if __name__ == "__main__":
