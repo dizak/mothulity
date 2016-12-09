@@ -3,7 +3,6 @@
 import jinja2 as jj2
 import argparse
 import os
-import shutil
 
 def load_template_str(template_str):
     template = jj2.Environment().from_string(template_str)
