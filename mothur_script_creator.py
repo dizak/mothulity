@@ -111,7 +111,7 @@ def main():
                           help = "number of nodes. Default: <1>.")
     headnode.add_argument("--ntasks-per-node",
                           action = "store",
-                          dest = "ntask_per_node",
+                          dest = "ntasks_per_node",
                           metavar = "",
                           default = 6,
                           help = "number of tasks to invoke on each node")
@@ -184,7 +184,7 @@ def main():
                         default = 4,
                         help = "number of differences between reads treated as\
                                 insignificant. screen.seqs param. Default <25>")
-    mothur.add_argument("--chimera_dereplicate",
+    mothur.add_argument("--chimera-dereplicate",
                         action = "store",
                         dest = "chimera_dereplicate",
                         metavar = "",
@@ -220,9 +220,24 @@ def main():
     else:
         loaded_template = load_template_str(templ_str)
     rendered_template = render_template(loaded_template,
-                                        args.job_name,
-                                        args.mock,
-                                        args.partition)
+                                        job_name = args.job_name,
+                                        mock = args.mock,
+                                        partition = args.partition,
+                                        nodes = args.nodes,
+                                        ntasks_per_node = args.ntasks_per_node,
+                                        mem_per_cpu = args.mem_per_cpu,
+                                        node_list = args.node_list,
+                                        processors = args.processors,
+                                        max_ambig = args.max_ambig,
+                                        max_homop = args.max_homop,
+                                        min_length = args.min_length,
+                                        max_length = args.max_length,
+                                        min_overlap = args.min_overlap,
+                                        screen_criteria = args.screen_criteria,
+                                        precluster_diffs = args.precluster_diffs,
+                                        chimera_dereplicate = args.chimera_dereplicate,
+                                        classify_seqs_cutoff = args.classify_seqs_cutoff,
+                                        cluster_cutoff = args.cluster_cutoff)
     save_template(args.output_file_name,
                   rendered_template)
 
