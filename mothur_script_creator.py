@@ -209,10 +209,10 @@ def main():
                         "--template",
                         action = "store",
                         dest = "template_file_name",
-                        metavar = "path/to/template",
+                        metavar = "",
                         default = None,
-                        help = "use if you want to use other template than\
-                                default")
+                        help = "path/to/template. Use if you want to use other template than\
+                                default.")
     args = parser.parse_args()
 
     if args.template_file_name != None:
