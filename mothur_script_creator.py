@@ -78,7 +78,7 @@ def main():
                         dest = "output_file_name",
                         metavar = "",
                         default = "mothur.sh",
-                        help = "output file name. Default <mothur.sh>")
+                        help = "output file name. Default <mothur.sh>.")
     parser.add_argument("-n",
                         "--job-name",
                         action = "store",
@@ -94,7 +94,7 @@ def main():
                         default = False,
                         help = "use if you have mock community group and\
                                 want to calculate sequencing errors, classify\
-                                mock OTUs and draw mock rarefaction curve")
+                                mock OTUs and draw mock rarefaction curve.")
     headnode.add_argument("--partition",
                           action = "store",
                           dest = "partition",
@@ -121,7 +121,7 @@ def main():
                           metavar = "",
                           default = 24,
                           help = "maximum amount of real memory per node.\
-                                 Default <24>")
+                                 Default <24>.")
     headnode.add_argument("--node-list",
                           action = "store",
                           dest = "node_list",
@@ -140,35 +140,35 @@ def main():
                         metavar = "",
                         default = 0,
                         help = "maximum number of ambiguous bases allowed.\
-                                screen.seqs param. Default <0>")
+                                screen.seqs param. Default <0>.")
     mothur.add_argument("--max-homop",
                         action = "store",
                         dest = "max_homop",
                         metavar = "",
                         default = 8,
                         help = "maximum number of homopolymers allowed.\
-                                screen.seqs param. Default <8>")
+                                screen.seqs param. Default <8>.")
     mothur.add_argument("--min-length",
                         action = "store",
                         dest = "min_length",
                         metavar = "",
                         default = 400,
                         help = "minimum length of read allowed.\
-                                screen.seqs param. Default <400>")
+                                screen.seqs param. Default <400>.")
     mothur.add_argument("--max-length",
                         action = "store",
                         dest = "max_length",
                         metavar = "",
                         default = 500,
                         help = "minimum length of read allowed.\
-                                screen.seqs param. Default <500>")
+                                screen.seqs param. Default <500>.")
     mothur.add_argument("--min-overlap",
                         action = "store",
                         dest = "min_overlap",
                         metavar = "",
                         default = 25,
                         help = "minimum number of bases overlap in contig.\
-                                screen.seqs param. Default <25>")
+                                screen.seqs param. Default <25>.")
     mothur.add_argument("--screen-criteria",
                         action = "store",
                         dest = "screen_criteria",
@@ -176,35 +176,35 @@ def main():
                         default = 95,
                         help = "trim start and end of read to fit this\
                                 percentage of all reads.\
-                                screen.seqs param. Default <95>")
+                                screen.seqs param. Default <95>.")
     mothur.add_argument("--precluster-diffs",
                         action = "store",
                         dest = "precluster_diffs",
                         metavar = "",
                         default = 4,
                         help = "number of differences between reads treated as\
-                                insignificant. screen.seqs param. Default <25>")
+                                insignificant. screen.seqs param. Default <25>.")
     mothur.add_argument("--chimera-dereplicate",
                         action = "store",
                         dest = "chimera_dereplicate",
                         metavar = "",
                         default = "T",
                         help = "checking for chimeras by group. chimera.uchime\
-                                param. Default <T")
+                                param. Default <T>.")
     mothur.add_argument("--classify-seqs-cutoff",
                         action = "store",
                         dest = "classify_seqs_cutoff",
                         metavar = "",
                         default = 80,
                         help = "bootstrap value for taxonomic assignment.\
-                                classify.seqs param. Default <80>")
+                                classify.seqs param. Default <80>.")
     mothur.add_argument("--cluster-cutoff",
                         action = "store",
                         dest = "cluster_cutoff",
                         metavar = "",
                         default = 0.15,
                         help = "cutoff value. Smaller == faster cluster param.\
-                                Default <0.15>")
+                                Default <0.15>.")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
