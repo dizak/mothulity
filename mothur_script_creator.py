@@ -95,6 +95,14 @@ def main():
                         help = "use if you have mock community group and\
                                 want to calculate sequencing errors, classify\
                                 mock OTUs and draw mock rarefaction curve.")
+    parser.add_argument("-t",
+                        "--template",
+                        action = "store",
+                        dest = "template_file_name",
+                        metavar = "",
+                        default = None,
+                        help = "path/to/template. Use if you want to use other\
+                                template than default.")
     headnode.add_argument("--partition",
                           action = "store",
                           dest = "partition",
@@ -205,14 +213,6 @@ def main():
                         default = 0.15,
                         help = "cutoff value. Smaller == faster cluster param.\
                                 Default <0.15>.")
-    parser.add_argument("-t",
-                        "--template",
-                        action = "store",
-                        dest = "template_file_name",
-                        metavar = "",
-                        default = None,
-                        help = "path/to/template. Use if you want to use other template than\
-                                default.")
     args = parser.parse_args()
 
     if args.template_file_name != None:
@@ -240,6 +240,7 @@ def main():
                                         cluster_cutoff = args.cluster_cutoff)
     save_template(args.output_file_name,
                   rendered_template)
+    if args
 
 if __name__ == "__main__":
     main()
