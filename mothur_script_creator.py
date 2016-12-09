@@ -2,7 +2,8 @@
 
 import jinja2 as jj2
 import argparse
-
+import os
+import shutil
 
 def load_template_str(template_str):
     template = jj2.Environment().from_string(template_str)
@@ -95,6 +96,13 @@ def main():
                         help = "use if you have mock community group and\
                                 want to calculate sequencing errors, classify\
                                 mock OTUs and draw mock rarefaction curve.")
+    parser.add_argument("-s",
+                        "--sequence-processing",
+                        action = "store_true",
+                        dest = "sequence_processing",
+                        default = False,
+                        help = "use if you want to run the sequnce processing\
+                                mothur script immediately. Default <False>.")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
@@ -128,8 +136,8 @@ def main():
                           dest = "mem_per_cpu",
                           metavar = "",
                           default = 24,
-                          help = "maximum amount of real memory per node.\
-                                 Default <24>.")
+                          help = "maximum amount of real memory per node in\
+                                  gigabytes. Default <24>.")
     headnode.add_argument("--node-list",
                           action = "store",
                           dest = "node_list",
@@ -141,7 +149,7 @@ def main():
                           dest = "processors",
                           metavar = "",
                           default = 12,
-                          help = "number of logical processors")
+                          help = "number of logical processors. Default: <12>")
     mothur.add_argument("--max-ambig",
                         action = "store",
                         dest = "max_ambig",
@@ -240,7 +248,8 @@ def main():
                                         cluster_cutoff = args.cluster_cutoff)
     save_template(args.output_file_name,
                   rendered_template)
-    if args
+    if args.sequence_processing == True:
+        os.system("sbatch {0}".format(args.output_file_name))
 
 if __name__ == "__main__":
     main()
