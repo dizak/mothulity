@@ -220,6 +220,14 @@ def main():
                         required = True,
                         help = "path/to/align-database. Used by align.seqs\
                                 command as <reference> argument. Required.")
+    mothur.add_argument("--taxonomy-database",
+                        action = "store",
+                        dest = taxonomy_database,
+                        metavar = "",
+                        required = True,
+                        help = "path/to/taxonomy-database. Used by\
+                                classify.seqs as <taxonomy> argument.\
+                                Required")
     mothur.add_argument("--cluster-cutoff",
                         action = "store",
                         dest = "cluster_cutoff",
