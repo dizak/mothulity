@@ -219,14 +219,14 @@ def main():
                                 classify.seqs param. Default <80>.")
     mothur.add_argument("--align-database",
                         action = "store",
-                        dest = align_database,
+                        dest = "align_database",
                         metavar = "",
                         required = True,
                         help = "path/to/align-database. Used by align.seqs\
                                 command as <reference> argument. Required.")
     mothur.add_argument("--taxonomy-database",
                         action = "store",
-                        dest = taxonomy_database,
+                        dest = "taxonomy_database",
                         metavar = "",
                         required = True,
                         help = "path/to/taxonomy-database. Used by\
