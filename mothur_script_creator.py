@@ -34,6 +34,8 @@ def render_template(template_loaded,
                     precluster_diffs = 4,
                     chimera_dereplicate = "T",
                     classify_seqs_cutoff = 80,
+                    align_database = None,
+                    taxonomy_database = None,
                     cluster_cutoff = 0.15):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"job_name": job_name,
@@ -53,6 +55,8 @@ def render_template(template_loaded,
                      "precluster_diffs": precluster_diffs,
                      "chimera_dereplicate": chimera_dereplicate,
                      "classify_seqs_cutoff": classify_seqs_cutoff,
+                     "align_database": align_database,
+                     "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
@@ -259,6 +263,8 @@ def main():
                                         precluster_diffs = args.precluster_diffs,
                                         chimera_dereplicate = args.chimera_dereplicate,
                                         classify_seqs_cutoff = args.classify_seqs_cutoff,
+                                        align_database = args.align_database,
+                                        taxonomy_database = args.database,
                                         cluster_cutoff = args.cluster_cutoff)
     save_template(args.output_file_name,
                   rendered_template)
