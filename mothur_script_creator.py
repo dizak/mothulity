@@ -218,19 +218,21 @@ def main():
                         help = "bootstrap value for taxonomic assignment.\
                                 classify.seqs param. Default <80>.")
     mothur.add_argument("--align-database",
-                        required = True,
                         action = "store",
                         dest = "align_database",
                         metavar = "",
+                        default = "~/db/Silva.nr_v119/silva.nr_v119.align"
                         help = "path/to/align-database. Used by align.seqs\
-                                command as <reference> argument. Required.")
+                                command as <reference> argument. Default\
+                                <~/db/Silva.nr_v119/silva.nr_v119.align>.")
     mothur.add_argument("--taxonomy-database",
                         action = "store",
                         dest = "taxonomy_database",
                         metavar = "",
+                        default = "~/db/Silva.nr_v119/silva.nr_v119.tax"
                         help = "path/to/taxonomy-database. Used by\
                                 classify.seqs as <taxonomy> argument.\
-                                Required")
+                                Default <~/db/Silva.nr_v119/silva.nr_v119.tax>")
     mothur.add_argument("--cluster-cutoff",
                         action = "store",
                         dest = "cluster_cutoff",
