@@ -213,6 +213,13 @@ def main():
                         default = 80,
                         help = "bootstrap value for taxonomic assignment.\
                                 classify.seqs param. Default <80>.")
+    mothur.add_argument("--align-database",
+                        action = "store",
+                        dest = align_database,
+                        metavar = "",
+                        required = True,
+                        help = "path/to/align-database. Used by align.seqs\
+                                command as <reference> argument. Required.")
     mothur.add_argument("--cluster-cutoff",
                         action = "store",
                         dest = "cluster_cutoff",
