@@ -262,7 +262,10 @@ def main():
     if args.template_file_name != None:
         loaded_template = load_template(args.template_file_name)
     else:
-        loaded_template = load_template_str(templ_str_otu)
+        if args.classify_ITS == True:
+            loaded_template = load_template_str(templ_str_its)
+        else:
+            loaded_template = load_template_str(templ_str_otu)
     rendered_template = render_template(loaded_template,
                                         job_name = args.job_name,
                                         mock = args.mock,
