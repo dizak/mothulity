@@ -35,6 +35,8 @@ def render_template(template_loaded,
                     precluster_diffs = 4,
                     chimera_dereplicate = "T",
                     classify_seqs_cutoff = 80,
+                    align_database = None,
+                    taxonomy_database = None,
                     cluster_cutoff = 0.15):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"job_name": job_name,
@@ -54,6 +56,8 @@ def render_template(template_loaded,
                      "precluster_diffs": precluster_diffs,
                      "chimera_dereplicate": chimera_dereplicate,
                      "classify_seqs_cutoff": classify_seqs_cutoff,
+                     "align_database": align_database,
+                     "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
@@ -66,7 +70,7 @@ def save_template(out_file_name,
 
 
 def main():
-    templ_str = """#!/bin/bash\n\n#SBATCH --job-name="{{job_name}}"\n#SBATCH --partition={{partition}}\n#SBATCH --nodes={{nodes}}\n#SBATCH --ntasks-per-node={{ntasks_per_node}}\n#SBATCH --mem-per-cpu={{mem_per_cpu}}\n{%if node_list != None%}#SBATCH --nodelist={{node_list}}{%endif%}\n\nmothur '#set.current(processors={{processors}}); make.contigs(file={{job_name}}.files); summary.seqs(fasta=current); screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); summary.seqs(fasta=current); unique.seqs(fasta=current); count.seqs(name=current, group=current); summary.seqs(fasta=current, count=current); align.seqs(fasta=current, reference=/home/dizak/db/Silva.nr_v119/silva.nr_v119.align); summary.seqs(fasta=current, count=current); screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); summary.seqs(fasta=current, count=current); filter.seqs(fasta=current, vertical=T, trump=.); unique.seqs(fasta=current, count=current); summary.seqs(fasta=current, count=current); pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); remove.seqs(fasta=current, accnos=current); summary.seqs(fasta=current, count=current); classify.seqs(fasta=current, count=current, reference=/home/dizak/db/Silva.nr_v119/silva.nr_v119.align, taxonomy=/home/dizak/db/Silva.nr_v119/silva.nr_v119.tax, cutoff={{classify_seqs_cutoff}}); remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);{%if mock == True%} remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); make.shared(list=current, count=current, label=0.03); classify.otu(list=current, count=current, taxonomy=current, label=0.03); count.groups(shared=current); phylotype(taxonomy=current); make.shared(list=current, count=current, label=1); classify.otu(list=current, count=current, taxonomy=current, label=1); system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); dist.seqs(fasta=current, cutoff=0.20); cluster(column=current, count=current); make.shared(list=current, count=current, label=0.03); rarefaction.single(shared=current){%else%}cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); make.shared(list=current, count=current, label=0.03); classify.otu(list=current, count=current, taxonomy=current, label=0.03); count.groups(shared=current); phylotype(taxonomy=current); make.shared(list=current, count=current, label=1); classify.otu(list=current, count=current, taxonomy=current, label=1){%endif%}'"""
+    templ_str = """#!/bin/bash\n\n#SBATCH --job-name="{{job_name}}"\n#SBATCH --partition={{partition}}\n#SBATCH --nodes={{nodes}}\n#SBATCH --ntasks-per-node={{ntasks_per_node}}\n#SBATCH --mem-per-cpu={{mem_per_cpu}}\n{%if node_list != None%}#SBATCH --nodelist={{node_list}}{%endif%}\n\nmothur '#set.current(processors={{processors}}); make.contigs(file={{job_name}}.files); summary.seqs(fasta=current); screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); summary.seqs(fasta=current); unique.seqs(fasta=current); count.seqs(name=current, group=current); summary.seqs(fasta=current, count=current); align.seqs(fasta=current, reference={{align_database}}); summary.seqs(fasta=current, count=current); screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); summary.seqs(fasta=current, count=current); filter.seqs(fasta=current, vertical=T, trump=.); unique.seqs(fasta=current, count=current); summary.seqs(fasta=current, count=current); pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); remove.seqs(fasta=current, accnos=current); summary.seqs(fasta=current, count=current); classify.seqs(fasta=current, count=current, reference={{align_database}}, taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);{%if mock == True%} remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); make.shared(list=current, count=current, label=0.03); classify.otu(list=current, count=current, taxonomy=current, label=0.03); count.groups(shared=current); phylotype(taxonomy=current); make.shared(list=current, count=current, label=1); classify.otu(list=current, count=current, taxonomy=current, label=1); system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); dist.seqs(fasta=current, cutoff=0.20); cluster(column=current, count=current); make.shared(list=current, count=current, label=0.03); rarefaction.single(shared=current){%else%}cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); make.shared(list=current, count=current, label=0.03); classify.otu(list=current, count=current, taxonomy=current, label=0.03); count.groups(shared=current); phylotype(taxonomy=current); make.shared(list=current, count=current, label=1); classify.otu(list=current, count=current, taxonomy=current, label=1){%endif%}'"""
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
@@ -130,7 +134,8 @@ def main():
                           dest = "ntasks_per_node",
                           metavar = "",
                           default = 6,
-                          help = "number of tasks to invoke on each node")
+                          help = "number of tasks to invoke on each node.\
+                                  Default <6>")
     headnode.add_argument("--mem-per-cpu",
                           action = "store",
                           dest = "mem_per_cpu",
@@ -214,6 +219,22 @@ def main():
                         default = 80,
                         help = "bootstrap value for taxonomic assignment.\
                                 classify.seqs param. Default <80>.")
+    mothur.add_argument("--align-database",
+                        action = "store",
+                        dest = "align_database",
+                        metavar = "",
+                        default = "~/db/Silva.nr_v119/silva.nr_v119.align",
+                        help = "path/to/align-database. Used by align.seqs\
+                                command as <reference> argument. Default\
+                                <~/db/Silva.nr_v119/silva.nr_v119.align>.")
+    mothur.add_argument("--taxonomy-database",
+                        action = "store",
+                        dest = "taxonomy_database",
+                        metavar = "",
+                        default = "~/db/Silva.nr_v119/silva.nr_v119.tax",
+                        help = "path/to/taxonomy-database. Used by\
+                                classify.seqs as <taxonomy> argument.\
+                                Default <~/db/Silva.nr_v119/silva.nr_v119.tax>")
     mothur.add_argument("--cluster-cutoff",
                         action = "store",
                         dest = "cluster_cutoff",
@@ -245,6 +266,8 @@ def main():
                                         precluster_diffs = args.precluster_diffs,
                                         chimera_dereplicate = args.chimera_dereplicate,
                                         classify_seqs_cutoff = args.classify_seqs_cutoff,
+                                        align_database = args.align_database,
+                                        taxonomy_database = args.taxonomy_database,
                                         cluster_cutoff = args.cluster_cutoff)
     save_template(args.output_file_name,
                   rendered_template)
