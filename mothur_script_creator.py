@@ -206,7 +206,7 @@ def main():
                         metavar = "",
                         default = 4,
                         help = "number of differences between reads treated as\
-                                insignificant. screen.seqs param. Default <25>.")
+                                insignificant. screen.seqs param. Default <4>.")
     mothur.add_argument("--chimera-dereplicate",
                         action = "store",
                         dest = "chimera_dereplicate",
