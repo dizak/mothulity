@@ -219,6 +219,19 @@ def main():
                         default = 80,
                         help = "bootstrap value for taxonomic assignment.\
                                 classify.seqs param. Default <80>.")
+    mothur.add_argument("--classify-ITS",
+                        action = "store_true",
+                        dest = "classify_ITS",
+                        default = False,
+                        help = "removes align.seqs step and modifies\
+                                classify.seqs with <method=knn>,\
+                                                   <search=blast>,\
+                                                   <match=2>,\
+                                                   <mismatch=-2>,\
+                                                   <gapopen=-2>,\
+                                                   <gapextend=-1>,\
+                                                   <numwanted=1>).\
+                                Default <False>")
     mothur.add_argument("--align-database",
                         action = "store",
                         dest = "align_database",
