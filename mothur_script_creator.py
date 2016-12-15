@@ -4,6 +4,9 @@ import jinja2 as jj2
 import argparse
 import os
 
+__author__ = "Dariusz Izak IBB PAS"
+__veersion = "0.9"
+
 
 def load_template_str(template_str):
     template = jj2.Environment().from_string(template_str)
@@ -76,7 +79,7 @@ def main():
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
-                                     version = "tests")
+                                     version = "0.9")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
     parser.add_argument("-o",
