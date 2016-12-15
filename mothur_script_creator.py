@@ -134,7 +134,8 @@ def main():
                           dest = "ntasks_per_node",
                           metavar = "",
                           default = 6,
-                          help = "number of tasks to invoke on each node")
+                          help = "number of tasks to invoke on each node.\
+                                  Default <6>")
     headnode.add_argument("--mem-per-cpu",
                           action = "store",
                           dest = "mem_per_cpu",
