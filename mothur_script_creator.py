@@ -267,7 +267,7 @@ def main():
                                         chimera_dereplicate = args.chimera_dereplicate,
                                         classify_seqs_cutoff = args.classify_seqs_cutoff,
                                         align_database = args.align_database,
-                                        taxonomy_database = args.database,
+                                        taxonomy_database = args.taxonomy_database,
                                         cluster_cutoff = args.cluster_cutoff)
     save_template(args.output_file_name,
                   rendered_template)
