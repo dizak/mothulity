@@ -4,6 +4,9 @@ import os
 import argparse
 import pandas as pd
 
+__author__ = "Dariusz Izak IBB PAS"
+__version__ = "1.0"
+
 
 def names_sanitizer(unwanted_sign,
                     files_directory):
@@ -43,7 +46,7 @@ def main():
                                                     <.files> file just upon the\
                                                     input file names. removes\
                                                     <-> from file names",
-                                     version = "tests")
+                                     version = "1.0")
     parser.add_argument(action = "store",
                         dest = "files_directory",
                         metavar = "path/to/files",
