@@ -41,7 +41,8 @@ def render_template(template_loaded,
                     classify_seqs_cutoff = 80,
                     align_database = None,
                     taxonomy_database = None,
-                    cluster_cutoff = 0.15):
+                    cluster_cutoff = 0.15,
+                    label = 0.03):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"job_name": job_name,
                      "mock": mock,
@@ -63,7 +64,8 @@ def render_template(template_loaded,
                      "classify_seqs_cutoff": classify_seqs_cutoff,
                      "align_database": align_database,
                      "taxonomy_database": taxonomy_database,
-                     "cluster_cutoff": cluster_cutoff}
+                     "cluster_cutoff": cluster_cutoff,
+                     "label": label}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -110,8 +112,8 @@ remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast
 {%if mock == True%} \
 remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
-make.shared(list=current, count=current, label=0.03); \
-classify.otu(list=current, count=current, taxonomy=current, label=0.03); \
+make.shared(list=current, count=current, label={{label}}); \
+classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current); phylotype(taxonomy=current); \
 make.shared(list=current, count=current, label=1); \
 classify.otu(list=current, count=current, taxonomy=current, label=1); \
@@ -121,12 +123,12 @@ get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
 seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
 dist.seqs(fasta=current, cutoff=0.20); \
 cluster(column=current, count=current); \
-make.shared(list=current, count=current, label=0.03); \
+make.shared(list=current, count=current, label={{label}}); \
 rarefaction.single(shared=current)\
 {%else%}\
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
-make.shared(list=current, count=current, label=0.03); \
-classify.otu(list=current, count=current, taxonomy=current, label=0.03); \
+make.shared(list=current, count=current, label={{label}}); \
+classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current); phylotype(taxonomy=current); \
 make.shared(list=current, count=current, label=1); \
 classify.otu(list=current, count=current, taxonomy=current, label=1)\
@@ -159,8 +161,8 @@ remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast
 {%if mock == True%}\
 remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
  pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
- make.shared(list=current, count=current, label=0.03); \
- classify.otu(list=current, count=current, taxonomy=current, label=0.03); \
+ make.shared(list=current, count=current, label={{label}}); \
+ classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
  count.groups(shared=current); phylotype(taxonomy=current); \
  make.shared(list=current, count=current, label=1); \
  classify.otu(list=current, count=current, taxonomy=current, label=1); \
@@ -169,12 +171,12 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
  get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
  seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
  pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
- make.shared(list=current, count=current, label=0.03); \
+ make.shared(list=current, count=current, label={{label}}); \
  rarefaction.single(shared=current)\
  {%else%}
  pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
- make.shared(list=current, count=current, label=0.03); \
- classify.otu(list=current, count=current, taxonomy=current, label=0.03); \
+ make.shared(list=current, count=current, label={{label}}); \
+ classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
  count.groups(shared=current); \
  phylotype(taxonomy=current); \
  make.shared(list=current, count=current, label=1); \
@@ -372,6 +374,13 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                         default = 0.15,
                         help = "cutoff value. Smaller == faster cluster param.\
                                 Default <0.15>.")
+    mothur.add_argument("--label",
+                        action = "store",
+                        dest = "label",
+                        metavar = "",
+                        default = 0.03,
+                        help = "label argument for number of commands for OTU\
+                                analysis approach. Default 0.03")
     args = parser.parse_args()
 
     if args.template_file_name != None:
