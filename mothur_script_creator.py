@@ -591,7 +591,10 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
         save_template(args.output_file_name,
                       rendered_template)
         if args.run == True:
-            os.system("sbatch {0}".format(args.output_file_name))
+            try:
+                os.system("sbatch {0}".format(args.output_file_name))
+            except:
+                os.system("sh {0}".format(args.output_file_name))
         else:
             pass
 if __name__ == "__main__":
