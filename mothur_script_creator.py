@@ -160,6 +160,7 @@ make.shared(list=current, count=current, label={{label}}); \
 rarefaction.single(shared=current)\
 {%else%}\
 
+
 #OTU clustering
 
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
@@ -167,10 +168,12 @@ make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current); phylotype(taxonomy=current); \
 
+
 #Phylotype
 
 make.shared(list=current, count=current, label=1); \
 classify.otu(list=current, count=current, taxonomy=current, label=1)\
+
 
 ###OTU approach analysis###
 
@@ -208,7 +211,7 @@ mothur '#tree.shared(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.sq
 
 mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
 
-{%endif%}'"""
+{%endif%}"""
 
     templ_str_its = """#!/bin/bash\
 
