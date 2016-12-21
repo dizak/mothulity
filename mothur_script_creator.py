@@ -267,6 +267,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                                      version = "0.9")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
+    draw = parser.add_argument_group("drawing options")
     parser.add_argument("-o",
                         "--output",
                         action = "store",
@@ -460,6 +461,12 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                         default = 0.03,
                         help = "label argument for number of commands for OTU\
                                 analysis approach. Default 0.03")
+    draw.add_argument("--phylip",
+                      action = "store",
+                      dest = "phylip",
+                      metavar = "",
+                      help = "path/to/phylip-file. Used to draw heatmap, tree\
+                              and scatter plots")
     args = parser.parse_args()
 
     if args.template_file_name != None:
@@ -490,7 +497,8 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                                         classify_seqs_cutoff = args.classify_seqs_cutoff,
                                         align_database = args.align_database,
                                         taxonomy_database = args.taxonomy_database,
-                                        cluster_cutoff = args.cluster_cutoff)
+                                        cluster_cutoff = args.cluster_cutoff,
+                                        label = args.label)
     save_template(args.output_file_name,
                   rendered_template)
     if args.run == True:
