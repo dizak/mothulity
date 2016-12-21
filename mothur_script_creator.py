@@ -129,7 +129,7 @@ def main():
 #SBATCH --mem-per-cpu={{mem_per_cpu}}
 {%if node_list != None%}
 #SBATCH --nodelist={{node_list}}{%endif%}
-
+{%endif%}
 ###Sequence preprocessing###
 
 mothur '#set.current(processors={{processors}}); \
@@ -241,7 +241,8 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 #SBATCH --mem-per-cpu={{mem_per_cpu}}\
 {%if node_list != None%}
 #SBATCH --nodelist={{node_list}}
-{%endif%}\
+{%endif%}
+###Sequence preprocessing###
 
 mothur '#set.current(processors={{processors}}); \ make.contigs(file={{job_name}}.files); \
 summary.seqs(fasta=current); \
@@ -257,6 +258,9 @@ remove.seqs(fasta=current, accnos=current); summary.seqs(fasta=current, count=cu
 classify.seqs(fasta=current, count=current,template={{align_database}}, taxonomy={{taxonomy_database}}, method=knn, search=blast, match=2, mismatch=-2, gapopen=-2, gapextend=-1, numwanted=1); \
 remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Unknown);\
 {%if mock == True%}\
+
+#Mock community analysis
+
 remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
  pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
  make.shared(list=current, count=current, label={{label}}); \
@@ -279,7 +283,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
  phylotype(taxonomy=current); \
  make.shared(list=current, count=current, label=1); \
  classify.otu(list=current, count=current, taxonomy=current, label=1)\
- {%endif%}'"""
+ {%endif%}"""
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
