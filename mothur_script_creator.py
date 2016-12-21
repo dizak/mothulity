@@ -42,7 +42,8 @@ def render_template(template_loaded,
                     align_database = None,
                     taxonomy_database = None,
                     cluster_cutoff = 0.15,
-                    label = 0.03):
+                    label = 0.03,
+                    phylip = None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"job_name": job_name,
                      "mock": mock,
@@ -65,7 +66,8 @@ def render_template(template_loaded,
                      "align_database": align_database,
                      "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff,
-                     "label": label}
+                     "label": label,
+                     "phylip": phylip}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -469,6 +471,8 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                               and scatter plots")
     args = parser.parse_args()
 
+    if args.phylip != None:
+        draw_heatmap(args.phylip)
     if args.template_file_name != None:
         loaded_template = load_template(args.template_file_name)
     else:
@@ -498,7 +502,8 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                                         align_database = args.align_database,
                                         taxonomy_database = args.taxonomy_database,
                                         cluster_cutoff = args.cluster_cutoff,
-                                        label = args.label)
+                                        label = args.label,
+                                        phylip = args.phylip)
     save_template(args.output_file_name,
                   rendered_template)
     if args.run == True:
