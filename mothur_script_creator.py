@@ -347,7 +347,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                         default = False,
                         help = "use if you want to run the mothur script\
                                 immediately. Default <False>.")
-    parser.add_argument("--analysis_only",
+    parser.add_argument("--analysis-only",
                         action = "store_true",
                         dest = "analysis_only",
                         default = False,
@@ -591,10 +591,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
         save_template(args.output_file_name,
                       rendered_template)
         if args.run == True:
-            try:
-                os.system("sbatch {0}".format(args.output_file_name))
-            except:
-                os.system("sh {0}".format(args.output_file_name))
+            os.system("sh {0}".format(args.output_file_name))
         else:
             pass
 if __name__ == "__main__":
