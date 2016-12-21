@@ -35,6 +35,7 @@ def render_template(template_loaded,
                     max_length = 500,
                     min_overlap = 25,
                     screen_criteria = 95,
+                    chop_length = 250,
                     precluster_diffs = 4,
                     chimera_dereplicate = "T",
                     classify_seqs_cutoff = 80,
@@ -56,6 +57,7 @@ def render_template(template_loaded,
                      "max_length": max_length,
                      "min_overlap": min_overlap,
                      "screen_criteria": screen_criteria,
+                     "chop_length": chop_length,
                      "precluster_diffs": precluster_diffs,
                      "chimera_dereplicate": chimera_dereplicate,
                      "classify_seqs_cutoff": classify_seqs_cutoff,
@@ -138,46 +140,46 @@ classify.otu(list=current, count=current, taxonomy=current, label=1)\
 #SBATCH --ntasks-per-node={{ntasks_per_node}}\
 #SBATCH --mem-per-cpu={{mem_per_cpu}}\
 {%if node_list != None%}
-#SBATCH --nodelist={{node_list}}{%endif%}\
+#SBATCH --nodelist={{node_list}}
+{%endif%}\
 
-mothur '#set.current(processors={{processors}}); \
-make.contigs(file={{job_name}}.files); \
+mothur '#set.current(processors={{processors}}); \ make.contigs(file={{job_name}}.files); \
 summary.seqs(fasta=current); \
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); \
 summary.seqs(fasta=current); \
+chop.seqs(fasta=current, group=current, numbases={{chop_length}}); \
 unique.seqs(fasta=current); \
 count.seqs(name=current, group=current); \
 summary.seqs(fasta=current, count=current); \
 pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); \
 chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); \
-remove.seqs(fasta=current, accnos=current); \
-summary.seqs(fasta=current, count=current); \
+remove.seqs(fasta=current, accnos=current); summary.seqs(fasta=current, count=current); \
 classify.seqs(fasta=current, count=current,template={{align_database}}, taxonomy={{taxonomy_database}}, method=knn, search=blast, match=2, mismatch=-2, gapopen=-2, gapextend=-1, numwanted=1); \
 remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Unknown);\
-{%if mock == True%} \
+{%if mock == True%}\
 remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
-make.shared(list=current, count=current, label=0.03); \
-classify.otu(list=current, count=current, taxonomy=current, label=0.03); \
-count.groups(shared=current); phylotype(taxonomy=current); \
-make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1); \
-system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); \
-system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); \
-get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
-seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
-dist.seqs(fasta=current, cutoff=0.20); \
-cluster(column=current, count=current); \
-make.shared(list=current, count=current, label=0.03); \
-rarefaction.single(shared=current) \
-{%else%} \
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
-make.shared(list=current, count=current, label=0.03); \
-classify.otu(list=current, count=current, taxonomy=current, label=0.03); \
-count.groups(shared=current); phylotype(taxonomy=current); \
-make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1)\
-{%endif%}'"""
+ pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
+ make.shared(list=current, count=current, label=0.03); \
+ classify.otu(list=current, count=current, taxonomy=current, label=0.03); \
+ count.groups(shared=current); phylotype(taxonomy=current); \
+ make.shared(list=current, count=current, label=1); \
+ classify.otu(list=current, count=current, taxonomy=current, label=1); \
+ system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); \
+ system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); \
+ get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
+ seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
+ pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
+ make.shared(list=current, count=current, label=0.03); \
+ rarefaction.single(shared=current)\
+ {%else%}
+ pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
+ make.shared(list=current, count=current, label=0.03); \
+ classify.otu(list=current, count=current, taxonomy=current, label=0.03); \
+ count.groups(shared=current); \
+ phylotype(taxonomy=current); \
+ make.shared(list=current, count=current, label=1); \
+ classify.otu(list=current, count=current, taxonomy=current, label=1)\
+ {%endif%}'"""
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
@@ -305,6 +307,14 @@ classify.otu(list=current, count=current, taxonomy=current, label=1)\
                         help = "trim start and end of read to fit this\
                                 percentage of all reads.\
                                 screen.seqs param. Default <95>.")
+    mothur.add_argument("--chop-length",
+                        action = "store",
+                        dest = "chop_length",
+                        metavar = "",
+                        default = 250,
+                        help = "cut all the reads to this length. Keeps front\
+                                of the sequences. chop.seqs argument.\
+                                Default <250>")
     mothur.add_argument("--precluster-diffs",
                         action = "store",
                         dest = "precluster_diffs",
@@ -386,6 +396,7 @@ classify.otu(list=current, count=current, taxonomy=current, label=1)\
                                         max_length = args.max_length,
                                         min_overlap = args.min_overlap,
                                         screen_criteria = args.screen_criteria,
+                                        chop_length = args.chop_length,
                                         precluster_diffs = args.precluster_diffs,
                                         chimera_dereplicate = args.chimera_dereplicate,
                                         classify_seqs_cutoff = args.classify_seqs_cutoff,
