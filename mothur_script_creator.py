@@ -6,6 +6,8 @@ import os
 import sys
 from Bio import Phylo as ph
 import pylab
+from bokeh.io import save, output_file
+from bokeh.charts import Line
 from pandas import read_csv
 from seaborn import heatmap
 from seaborn import pairplot
@@ -51,7 +53,8 @@ def render_template(template_loaded,
                     cluster_cutoff = 0.15,
                     label = 0.03):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
-    template_vars = {"msc_path": sys.argv[0],
+    msc_path = sys.argv[0]
+    template_vars = {"msc_path": msc_path,
                      "job_name": job_name,
                      "mock": mock,
                      "partition": partition,
@@ -88,6 +91,21 @@ def save_template(out_file_name,
                   template_rendered):
     with open(out_file_name, "w") as fout:
         fout.write(template_rendered)
+
+
+def draw_rarefaction(file_name):
+    output_file("{}.bokeh.html".format(file_name))
+    df = read_csv(file_name,
+                  sep = "\t",
+                  index_col = "numsampled")
+    cols = [i for i in df.columns if "lci" not in i]
+    cols = [i for i in cols if "hci" not in i]
+    plot = Line(df[cols],
+                xlabel = "hundreds of sequences",
+                ylabel = "OTU count at 0.03 cutoff",
+                legend = "top_right",
+                width = 1000)
+    save(plot)
 
 
 def draw_heatmap(file_name):
@@ -208,10 +226,13 @@ mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub
 cp {{job_name}}.shared ./alpha
 cp {{job_name}}.{{label}}.subsample.shared ./beta
 
-#Go to alpha directory and create rarefaction and summary
+#Go to alpha directory and create krona chart, rarefaction, summary table
 
 cd ./alpha
+mothur_krona_XML.py {{job_name}}.tax.summary > {{job_name}}.krona.xml
+ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
+{{msc_path}} --rarefaction {{job_name}}.groups.rarefaction
 
 #Go to beta directory and create dist files for Jaccard and YC measures
 
@@ -484,24 +505,34 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                         default = 0.03,
                         help = "label argument for number of commands for OTU\
                                 analysis approach. Default 0.03.")
+    draw.add_argument("--rarefaction",
+                      action = "store",
+                      dest = "rarefaction",
+                      metavar = "",
+                      help = "path/to/rarefaction-file. Use to draw rarefaction\
+                              curves plot.")
     draw.add_argument("--phylip",
                       action = "store",
                       dest = "phylip",
                       metavar = "",
-                      help = "path/to/phylip-file. Used to draw heatmap and\
+                      help = "path/to/phylip-file. Use to draw heatmap and\
                               tree.")
     draw.add_argument("--tree",
                       action = "store",
                       metavar = "",
-                      help = "path/to/tree-file. Used to draw dendrogram.")
+                      help = "path/to/tree-file. Use to draw dendrogram.")
     draw.add_argument("--axes",
                       action = "store",
                       dest = "axes",
                       metavar = "",
-                      help = "path/to/axes-file. Used to draw scatter plots.")
+                      help = "path/to/axes-file. Use to draw scatter plots.")
     args = parser.parse_args()
 
-    if args.phylip or args.tree or args.axes != None:
+    if args.rarefaction or args.phylip or args.tree or args.axes != None:
+        if args.rarefaction != None:
+            draw_rarefaction(args.rarefaction)
+        else:
+            pass
         if args.phylip != None:
             draw_heatmap(args.phylip)
         else:
