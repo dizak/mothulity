@@ -3,6 +3,10 @@
 import jinja2 as jj2
 import argparse
 import os
+from pandas import read_csv
+from seaborn import heatmap
+from seaborn import pairplot
+from seaborn import lmplot
 
 __author__ = "Dariusz Izak IBB PAS"
 __veersion = "0.9"
@@ -85,25 +89,25 @@ def save_template(out_file_name,
 
 
 def draw_heatmap(file_name):
-    df = read_csv(f_name,
+    df = read_csv(file_name,
                   sep="\t",
                   skiprows=1,
                   header=None,
                   index_col=0)
     df.columns = df.index
     fig = heatmap(df, square=True, cmap="plasma").get_figure()
-    fig.savefig("{}.svg".format(f_name))
+    fig.savefig("{}.svg".format(file_name))
 
 
 def draw_scatter(file_name):
-    df = read_csv(f_name,
+    df = read_csv(file_name,
                   sep="\t")
     fig = lmplot(x="axis1",
                  y="axis2",
                  data=df,
                  hue="group",
                  fit_reg=False)
-    fig.savefig("{}.svg".format(f_name))
+    fig.savefig("{}.svg".format(file_name))
 
 
 def main():
