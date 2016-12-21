@@ -12,7 +12,7 @@ from seaborn import pairplot
 from seaborn import lmplot
 
 __author__ = "Dariusz Izak IBB PAS"
-__veersion = "0.9"
+__veersion = "0.9.1"
 
 
 def load_template_str(template_str):
@@ -283,7 +283,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
-                                     version = "0.9")
+                                     version = "0.9.1")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
     draw = parser.add_argument_group("drawing options")
