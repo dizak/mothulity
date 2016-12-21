@@ -115,6 +115,8 @@ def main():
 {%if node_list != None%}
 #SBATCH --nodelist={{node_list}}{%endif%}
 
+###Sequence preprocessing###
+
 mothur '#set.current(processors={{processors}}); \
 make.contigs(file={{job_name}}.files); \
 summary.seqs(fasta=current); \
@@ -138,6 +140,9 @@ classify.seqs(fasta=current, count=current, reference={{align_database}}, \
 taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
 remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
 {%if mock == True%} \
+
+#Mock community analysis
+
 remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
 make.shared(list=current, count=current, label={{label}}); \
@@ -154,12 +159,55 @@ cluster(column=current, count=current); \
 make.shared(list=current, count=current, label={{label}}); \
 rarefaction.single(shared=current)\
 {%else%}\
+
+#OTU clustering
+
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current); phylotype(taxonomy=current); \
+
+#Phylotype
+
 make.shared(list=current, count=current, label=1); \
 classify.otu(list=current, count=current, taxonomy=current, label=1)\
+
+###OTU approach analysis###
+
+#Create directories and shorten shared file name
+
+mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
+cp *list.shared ./analysis/OTU/{{prefix}}.shared
+cp *{{label}}.cons.tax.summary ./analysis/OTU/alpha/{{prefix}}.tax.summary
+
+#Go to subdirectory and subsample shared file
+
+cd ./analysis/OTU
+mothur '#set.current(processors={{processors}}, shared={{prefix}}.shared); sub.sample(shared=current)'
+
+#Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory
+
+cp {{prefix}}.shared ./alpha
+cp {{prefix}}.{{label}}.subsample.shared ./beta
+
+#Go to alpha directory and create rarefaction and summary
+
+cd ./alpha
+mothur '#set.current(processors={{processors}}, shared={{prefix}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
+
+#Go to beta directory and create dist files for Jaccard and YC measures
+
+cd ../beta
+mothur '#set.current(processors={{processors}}, shared={{prefix}}.{{label}}.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
+
+#Create phylogenetic tree for Jaccard and YC measures
+
+mothur '#tree.shared(phylip={{prefix}}.{{label}}.subsample.jclass.{{label}}.square.dist); tree.shared(phylip={{prefix}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
+
+#Create scatter plots upon NMDS for Jaccard and YC measures
+
+mothur '#nmds(phylip={{prefix}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{prefix}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
+
 {%endif%}'"""
 
     templ_str_its = """#!/bin/bash\
