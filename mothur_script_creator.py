@@ -466,17 +466,26 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                         metavar = "",
                         default = 0.03,
                         help = "label argument for number of commands for OTU\
-                                analysis approach. Default 0.03")
+                                analysis approach. Default 0.03.")
     draw.add_argument("--phylip",
                       action = "store",
                       dest = "phylip",
                       metavar = "",
-                      help = "path/to/phylip-file. Used to draw heatmap, tree\
-                              and scatter plots")
+                      help = "path/to/phylip-file. Used to draw heatmap and\
+                              tree.")
+    draw.add_argument("--axes",
+                      action = "store",
+                      dest = "axes",
+                      metavar = "",
+                      help = "path/to/axes-file. Used to draw scatter plots.")
     args = parser.parse_args()
 
     if args.phylip != None:
         draw_heatmap(args.phylip)
+    else:
+        pass
+    if args.axes != None:
+        draw_scatter(args.axes)
     if args.template_file_name != None:
         loaded_template = load_template(args.template_file_name)
     else:
