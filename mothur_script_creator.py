@@ -32,6 +32,7 @@ def load_template(template_file):
 def render_template(template_loaded,
                     job_name = "mothur.job",
                     mock = False,
+                    analysis_only = False,
                     partition = "long",
                     nodes = 1,
                     ntasks_per_node = 6,
@@ -57,6 +58,7 @@ def render_template(template_loaded,
     template_vars = {"msc_path": msc_path,
                      "job_name": job_name,
                      "mock": mock,
+                     "analysis_only": analysis_only,
                      "partition": partition,
                      "nodes": nodes,
                      "ntasks_per_node": ntasks_per_node,
@@ -149,6 +151,7 @@ def main():
 #SBATCH --nodelist={{node_list}}
 {%endif%}
 
+{%if analysis_only == False%}
 ###Sequence preprocessing###
 
 mothur '#set.current(processors={{processors}}); \
@@ -207,7 +210,8 @@ count.groups(shared=current); phylotype(taxonomy=current); \
 
 make.shared(list=current, count=current, label=1); \
 classify.otu(list=current, count=current, taxonomy=current, label=1)\
-
+{%endif%}
+{%else%}
 
 ###OTU approach analysis###
 
@@ -343,6 +347,12 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                         default = False,
                         help = "use if you want to run the mothur script\
                                 immediately. Default <False>.")
+    parser.add_argument("--analysis_only",
+                        action = "store_true",
+                        dest = "analysis_only",
+                        default = False,
+                        help = "outputs just the part involved in statistical\
+                                analysis and drawing.")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
@@ -557,6 +567,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
                                             mock = args.mock,
+                                            analysis_only = args.analysis_only,
                                             partition = args.partition,
                                             nodes = args.nodes,
                                             ntasks_per_node = args.ntasks_per_node,
