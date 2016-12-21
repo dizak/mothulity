@@ -76,6 +76,34 @@ def save_template(out_file_name,
         fout.write(template_rendered)
 
 
+def save_template(out_file_name,
+                  template_rendered):
+    with open(out_file_name, "w") as fout:
+        fout.write(template_rendered)
+
+
+def draw_heatmap(file_name):
+    df = read_csv(f_name,
+                  sep="\t",
+                  skiprows=1,
+                  header=None,
+                  index_col=0)
+    df.columns = df.index
+    fig = heatmap(df, square=True, cmap="plasma").get_figure()
+    fig.savefig("{}.svg".format(f_name))
+
+
+def draw_scatter(file_name):
+    df = read_csv(f_name,
+                  sep="\t")
+    fig = lmplot(x="axis1",
+                 y="axis2",
+                 data=df,
+                 hue="group",
+                 fit_reg=False)
+    fig.savefig("{}.svg".format(f_name))
+
+
 def main():
     templ_str_otu = """#!/bin/bash
 
