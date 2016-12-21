@@ -477,7 +477,6 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
 
     if args.phylip != None:
         draw_heatmap(args.phylip)
-        draw_scatter(args.phylip)
     if args.template_file_name != None:
         loaded_template = load_template(args.template_file_name)
     else:
