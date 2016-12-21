@@ -3,6 +3,7 @@
 import jinja2 as jj2
 import argparse
 import os
+import sys
 from Bio import Phylo as ph
 import pylab
 from pandas import read_csv
@@ -48,10 +49,10 @@ def render_template(template_loaded,
                     align_database = None,
                     taxonomy_database = None,
                     cluster_cutoff = 0.15,
-                    label = 0.03,
-                    phylip = None):
+                    label = 0.03):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
-    template_vars = {"job_name": job_name,
+    template_vars = {"msc_path": sys.argv[0],
+                     "job_name": job_name,
                      "mock": mock,
                      "partition": partition,
                      "nodes": nodes,
@@ -72,8 +73,7 @@ def render_template(template_loaded,
                      "align_database": align_database,
                      "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff,
-                     "label": label,
-                     "phylip": phylip}
+                     "label": label}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -226,6 +226,10 @@ mothur '#tree.shared(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.sq
 
 mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
 
+#Draw beta directory pictures for Jaccard and YC measures
+
+{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
+{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
 {%endif%}"""
 
     templ_str_its = """#!/bin/bash\
@@ -536,14 +540,12 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                                             align_database = args.align_database,
                                             taxonomy_database = args.taxonomy_database,
                                             cluster_cutoff = args.cluster_cutoff,
-                                            label = args.label,
-                                            phylip = args.phylip)
+                                            label = args.label)
         save_template(args.output_file_name,
                       rendered_template)
         if args.run == True:
             os.system("sbatch {0}".format(args.output_file_name))
         else:
             pass
-
 if __name__ == "__main__":
     main()
