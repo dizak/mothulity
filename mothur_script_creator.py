@@ -493,49 +493,57 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                       help = "path/to/axes-file. Used to draw scatter plots.")
     args = parser.parse_args()
 
-    if args.phylip != None:
-        draw_heatmap(args.phylip)
-    else:
-        pass
-    if args.tree != None:
-        draw_tree(args.tree)
-    if args.axes != None:
-        draw_scatter(args.axes)
-    if args.template_file_name != None:
-        loaded_template = load_template(args.template_file_name)
-    else:
-        if args.classify_ITS == True:
-            loaded_template = load_template_str(templ_str_its)
+    if args.phylip or args.tree or args.axes != None:
+        if args.phylip != None:
+            draw_heatmap(args.phylip)
         else:
-            loaded_template = load_template_str(templ_str_otu)
-    rendered_template = render_template(loaded_template,
-                                        job_name = args.job_name,
-                                        mock = args.mock,
-                                        partition = args.partition,
-                                        nodes = args.nodes,
-                                        ntasks_per_node = args.ntasks_per_node,
-                                        mem_per_cpu = args.mem_per_cpu,
-                                        node_list = args.node_list,
-                                        processors = args.processors,
-                                        max_ambig = args.max_ambig,
-                                        max_homop = args.max_homop,
-                                        min_length = args.min_length,
-                                        max_length = args.max_length,
-                                        min_overlap = args.min_overlap,
-                                        screen_criteria = args.screen_criteria,
-                                        chop_length = args.chop_length,
-                                        precluster_diffs = args.precluster_diffs,
-                                        chimera_dereplicate = args.chimera_dereplicate,
-                                        classify_seqs_cutoff = args.classify_seqs_cutoff,
-                                        align_database = args.align_database,
-                                        taxonomy_database = args.taxonomy_database,
-                                        cluster_cutoff = args.cluster_cutoff,
-                                        label = args.label,
-                                        phylip = args.phylip)
-    save_template(args.output_file_name,
-                  rendered_template)
-    if args.run == True:
-        os.system("sbatch {0}".format(args.output_file_name))
+            pass
+        if args.tree != None:
+            draw_tree(args.tree)
+        else:
+            pass
+        if args.axes != None:
+            draw_scatter(args.axes)
+        else:
+            pass
+    else:
+        if args.template_file_name != None:
+            loaded_template = load_template(args.template_file_name)
+        else:
+            if args.classify_ITS == True:
+                loaded_template = load_template_str(templ_str_its)
+            else:
+                loaded_template = load_template_str(templ_str_otu)
+        rendered_template = render_template(loaded_template,
+                                            job_name = args.job_name,
+                                            mock = args.mock,
+                                            partition = args.partition,
+                                            nodes = args.nodes,
+                                            ntasks_per_node = args.ntasks_per_node,
+                                            mem_per_cpu = args.mem_per_cpu,
+                                            node_list = args.node_list,
+                                            processors = args.processors,
+                                            max_ambig = args.max_ambig,
+                                            max_homop = args.max_homop,
+                                            min_length = args.min_length,
+                                            max_length = args.max_length,
+                                            min_overlap = args.min_overlap,
+                                            screen_criteria = args.screen_criteria,
+                                            chop_length = args.chop_length,
+                                            precluster_diffs = args.precluster_diffs,
+                                            chimera_dereplicate = args.chimera_dereplicate,
+                                            classify_seqs_cutoff = args.classify_seqs_cutoff,
+                                            align_database = args.align_database,
+                                            taxonomy_database = args.taxonomy_database,
+                                            cluster_cutoff = args.cluster_cutoff,
+                                            label = args.label,
+                                            phylip = args.phylip)
+        save_template(args.output_file_name,
+                      rendered_template)
+        if args.run == True:
+            os.system("sbatch {0}".format(args.output_file_name))
+        else:
+            pass
 
 if __name__ == "__main__":
     main()
