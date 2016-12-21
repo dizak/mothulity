@@ -146,8 +146,9 @@ def main():
 #SBATCH --ntasks-per-node={{ntasks_per_node}}
 #SBATCH --mem-per-cpu={{mem_per_cpu}}
 {%if node_list != None%}
-#SBATCH --nodelist={{node_list}}{%endif%}
+#SBATCH --nodelist={{node_list}}
 {%endif%}
+
 ###Sequence preprocessing###
 
 mothur '#set.current(processors={{processors}}); \
