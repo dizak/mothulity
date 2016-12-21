@@ -237,7 +237,7 @@ cd ./alpha
 mothur_krona_XML.py {{job_name}}.tax.summary > {{job_name}}.krona.xml
 ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
-{{msc_path}} --rarefaction {{job_name}}.groups.rarefaction
+../../../{{msc_path}} --rarefaction {{job_name}}.groups.rarefaction
 
 #Go to beta directory and create dist files for Jaccard and YC measures
 
@@ -254,8 +254,8 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 
 #Draw beta directory pictures for Jaccard and YC measures
 
-{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
-{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
+../../../{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
+../../../{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
 {%endif%}"""
 
     templ_str_its = """#!/bin/bash\
