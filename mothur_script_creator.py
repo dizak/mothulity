@@ -177,36 +177,36 @@ classify.otu(list=current, count=current, taxonomy=current, label=1)\
 #Create directories and shorten shared file name
 
 mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
-cp *list.shared ./analysis/OTU/{{prefix}}.shared
-cp *{{label}}.cons.tax.summary ./analysis/OTU/alpha/{{prefix}}.tax.summary
+cp *list.shared ./analysis/OTU/{{job_name}}.shared
+cp *{{label}}.cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
 
 #Go to subdirectory and subsample shared file
 
 cd ./analysis/OTU
-mothur '#set.current(processors={{processors}}, shared={{prefix}}.shared); sub.sample(shared=current)'
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub.sample(shared=current)'
 
 #Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory
 
-cp {{prefix}}.shared ./alpha
-cp {{prefix}}.{{label}}.subsample.shared ./beta
+cp {{job_name}}.shared ./alpha
+cp {{job_name}}.{{label}}.subsample.shared ./beta
 
 #Go to alpha directory and create rarefaction and summary
 
 cd ./alpha
-mothur '#set.current(processors={{processors}}, shared={{prefix}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
 
 #Go to beta directory and create dist files for Jaccard and YC measures
 
 cd ../beta
-mothur '#set.current(processors={{processors}}, shared={{prefix}}.{{label}}.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.{{label}}.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
 
 #Create phylogenetic tree for Jaccard and YC measures
 
-mothur '#tree.shared(phylip={{prefix}}.{{label}}.subsample.jclass.{{label}}.square.dist); tree.shared(phylip={{prefix}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
+mothur '#tree.shared(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); tree.shared(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
 
 #Create scatter plots upon NMDS for Jaccard and YC measures
 
-mothur '#nmds(phylip={{prefix}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{prefix}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
+mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
 
 {%endif%}'"""
 
