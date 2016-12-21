@@ -3,6 +3,8 @@
 import jinja2 as jj2
 import argparse
 import os
+from Bio import Phylo as ph
+import pylab
 from pandas import read_csv
 from seaborn import heatmap
 from seaborn import pairplot
@@ -97,6 +99,13 @@ def draw_heatmap(file_name):
     df.columns = df.index
     fig = heatmap(df, square=True, cmap="plasma").get_figure()
     fig.savefig("{}.svg".format(file_name))
+
+
+def draw_tree(file_name):
+    pylab.ion()
+    tree = ph.read(file_name, "newick")
+    ph.draw(tree)
+    pylab.savefig("{}.svg".format(file_name))
 
 
 def draw_scatter(file_name):
@@ -473,6 +482,10 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                       metavar = "",
                       help = "path/to/phylip-file. Used to draw heatmap and\
                               tree.")
+    draw.add_argument("--tree",
+                      action = "store",
+                      metavar = "",
+                      help = "path/to/tree-file. Used to draw dendrogram.")
     draw.add_argument("--axes",
                       action = "store",
                       dest = "axes",
@@ -484,6 +497,8 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
         draw_heatmap(args.phylip)
     else:
         pass
+    if args.tree != None:
+        draw_tree(args.tree)
     if args.axes != None:
         draw_scatter(args.axes)
     if args.template_file_name != None:
