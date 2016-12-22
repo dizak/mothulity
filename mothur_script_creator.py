@@ -611,20 +611,27 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
         print "Downloading to {0}/Silva.bacteria.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/9/98/Silva.bacteria.zip",
                "{0}/Silva.bacteria.zip".format(args.silva_102))
-        print "Done!"
         print "Downloading to {0}/Silva.archaea.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
                "{0}/Silva.archaea.zip".format(args.silva_102))
-        print "Done!"
         print "Downloading to {0}/Silva.eukarya.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/1/1a/Silva.eukarya.zip",
                "{0}/Silva.eukarya.zip".format(args.silva_102))
         print "Done!"
     else:
         pass
-    if args.silva-119 != None:
+    if args.silva_119 != None:
+        print "Downloading to {0}/Silva.nr_v119.tgz".format(args.silva_119)
         get_db("http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz",
-               "{0}/Silva.nr_v119.tgz".format(args.sil))
+               "{0}/Silva.nr_v119.tgz".format(args.silva_119))
+        print "Done!"
+    else:
+        pass
+    if args.silva_123 != None:
+        print "Downloading to {0}/Silva.nr_v123.tgz".format(args.silva_123)
+        get_db("https://www.mothur.org/w/images/b/be/Silva.nr_v123.tgz",
+               "{0}/Silva.nr_v123.tgz".format(args.silva_123))
+        print "Done!"
     if args.rarefaction or args.phylip or args.tree or args.axes != None:
         if args.rarefaction != None:
             draw_rarefaction(args.rarefaction)
