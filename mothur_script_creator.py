@@ -3,6 +3,7 @@
 import jinja2 as jj2
 import argparse
 import requests as rq
+from tqdm import tqdm
 import os
 import sys
 from Bio import Phylo as ph
@@ -97,10 +98,17 @@ def save_template(out_file_name,
 
 
 def get_db(url,
-           save_path):
-    res = rq.get(url)
-    with open(save_path, "w") as fout:
-        fout.write(res.content)
+           save_path,
+           chunk = 8192):
+    res = rq.get(url, stream = True)
+    total_len = int(res.headers.get("content-length"))
+    if res.status_code == 200:
+        with open(save_path, "wb") as fout:
+            for i in tqdm(res.iter_content(chunk_size = chunk),
+                          total = total_len / chunk):
+                fout.write(i)
+    else:
+        pass
 
 
 def draw_rarefaction(file_name):
