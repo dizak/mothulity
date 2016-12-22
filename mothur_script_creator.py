@@ -2,6 +2,7 @@
 
 import jinja2 as jj2
 import argparse
+import requests as rq
 import os
 import sys
 from Bio import Phylo as ph
@@ -93,6 +94,13 @@ def save_template(out_file_name,
                   template_rendered):
     with open(out_file_name, "w") as fout:
         fout.write(template_rendered)
+
+
+def get_db(url,
+           save_path):
+    res = rq.get_url(url)
+    with open(save_path, "w") as fout:
+        fout.write(res.content)
 
 
 def draw_rarefaction(file_name):
