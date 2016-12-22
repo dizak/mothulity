@@ -304,28 +304,28 @@ remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast
 #Mock community analysis
 
 remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
- pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
- make.shared(list=current, count=current, label={{label}}); \
- classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
- count.groups(shared=current); phylotype(taxonomy=current); \
- make.shared(list=current, count=current, label=1); \
- classify.otu(list=current, count=current, taxonomy=current, label=1); \
- system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); \
- system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); \
- get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
- seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
- pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
- make.shared(list=current, count=current, label={{label}}); \
- rarefaction.single(shared=current)\
- {%else%}
- pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
- make.shared(list=current, count=current, label={{label}}); \
- classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
- count.groups(shared=current); \
- phylotype(taxonomy=current); \
- make.shared(list=current, count=current, label=1); \
- classify.otu(list=current, count=current, taxonomy=current, label=1)\
- {%endif%}"""
+pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
+make.shared(list=current, count=current, label={{label}}); \
+classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
+count.groups(shared=current); phylotype(taxonomy=current); \
+make.shared(list=current, count=current, label=1); \
+classify.otu(list=current, count=current, taxonomy=current, label=1); \
+system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); \
+system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); \
+get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
+seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
+pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
+make.shared(list=current, count=current, label={{label}}); \
+rarefaction.single(shared=current)\
+{%else%}
+pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
+make.shared(list=current, count=current, label={{label}}); \
+classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
+count.groups(shared=current); \
+phylotype(taxonomy=current); \
+make.shared(list=current, count=current, label=1); \
+classify.otu(list=current, count=current, taxonomy=current, label=1)\
+{%endif%}"""
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
