@@ -176,7 +176,7 @@ summary.seqs(fasta=current, count=current); \
 classify.seqs(fasta=current, count=current, reference={{align_database}}, \
 taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
 remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
-{%if mock == True%} \
+{%if mock == True%}
 
 #Mock community analysis
 
@@ -195,7 +195,7 @@ dist.seqs(fasta=current, cutoff=0.20); \
 cluster(column=current, count=current); \
 make.shared(list=current, count=current, label={{label}}); \
 rarefaction.single(shared=current)\
-{%else%}\
+{%else%}
 
 
 #OTU clustering
@@ -209,7 +209,7 @@ count.groups(shared=current); phylotype(taxonomy=current); \
 #Phylotype
 
 make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1)\
+classify.otu(list=current, count=current, taxonomy=current, label=1)'\
 {%endif%}
 {%else%}
 
@@ -342,11 +342,12 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                                 mock OTUs and draw mock rarefaction curve.")
     parser.add_argument("-r",
                         "--run",
-                        action = "store_true",
+                        action = "store",
                         dest = "run",
-                        default = False,
-                        help = "use if you want to run the mothur script\
-                                immediately. Default <False>.")
+                        default = None,
+                        help = "shell call. Use if you want to run the mothur\
+                                script immediately. eg -r sh for regular bash\
+                                or -r sbatch for slurm.")
     parser.add_argument("--analysis-only",
                         action = "store_true",
                         dest = "analysis_only",
@@ -590,8 +591,8 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                                             label = args.label)
         save_template(args.output_file_name,
                       rendered_template)
-        if args.run == True:
-            os.system("sh {0}".format(args.output_file_name))
+        if args.run != None:
+            os.system("{0} {1}".format(args.run, args.output_file_name))
         else:
             pass
 if __name__ == "__main__":
