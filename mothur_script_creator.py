@@ -594,10 +594,15 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
     args = parser.parse_args()
 
     if args.unite_ITS_02 != None:
-        print "Downloading to {0}/Unite_ITS_02.zip".format(args.unite_ITS_02)
+        download_path = "{0}/Unite_ITS_02.zip".format(args.unite_ITS_02)
+        print "Downloading to {0}".format(download_path)
         get_db("https://www.mothur.org/w/images/4/49/Unite_ITS_02.zip",
-               "{0}/Unite_ITS_02.zip".format(args.unite_ITS_02))
-        print "Done!"
+               download_path)
+        print "Downloading done!"
+        print "Unpacking..."
+        os.system("unzip {0}".format(download_path))
+        os.system("rm {0}".format(download_path))
+        print "Unpacking done!"
     else:
         pass
     if args.unite_ITS_s_02 != None:
