@@ -403,7 +403,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                                   download Silva v102.")
     database.add_argument("--silva-119",
                           action = "store",
-                          dest = "silva-119",
+                          dest = "silva_119",
                           metavar = "",
                           default = None,
                           help = "path/to/download-database. Use if you want to\
@@ -594,22 +594,37 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
     args = parser.parse_args()
 
     if args.unite_ITS_02 != None:
+        print "Downloading to {0}/Unite_ITS_02.zip".format(args.unite_ITS_02)
         get_db("https://www.mothur.org/w/images/4/49/Unite_ITS_02.zip",
                "{0}/Unite_ITS_02.zip".format(args.unite_ITS_02))
+        print "Done!"
     else:
         pass
     if args.unite_ITS_s_02 != None:
+        print "Downloading to {0}/Unite_ITS_s_02.zip".format(args.Unite_ITS_s_02)
         get_db("https://www.mothur.org/w/images/2/27/Unite_ITS_s_02.zip",
                "{0}/Unite_ITS_s_02.zip".format(args.unite_ITS_s_02))
+        print "Done!"
     else:
         pass
     if args.silva_102 != None:
+        print "Downloading to {0}/Silva.bacteria.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/9/98/Silva.bacteria.zip",
                "{0}/Silva.bacteria.zip".format(args.silva_102))
+        print "Done!"
+        print "Downloading to {0}/Silva.archaea.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
                "{0}/Silva.archaea.zip".format(args.silva_102))
+        print "Done!"
+        print "Downloading to {0}/Silva.eukarya.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/1/1a/Silva.eukarya.zip",
                "{0}/Silva.eukarya.zip".format(args.silva_102))
+        print "Done!"
+    else:
+        pass
+    if args.silva-119 != None:
+        get_db("http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz",
+               "{0}/Silva.nr_v119.tgz".format(args.sil))
     if args.rarefaction or args.phylip or args.tree or args.axes != None:
         if args.rarefaction != None:
             draw_rarefaction(args.rarefaction)
