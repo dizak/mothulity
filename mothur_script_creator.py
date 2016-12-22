@@ -314,6 +314,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
                                      version = "0.9.1")
+    database = parser.add_argument_group("database download options")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
     draw = parser.add_argument_group("drawing options")
@@ -344,6 +345,7 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                         "--run",
                         action = "store",
                         dest = "run",
+                        metavar = "",
                         default = None,
                         help = "shell call. Use if you want to run the mothur\
                                 script immediately. eg -r sh for regular bash\
@@ -362,6 +364,41 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                         default = None,
                         help = "path/to/template. Use if you want to use other\
                                 template than default.")
+    database.add_argument("--unite-ITS-02",
+                          action = "store",
+                          dest = "unite_ITS_02",
+                          metavar = "",
+                          default = None,
+                          help = "path/to/download-database. Use if you want to\
+                                  download UNITE ITS 02 database.")
+    database.add_argument("--unite-ITS-s-02",
+                          action = "store",
+                          dest = "unite_ITS_s_02",
+                          metavar = "",
+                          default = None,
+                          help = "path/to/download-database. Use if you want to\
+                                  download UNITE ITS s 02 database.")
+    database.add_argument("--silva-102",
+                          action = "store",
+                          dest = "silva_102",
+                          metavar = "",
+                          default = None,
+                          help = "path/to/download-database. Use if you want to\
+                                  download Silva v102.")
+    database.add_argument("--silva-119",
+                          action = "store",
+                          dest = "silva-119",
+                          metavar = "",
+                          default = None,
+                          help = "path/to/download-database. Use if you want to\
+                                  download Silva v119.")
+    database.add_argument("--silva-123",
+                          action = "store",
+                          dest = "silva_123",
+                          metavar = "",
+                          default = None,
+                          help = "path/to/download-database. Use if you want to\
+                                  download Silva v123.")
     headnode.add_argument("--partition",
                           action = "store",
                           dest = "partition",
