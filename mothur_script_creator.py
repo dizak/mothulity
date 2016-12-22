@@ -600,43 +600,100 @@ remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
                download_path)
         print "Downloading done!"
         print "Unpacking..."
-        os.system("unzip {0}".format(download_path))
-        os.system("rm {0}".format(download_path))
-        print "Unpacking done!"
+        try:
+            os.system("unzip {0}".format(download_path))
+            os.system("rm {0}".format(download_path))
+            print "Unpacking done!"
+        except:
+            print "Failed to extract file... skipping"
     else:
         pass
     if args.unite_ITS_s_02 != None:
+        download_path = "{0}/Unite_ITS_s_02.zip".format(args.Unite_ITS_s_02)
         print "Downloading to {0}/Unite_ITS_s_02.zip".format(args.Unite_ITS_s_02)
         get_db("https://www.mothur.org/w/images/2/27/Unite_ITS_s_02.zip",
-               "{0}/Unite_ITS_s_02.zip".format(args.unite_ITS_s_02))
-        print "Done!"
+               download_path)
+        print "Downloading done!"
+        print "Unpacking..."
+        try:
+            os.system("unzip {0}".format(download_path))
+            os.system("rm {0}".format(download_path))
+            print "Failed to extract file... skipping"
+        except:
+            print "Unpacking done!"
     else:
         pass
     if args.silva_102 != None:
+        download_path = "{0}/Silva.bacteria.zip".format(args.silva_102)
         print "Downloading to {0}/Silva.bacteria.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/9/98/Silva.bacteria.zip",
-               "{0}/Silva.bacteria.zip".format(args.silva_102))
+               download_path)
+        print "Downloading done!"
+        print "Unpacking..."
+        try:
+            os.system("unzip {0}".format(download_path))
+            os.system("rm {0}".format(download_path))
+            print "Unpacking done!"
+        except:
+            print "Failed to extract file... skipping"
+        download_path = "{0}/Silva.archaea.zip".format(args.silva_102)
         print "Downloading to {0}/Silva.archaea.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
-               "{0}/Silva.archaea.zip".format(args.silva_102))
+               download_path)
+        print "Downloading done!"
+        print "Unpacking..."
+        try:
+            os.system("unzip {0}".format(download_path))
+            os.system("rm {0}".format(download_path))
+            print "Unpacking done!"
+        except:
+            print "Failed to extract file... skipping"
+        download_path = "{0}/Silva.eukarya.zip".format(args.silva_102)
         print "Downloading to {0}/Silva.eukarya.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/1/1a/Silva.eukarya.zip",
-               "{0}/Silva.eukarya.zip".format(args.silva_102))
-        print "Done!"
+               download_path)
+        print "Downloading done!"
+        print "Unpacking..."
+        try:
+            os.system("unzip {0}".format(download_path))
+            os.system("rm {0}".format(download_path))
+            print "Unpacking done!"
+        except:
+            print "Failed to extract file... skipping"
     else:
         pass
     if args.silva_119 != None:
+        download_path = "{0}/Silva.nr_v119.tgz".format(args.silva_119)
         print "Downloading to {0}/Silva.nr_v119.tgz".format(args.silva_119)
         get_db("http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz",
-               "{0}/Silva.nr_v119.tgz".format(args.silva_119))
-        print "Done!"
+               download_path)
+        print "Downloading done!"
+        print "Unpacking..."
+        try:
+            os.mkdir("{0}/Silva.nr_v119".format(args.silva_119))
+            os.system("tar -xf {0} --directory {1}".format(download_path,
+                                                           "{0}/Silva.nr_v119".format(args.silva_119)))
+            os.system("rm {0}".format(download_path))
+            print "Unpacking done!"
+        except:
+            print "Failed to extract file... skipping"
     else:
         pass
     if args.silva_123 != None:
+        download_path = "{0}/Silva.nr_v123.tgz".format(args.silva_123)
         print "Downloading to {0}/Silva.nr_v123.tgz".format(args.silva_123)
         get_db("https://www.mothur.org/w/images/b/be/Silva.nr_v123.tgz",
-               "{0}/Silva.nr_v123.tgz".format(args.silva_123))
-        print "Done!"
+               download_path)
+        print "Downloading done!"
+        print "Unpacking..."
+        try:
+            os.mkdir("{0}/Silva.nr_v119".format(args.silva_119))
+            os.system("tar -xf {0} --directory {1}".format(download_path,
+                                                           "{0}/Silva.nr_v119".format(args.silva_119)))
+            os.system("rm {0}".format(download_path))
+            print "Unpacking done!"
+        except:
+            print "Failed to extract file... skipping"
     if args.rarefaction or args.phylip or args.tree or args.axes != None:
         if args.rarefaction != None:
             draw_rarefaction(args.rarefaction)
