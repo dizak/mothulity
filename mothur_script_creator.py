@@ -119,13 +119,21 @@ def draw_rarefaction(file_name):
                   index_col = "numsampled")
     cols = [i for i in df.columns if "lci" not in i]
     cols = [i for i in cols if "hci" not in i]
-    plot = Line(df[cols],
-                xlabel = "hundreds of sequences",
-                ylabel = "OTU count at 0.03 cutoff",
-                legend = "top_right",
-                width = 1000)
-    save(plot)
-
+    df = df[cols]
+    fig, ax = plt.subplots()
+    df[cols].plot(ax = ax,
+                  figsize = (15, 8))
+    labels = list(df.columns.values)
+    for i in range(len(labels)):
+        tooltip = mpld3.plugins.LineLabelTooltip(ax.get_lines()[i],
+                                                 labels[i])
+        mpld3.plugins.connect(plt.gcf(), tooltip)
+    plt.grid(True)
+    plt.title("Rarefaction curve")
+    plt.ylabel("OTU count at 0.03 cutoff")
+    plt.xlabel("hundreds of sequences")
+    with open("mpld3.html", "w") as fout:
+    fout.write(mpld3.fig_to_html(fig))
 
 def draw_heatmap(file_name):
     df = read_csv(file_name,
