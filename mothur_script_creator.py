@@ -132,7 +132,7 @@ def draw_rarefaction(file_name):
     plt.title("Rarefaction curve")
     plt.ylabel("OTU count at 0.03 cutoff")
     plt.xlabel("hundreds of sequences")
-    with open(file, "w") as fout:
+    with open(file_name, "w") as fout:
         fout.write(mpld3.fig_to_html(fig))
 
 def draw_heatmap(file_name):
