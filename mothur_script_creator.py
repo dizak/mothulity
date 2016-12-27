@@ -8,8 +8,9 @@ import os
 import sys
 from Bio import Phylo as ph
 import pylab
-from bokeh.io import save, output_file
-from bokeh.charts import Line
+import matplotlib.pylot as plt
+import matplotlib.style as style
+import mpld3
 from pandas import read_csv
 from seaborn import heatmap
 from seaborn import pairplot
