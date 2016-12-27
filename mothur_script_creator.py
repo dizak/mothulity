@@ -8,7 +8,7 @@ import os
 import sys
 from Bio import Phylo as ph
 import pylab
-import matplotlib.pylot as plt
+import matplotlib.pyplot as plt
 import matplotlib.style as style
 import mpld3
 from pandas import read_csv
