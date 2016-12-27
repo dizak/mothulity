@@ -113,7 +113,7 @@ def get_db(url,
 
 
 def draw_rarefaction(file_name):
-    output_file("{}.mpld3.html".format(file_name))
+    output_file = "{}.mpld3.html".format(file_name)
     df = read_csv(file_name,
                   sep = "\t",
                   index_col = "numsampled")
