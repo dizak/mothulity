@@ -132,8 +132,8 @@ def draw_rarefaction(file_name):
     plt.title("Rarefaction curve")
     plt.ylabel("OTU count at 0.03 cutoff")
     plt.xlabel("hundreds of sequences")
-    with open("mpld3.html", "w") as fout:
-    fout.write(mpld3.fig_to_html(fig))
+    with open(file, "w") as fout:
+        fout.write(mpld3.fig_to_html(fig))
 
 def draw_heatmap(file_name):
     df = read_csv(file_name,
