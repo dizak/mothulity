@@ -328,7 +328,7 @@ pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
 make.shared(list=current, count=current, label={{label}}); \
 rarefaction.single(shared=current)\
 {%else%}
-pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
+pairwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current); \
