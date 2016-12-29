@@ -193,13 +193,13 @@ count.seqs(name=current, group=current); \
 summary.seqs(fasta=current, count=current); \
 {%if classify_ITS == True%}
 {%else%}
-{%endif%}
 align.seqs(fasta=current, reference={{align_database}}); \
 summary.seqs(fasta=current, count=current); \
 screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); \
 summary.seqs(fasta=current, count=current); \
 filter.seqs(fasta=current, vertical=T, trump=.); \
 unique.seqs(fasta=current, count=current); \
+{%endif%}
 summary.seqs(fasta=current, count=current); \
 pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); \
 chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); \
