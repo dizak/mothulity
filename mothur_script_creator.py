@@ -283,19 +283,20 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 ../../../{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
 {%endif%}"""
 
-    templ_str_its = """#!/bin/bash\
+    templ_str_its = """#!/bin/bash
 
-#SBATCH --job-name="{{job_name}}"\
-#SBATCH --partition={{partition}}\
-#SBATCH --nodes={{nodes}}\
-#SBATCH --ntasks-per-node={{ntasks_per_node}}\
-#SBATCH --mem-per-cpu={{mem_per_cpu}}\
+#SBATCH --job-name="{{job_name}}"
+#SBATCH --partition={{partition}}
+#SBATCH --nodes={{nodes}}
+#SBATCH --ntasks-per-node={{ntasks_per_node}}
+#SBATCH --mem-per-cpu={{mem_per_cpu}}
 {%if node_list != None%}
 #SBATCH --nodelist={{node_list}}
 {%endif%}
 ###Sequence preprocessing###
 
-mothur '#set.current(processors={{processors}}); \ make.contigs(file={{job_name}}.files); \
+mothur '#set.current(processors={{processors}}); \
+make.contigs(file={{job_name}}.files); \
 summary.seqs(fasta=current); \
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); \
 summary.seqs(fasta=current); \
