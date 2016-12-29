@@ -165,7 +165,7 @@ def draw_scatter(file_name):
 
 
 def main():
-    templ_str_otu = """#!/bin/bash
+    templ_str = """#!/bin/bash
 
 #SBATCH --job-name="{{job_name}}"
 #SBATCH --partition={{partition}}
@@ -184,9 +184,16 @@ make.contigs(file={{job_name}}.files); \
 summary.seqs(fasta=current); \
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); \
 summary.seqs(fasta=current); \
+{%if classify_ITS == True%}
+chop.seqs(fasta=current, group=current, numbases={{chop_length}}); \
+{%else%}
+{%endif%}
 unique.seqs(fasta=current); \
 count.seqs(name=current, group=current); \
 summary.seqs(fasta=current, count=current); \
+{%if classify_ITS == True%}
+{%else%}
+{%endif%}
 align.seqs(fasta=current, reference={{align_database}}); \
 summary.seqs(fasta=current, count=current); \
 screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); \
