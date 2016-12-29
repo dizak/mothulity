@@ -334,7 +334,7 @@ classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current); \
 phylotype(taxonomy=current); \
 make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1)\
+classify.otu(list=current, count=current, taxonomy=current, label=1)'\
 {%endif%}"""
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
