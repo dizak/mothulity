@@ -314,7 +314,7 @@ remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast
 #Mock community analysis
 
 remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
-pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
+pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}, output=lt); \
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current); phylotype(taxonomy=current); \
