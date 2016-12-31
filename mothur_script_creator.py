@@ -52,6 +52,7 @@ def render_template(template_loaded,
                     precluster_diffs = 4,
                     chimera_dereplicate = "T",
                     classify_seqs_cutoff = 80,
+                    classify_ITS = False,
                     align_database = None,
                     taxonomy_database = None,
                     cluster_cutoff = 0.15,
@@ -78,6 +79,7 @@ def render_template(template_loaded,
                      "precluster_diffs": precluster_diffs,
                      "chimera_dereplicate": chimera_dereplicate,
                      "classify_seqs_cutoff": classify_seqs_cutoff,
+                     "classify_ITS": classify_ITS,
                      "align_database": align_database,
                      "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff,
@@ -744,10 +746,7 @@ classify.otu(list=current, count=current, taxonomy=current, label=1)'\
         if args.template_file_name != None:
             loaded_template = load_template(args.template_file_name)
         else:
-            if args.classify_ITS == True:
-                loaded_template = load_template_str(templ_str_its)
-            else:
-                loaded_template = load_template_str(templ_str_otu)
+            loaded_template = load_template_str(templ_str)
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
                                             mock = args.mock,
@@ -767,6 +766,7 @@ classify.otu(list=current, count=current, taxonomy=current, label=1)'\
                                             chop_length = args.chop_length,
                                             precluster_diffs = args.precluster_diffs,
                                             chimera_dereplicate = args.chimera_dereplicate,
+                                            classify_ITS = args.classify_ITS,
                                             classify_seqs_cutoff = args.classify_seqs_cutoff,
                                             align_database = args.align_database,
                                             taxonomy_database = args.taxonomy_database,
