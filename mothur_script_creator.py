@@ -174,11 +174,12 @@ def main():
 #SBATCH --nodes={{nodes}}
 #SBATCH --ntasks-per-node={{ntasks_per_node}}
 #SBATCH --mem-per-cpu={{mem_per_cpu}}
-{%if node_list != None%}
+{%if node_list != None%}\
 #SBATCH --nodelist={{node_list}}
-{%endif%}
+{%endif%}\
+{%if analysis_only == True%}\
+{%else%}\
 
-{%if analysis_only == False%}
 ###Sequence preprocessing###
 
 mothur '#set.current(processors={{processors}}); \
@@ -235,8 +236,7 @@ count.groups(shared=current); phylotype(taxonomy=current); \
 
 make.shared(list=current, count=current, label=1); \
 classify.otu(list=current, count=current, taxonomy=current, label=1)'\
-
-{%else%}
+{%endif%}\
 
 ###OTU approach analysis###
 
@@ -281,7 +281,7 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 
 {{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
 {{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
-{%endif%}"""
+"""
 
     templ_str_its = """#!/bin/bash
 
