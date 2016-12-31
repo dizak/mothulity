@@ -209,7 +209,7 @@ remove.seqs(fasta=current, accnos=current); \
 summary.seqs(fasta=current, count=current); \
 classify.seqs(fasta=current, count=current, reference={{align_database}}, \
 taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
-if {%classify_ITS == True%}
+{%if classify_ITS == True%}
 remove.lineage(fasta=current, count=current, taxonomy=current, \
 taxon=Chloroplast-Mitochondria-unknown-Unknown); \
 {%else%}
