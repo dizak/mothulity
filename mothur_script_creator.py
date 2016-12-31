@@ -237,8 +237,9 @@ rarefaction.single(shared=current)\
 #OTU clustering
 {%if classify_ITS == True%}
 pairwise.seqs(fasta=current, cutoff=0.15, output=lt); \
-cluster(list=current, cutoff=0.15)
-make.shared(list=current, count=current, label={{label}})
+cluster(list=current, cutoff=0.15); \
+make.shared(list=current, count=current, label={{label}}); \
+classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 {%else%}
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
 make.shared(list=current, count=current, label={{label}}); \
