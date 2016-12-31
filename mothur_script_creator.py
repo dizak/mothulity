@@ -186,22 +186,20 @@ make.contigs(file={{job_name}}.files); \
 summary.seqs(fasta=current); \
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); \
 summary.seqs(fasta=current); \
-{%if classify_ITS == True%}
+{%if classify_ITS == True%}\
 chop.seqs(fasta=current, group=current, numbases={{chop_length}}); \
-{%else%}
-{%endif%}
+{%endif%}\
 unique.seqs(fasta=current); \
 count.seqs(name=current, group=current); \
 summary.seqs(fasta=current, count=current); \
-{%if classify_ITS == True%}
-{%else%}
+{%if classify_ITS == True%}\
 align.seqs(fasta=current, reference={{align_database}}); \
 summary.seqs(fasta=current, count=current); \
 screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); \
 summary.seqs(fasta=current, count=current); \
 filter.seqs(fasta=current, vertical=T, trump=.); \
 unique.seqs(fasta=current, count=current); \
-{%endif%}
+{%endif%}\
 summary.seqs(fasta=current, count=current); \
 pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); \
 chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); \
@@ -209,54 +207,35 @@ remove.seqs(fasta=current, accnos=current); \
 summary.seqs(fasta=current, count=current); \
 classify.seqs(fasta=current, count=current, reference={{align_database}}, \
 taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
-{%if classify_ITS == True%}
+{%if classify_ITS == True%}\
 remove.lineage(fasta=current, count=current, taxonomy=current, \
 taxon=Chloroplast-Mitochondria-unknown-Unknown); \
-{%else%}
+{%else%}\
 remove.lineage(fasta=current, count=current, taxonomy=current, \
 taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
-{%endif%}
-{%if mock == True%}
-
-#Mock community analysis
-
-remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
-make.shared(list=current, count=current, label={{label}}); \
-classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-count.groups(shared=current); phylotype(taxonomy=current); \
-make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1); \
-system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); \
-system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); \
-get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
-seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
-dist.seqs(fasta=current, cutoff=0.20); \
-cluster(column=current, count=current); \
-make.shared(list=current, count=current, label={{label}}); \
-rarefaction.single(shared=current)\
-{%else%}
+{%endif%}\
 
 
 #OTU clustering
-{%if classify_ITS == True%}
+
+{%if classify_ITS == True%}\
 pairwise.seqs(fasta=current, cutoff=0.15, output=lt); \
 cluster(list=current, cutoff=0.15); \
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-{%else%}
+{%else%}\
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current); phylotype(taxonomy=current); \
-{%endif%}
+{%endif%}\
 
 
 #Phylotype
 
 make.shared(list=current, count=current, label=1); \
 classify.otu(list=current, count=current, taxonomy=current, label=1)'\
-{%endif%}
+
 {%else%}
 
 ###OTU approach analysis###
