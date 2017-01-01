@@ -229,8 +229,8 @@ count.groups(shared=current)'\
 #Create directories and shorten shared file name
 
 mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
-cp *list.shared ./analysis/OTU/{{job_name}}.shared
-cp *{{label}}.cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
+cp *shared ./analysis/OTU/{{job_name}}.shared
+cp *cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
 
 #Go to subdirectory and subsample shared file
 
