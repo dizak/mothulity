@@ -220,7 +220,7 @@ cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classi
 {%endif%}\
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-count.groups(shared=current); phylotype(taxonomy=current)'\
+count.groups(shared=current)'\
 {%endif%}\
 
 
