@@ -52,6 +52,7 @@ def render_template(template_loaded,
                     precluster_diffs = 4,
                     chimera_dereplicate = "T",
                     classify_seqs_cutoff = 80,
+                    classify_ITS = False,
                     align_database = None,
                     taxonomy_database = None,
                     cluster_cutoff = 0.15,
@@ -78,6 +79,7 @@ def render_template(template_loaded,
                      "precluster_diffs": precluster_diffs,
                      "chimera_dereplicate": chimera_dereplicate,
                      "classify_seqs_cutoff": classify_seqs_cutoff,
+                     "classify_ITS": classify_ITS,
                      "align_database": align_database,
                      "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff,
@@ -165,18 +167,19 @@ def draw_scatter(file_name):
 
 
 def main():
-    templ_str_otu = """#!/bin/bash
+    templ_str = """#!/bin/bash
 
 #SBATCH --job-name="{{job_name}}"
 #SBATCH --partition={{partition}}
 #SBATCH --nodes={{nodes}}
 #SBATCH --ntasks-per-node={{ntasks_per_node}}
 #SBATCH --mem-per-cpu={{mem_per_cpu}}
-{%if node_list != None%}
+{%if node_list != None%}\
 #SBATCH --nodelist={{node_list}}
-{%endif%}
+{%endif%}\
+{%if analysis_only == True%}\
+{%else%}\
 
-{%if analysis_only == False%}
 ###Sequence preprocessing###
 
 mothur '#set.current(processors={{processors}}); \
@@ -184,15 +187,20 @@ make.contigs(file={{job_name}}.files); \
 summary.seqs(fasta=current); \
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); \
 summary.seqs(fasta=current); \
+{%if classify_ITS == True%}\
+chop.seqs(fasta=current, group=current, numbases={{chop_length}}); \
+{%endif%}\
 unique.seqs(fasta=current); \
 count.seqs(name=current, group=current); \
-summary.seqs(fasta=current, count=current); \
+{%if classify_ITS == True%}\
+{%else%}
 align.seqs(fasta=current, reference={{align_database}}); \
 summary.seqs(fasta=current, count=current); \
 screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); \
 summary.seqs(fasta=current, count=current); \
 filter.seqs(fasta=current, vertical=T, trump=.); \
 unique.seqs(fasta=current, count=current); \
+{%endif%}\
 summary.seqs(fasta=current, count=current); \
 pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); \
 chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); \
@@ -200,51 +208,29 @@ remove.seqs(fasta=current, accnos=current); \
 summary.seqs(fasta=current, count=current); \
 classify.seqs(fasta=current, count=current, reference={{align_database}}, \
 taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
-remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
-{%if mock == True%}
-
-#Mock community analysis
-
-remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
+{%if classify_ITS == True%}\
+remove.lineage(fasta=current, count=current, taxonomy=current, \
+taxon=Chloroplast-Mitochondria-unknown-Unknown); \
+pairwise.seqs(fasta=current, cutoff=0.15, output=lt); \
+cluster(phylip=current, cutoff=0.15); \
+{%else%}\
+remove.lineage(fasta=current, count=current, taxonomy=current, \
+taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
+{%endif%}\
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-count.groups(shared=current); phylotype(taxonomy=current); \
-make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1); \
-system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); \
-system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); \
-get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
-seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
-dist.seqs(fasta=current, cutoff=0.20); \
-cluster(column=current, count=current); \
-make.shared(list=current, count=current, label={{label}}); \
-rarefaction.single(shared=current)\
-{%else%}
+count.groups(shared=current)'\
+{%endif%}\
 
-
-#OTU clustering
-
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
-make.shared(list=current, count=current, label={{label}}); \
-classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-count.groups(shared=current); phylotype(taxonomy=current); \
-
-
-#Phylotype
-
-make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1)'\
-{%endif%}
-{%else%}
 
 ###OTU approach analysis###
 
 #Create directories and shorten shared file name
 
 mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
-cp *list.shared ./analysis/OTU/{{job_name}}.shared
-cp *{{label}}.cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
+cp *shared ./analysis/OTU/{{job_name}}.shared
+cp *cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
 
 #Go to subdirectory and subsample shared file
 
@@ -262,7 +248,7 @@ cd ./alpha
 mothur_krona_XML.py {{job_name}}.tax.summary > {{job_name}}.krona.xml
 ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
-../../../{{msc_path}} --rarefaction {{job_name}}.groups.rarefaction
+{{msc_path}} --rarefaction {{job_name}}.groups.rarefaction
 
 #Go to beta directory and create dist files for Jaccard and YC measures
 
@@ -279,63 +265,10 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 
 #Draw beta directory pictures for Jaccard and YC measures
 
-../../../{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
-../../../{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
-{%endif%}"""
-
-    templ_str_its = """#!/bin/bash
-
-#SBATCH --job-name="{{job_name}}"
-#SBATCH --partition={{partition}}
-#SBATCH --nodes={{nodes}}
-#SBATCH --ntasks-per-node={{ntasks_per_node}}
-#SBATCH --mem-per-cpu={{mem_per_cpu}}
-{%if node_list != None%}
-#SBATCH --nodelist={{node_list}}
-{%endif%}
-###Sequence preprocessing###
-
-mothur '#set.current(processors={{processors}}); \
-make.contigs(file={{job_name}}.files); \
-summary.seqs(fasta=current); \
-screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); \
-summary.seqs(fasta=current); \
-chop.seqs(fasta=current, group=current, numbases={{chop_length}}); \
-unique.seqs(fasta=current); \
-count.seqs(name=current, group=current); \
-summary.seqs(fasta=current, count=current); \
-pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); \
-chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); \
-remove.seqs(fasta=current, accnos=current); summary.seqs(fasta=current, count=current); \
-classify.seqs(fasta=current, count=current,template={{align_database}}, taxonomy={{taxonomy_database}}, method=knn, search=blast, match=2, mismatch=-2, gapopen=-2, gapextend=-1, numwanted=1); \
-remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Unknown);\
-{%if mock == True%}\
-
-#Mock community analysis
-
-remove.groups(fasta=current, count=current, taxonomy=current, groups=Mock); \
-pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}, output=lt); \
-make.shared(list=current, count=current, label={{label}}); \
-classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-count.groups(shared=current); phylotype(taxonomy=current); \
-make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1); \
-system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta mock.fasta); \
-system(cp zury_V3_V4.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table mock.count_table); \
-get.groups(fasta=mock.fasta, count=mock.count_table, groups=Mock); \
-seq.error(fasta=current, count=current, reference=HMP_MOCK.v35.fasta, aligned=F); \
-pariwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
-make.shared(list=current, count=current, label={{label}}); \
-rarefaction.single(shared=current)\
-{%else%}
-pairwise.seqs(fasta=current, cutoff={{cluster_cutoff}}); \
-make.shared(list=current, count=current, label={{label}}); \
-classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-count.groups(shared=current); \
-phylotype(taxonomy=current); \
-make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1)'\
-{%endif%}"""
+{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
+{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
+"""
+>>>>>>> one_templ_str
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
@@ -725,10 +658,7 @@ classify.otu(list=current, count=current, taxonomy=current, label=1)'\
         if args.template_file_name != None:
             loaded_template = load_template(args.template_file_name)
         else:
-            if args.classify_ITS == True:
-                loaded_template = load_template_str(templ_str_its)
-            else:
-                loaded_template = load_template_str(templ_str_otu)
+            loaded_template = load_template_str(templ_str)
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
                                             mock = args.mock,
@@ -749,6 +679,7 @@ classify.otu(list=current, count=current, taxonomy=current, label=1)'\
                                             precluster_diffs = args.precluster_diffs,
                                             chimera_dereplicate = args.chimera_dereplicate,
                                             classify_seqs_cutoff = args.classify_seqs_cutoff,
+                                            classify_ITS = args.classify_ITS,
                                             align_database = args.align_database,
                                             taxonomy_database = args.taxonomy_database,
                                             cluster_cutoff = args.cluster_cutoff,
