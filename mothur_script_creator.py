@@ -7,6 +7,8 @@ from tqdm import tqdm
 import os
 import sys
 from Bio import Phylo as ph
+import matplotlib
+matplotlib.use('Agg')
 import pylab
 import matplotlib.pyplot as plt
 import matplotlib.style as style
