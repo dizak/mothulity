@@ -212,7 +212,7 @@ taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
 remove.lineage(fasta=current, count=current, taxonomy=current, \
 taxon=Chloroplast-Mitochondria-unknown-Unknown); \
 pairwise.seqs(fasta=current, cutoff=0.15, output=lt); \
-cluster(list=current, cutoff=0.15); \
+cluster(phylip=current, cutoff=0.15); \
 {%else%}\
 remove.lineage(fasta=current, count=current, taxonomy=current, \
 taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
