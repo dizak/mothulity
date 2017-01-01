@@ -192,8 +192,8 @@ chop.seqs(fasta=current, group=current, numbases={{chop_length}}); \
 {%endif%}\
 unique.seqs(fasta=current); \
 count.seqs(name=current, group=current); \
-summary.seqs(fasta=current, count=current); \
 {%if classify_ITS == True%}\
+{%else%}
 align.seqs(fasta=current, reference={{align_database}}); \
 summary.seqs(fasta=current, count=current); \
 screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); \
@@ -211,32 +211,18 @@ taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
 {%if classify_ITS == True%}\
 remove.lineage(fasta=current, count=current, taxonomy=current, \
 taxon=Chloroplast-Mitochondria-unknown-Unknown); \
+pairwise.seqs(fasta=current, cutoff=0.15, output=lt); \
+cluster(list=current, cutoff=0.15); \
 {%else%}\
 remove.lineage(fasta=current, count=current, taxonomy=current, \
 taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
-{%endif%}\
-
-
-#OTU clustering
-
-{%if classify_ITS == True%}\
-pairwise.seqs(fasta=current, cutoff=0.15, output=lt); \
-cluster(list=current, cutoff=0.15); \
-make.shared(list=current, count=current, label={{label}}); \
-classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-{%else%}\
 cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
+{%endif%}\
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-count.groups(shared=current); phylotype(taxonomy=current); \
+count.groups(shared=current); phylotype(taxonomy=current)'\
 {%endif%}\
 
-
-#Phylotype
-
-make.shared(list=current, count=current, label=1); \
-classify.otu(list=current, count=current, taxonomy=current, label=1)'\
-{%endif%}\
 
 ###OTU approach analysis###
 
