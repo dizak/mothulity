@@ -544,6 +544,12 @@ cd ./html_output/
                       dest = "axes",
                       metavar = "",
                       help = "path/to/axes-file. Use to draw scatter plots.")
+    draw.add_argument("--html-template",
+                      action = "store",
+                      dest = "html_template",
+                      metavar = "",
+                      help = "path/to/html-template-file. Use to pass args into\
+                              fancy html.")
     args = parser.parse_args()
 
     if args.unite_ITS_02 != None:
@@ -647,6 +653,8 @@ cd ./html_output/
             print "Unpacking done!"
         except:
             print "Failed to extract file... skipping"
+    else:
+        pass
     if args.rarefaction or args.phylip or args.tree or args.axes != None:
         if args.rarefaction != None:
             draw_rarefaction(args.rarefaction)
