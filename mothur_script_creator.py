@@ -655,6 +655,7 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
             draw_scatter(args.axes)
         else:
             pass
+        quit()
     else:
         if args.template_file_name != None:
             loaded_template = load_template(args.template_file_name)
