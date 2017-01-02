@@ -278,7 +278,6 @@ cp ./beta/*svg ./html_output/
 cd ./html_output/
 
 #Render html output
-{{msc_path}}/output_template.html
 """
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
