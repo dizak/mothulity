@@ -27,8 +27,8 @@ def load_template_str(template_str):
     return template
 
 
-def load_template(template_file):
-    template_Loader = jj2.FileSystemLoader(searchpath = ".")
+def load_template_file(template_file):
+    template_Loader = jj2.FileSystemLoader(searchpath = "/")
     template_Env = jj2.Environment(loader = template_Loader)
     template = template_Env.get_template(template_file)
     return template
@@ -230,8 +230,7 @@ count.groups(shared=current)'\
 
 #Create directories and shorten shared file name
 
-mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
-mkdir -p ./analysis/OTU/html_output
+mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta ./analysis/OTU/html_output/iframes ./analysis/OTU/html_output/images
 cp *shared ./analysis/OTU/{{job_name}}.shared
 cp *cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
 
@@ -277,6 +276,9 @@ cd ../
 cp ./alpha/*html ./html_output/
 cp ./beta/*svg ./html_output/
 cd ./html_output/
+
+#Render html output
+{{msc_path}}/output_template.html
 """
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
