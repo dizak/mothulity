@@ -544,10 +544,10 @@ cd ./html_output/
                       dest = "axes",
                       metavar = "",
                       help = "path/to/axes-file. Use to draw scatter plots.")
-    draw.add_argument("--html-template",
-                      action = "store",
-                      dest = "html_template",
-                      metavar = "",
+    draw.add_argument("--render-html",
+                      action = "store_true",
+                      dest = "render_html",
+                      default = False,
                       help = "path/to/html-template-file. Use to pass args into\
                               fancy html.")
     args = parser.parse_args()
@@ -655,6 +655,39 @@ cd ./html_output/
             print "Failed to extract file... skipping"
     else:
         pass
+    if args.render_html == True:
+        html_template_path = sys.argv[0].replace(sys.argv[0].split("/")[-1],
+                                                 "output_template.html")
+        html_output_name = "{0}.html".format(args.job_name)
+        loaded_template = load_template_file(html_template_path)
+        rendered_template = render_template(loaded_template,
+                                            job_name = args.job_name,
+                                            mock = args.mock,
+                                            analysis_only = args.analysis_only,
+                                            partition = args.partition,
+                                            nodes = args.nodes,
+                                            ntasks_per_node = args.ntasks_per_node,
+                                            mem_per_cpu = args.mem_per_cpu,
+                                            node_list = args.node_list,
+                                            processors = args.processors,
+                                            max_ambig = args.max_ambig,
+                                            max_homop = args.max_homop,
+                                            min_length = args.min_length,
+                                            max_length = args.max_length,
+                                            min_overlap = args.min_overlap,
+                                            screen_criteria = args.screen_criteria,
+                                            chop_length = args.chop_length,
+                                            precluster_diffs = args.precluster_diffs,
+                                            chimera_dereplicate = args.chimera_dereplicate,
+                                            classify_seqs_cutoff = args.classify_seqs_cutoff,
+                                            classify_ITS = args.classify_ITS,
+                                            align_database = args.align_database,
+                                            taxonomy_database = args.taxonomy_database,
+                                            cluster_cutoff = args.cluster_cutoff,
+                                            label = args.label)
+        save_template(html_output_name,
+                      rendered_template)
+        quit()
     if args.rarefaction or args.phylip or args.tree or args.axes != None:
         if args.rarefaction != None:
             draw_rarefaction(args.rarefaction)
@@ -675,7 +708,7 @@ cd ./html_output/
         quit()
     else:
         if args.template_file_name != None:
-            loaded_template = load_template(args.template_file_name)
+            loaded_template = load_template_file(args.template_file_name)
         else:
             loaded_template = load_template_str(templ_str)
         rendered_template = render_template(loaded_template,
