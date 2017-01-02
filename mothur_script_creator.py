@@ -231,6 +231,7 @@ count.groups(shared=current)'\
 #Create directories and shorten shared file name
 
 mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
+mkdir -p ./analysis/OTU/html_output
 cp *shared ./analysis/OTU/{{job_name}}.shared
 cp *cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
 
@@ -269,6 +270,13 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 
 {{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
 {{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
+
+#Go to html_output directory and copy plots there
+
+cd ../
+cp ./alpha/*html ./html_output/
+cp ./beta/*svg ./html_output/
+cd ./html_output/
 """
 
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
