@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <title>16S amplicon report</title>
+    <style>
+      iframe {
+        border: none;
+        align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="w3-container w3-grey">
+      <h1>{{job_name}}</h1>
+      <article class="w3-container w3-margin w3-card-8 w3-white">
+        <h1>Alpha Biodiversity</h1>
+        <h2>Biodiversity within a sample</h2>
+        <h3>Rarefaction</h3>
+        <iframe src="iframes/{{job_name}}.groups.rarefaction.mpld3.html" width="90%;" height="700px;"></iframe>
+        <p>
+          Rarefaction curves for the observed OTUs at a genetic distance of {{label}}.
+        </p>
+        <div class="w3-row">
+          <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
+            <h4>Citations:</h4>
+            <p>
+              Very Important et. al
+            </p>
+            <p>
+              Even More Important et. al
+            </p>
+          </div>
+        </div>
+        <h3>OTU classification</h3>
+        <iframe src="iframes/{{job_name}}.krona.html" width="90%;" height="700px;"></iframe>
+        <p>
+          Taxonomical representation of the observed OTUs.
+        </p>
+        <h3>Summary - full set</h3>
+        <div class="w3-row">
+          <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
+            <h4>Citations:</h4>
+            <p>
+              Very Important et. al
+            </p>
+            <p>
+              Even More Important et. al
+            </p>
+          </div>
+        </div>
+      </article>
+      <article class="w3-container w3-margin w3-card-8 w3-white">
+        <h1>Beta Biodiversity</h1>
+        <h2>Biodiversity among the samples</h2>
+        <h3> Dendrograms and Heatmaps</h3>
+        <div class="w3-row-padding">
+          <div class="w3-col l4 m12 s12">
+            <img src="images/{{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre.svg" alt="Dendrogram Yue and Clayton" width="100%;" height="100%;"/>
+            <p>
+              Dendrogram of the similarity between the communities based on Yue and Clayton measurement.
+              Relative scale.
+            </p>
+          </div>
+          <div class="w3-col l4 m12 s12">
+            <img src="images/{{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist.svg" alt="Heatmap Jaccard" width="100%;" height="100%;"/>
+            <p>
+              Community distance heatmap according to Jaccard measurement.
+            </p>
+          </div>
+          <div class="w3-col l4 m12 s12">
+            <img src="images/{{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist.svg" alt="Heatmap Yue and Clayton" width="100%;" height="100%;"/>
+            <p>
+              Community distance heatmap according to Yue & Clayton’s measurement.
+            </p>
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
+            <h4>Citations:</h4>
+            <p>
+              Very Important et. al
+            </p>
+            <p>
+              Even More Important et. al
+            </p>
+          </div>
+        </div>
+        <h3>NMDS</h3>
+        <div class="w3-row">
+          <div class="w3-col l5 m12 s12">
+            <img src="images/{{job_name}}.{{label}}.subsample.jclass.{label}.square.nmds.axes.svg" alt="NMDS Jaccard" width="100%;"/>
+            <p>
+              Non-metric multidimensional scaling (NMDS) analysis upon Jaccard measure of dissimilarity between all the samples.
+              Proximity of the points on the plot reflects similarities of bacterial communities structure.
+            </p>
+          </div>
+          <div class="w3-col l2">
+            <br/>
+          </div>
+          <div class="w3-col l5 m12 s12">
+            <img src="images/{{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes.svg" alt="NMDS Yue and Clayton" width="100%"/>
+            <p>
+              Non-metric multidimensional scaling (NMDS) analysis upon Yue & Clayton measure of dissimilarity between all the samples.
+              Proximity of the points on the plot reflects similarities of bacterial communities structure.
+            </p>
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
+            <h4>Citations:</h4>
+            <p>
+              Very Important et. al
+            </p>
+            <p>
+              Even More Important et. al
+            </p>
+          </div>
+        </div>
+      </article>
+    </section>
+<!--JavaScript Start-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+     $(document).ready(function() {
+       $('.dataframe').DataTable( {
+           scrollX: true,
+           lengthMenu: [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
+           initComplete: function () {
+             this.api().columns().every( function () {
+               var column = this;
+               var select = $('<select><option value=""></option></select>')
+                 .appendTo( $(column.header()))
+                 .on( 'change', function () {
+                     var val = $.fn.dataTable.util.escapeRegex(
+                         $(this).val()
+                     );
+
+                     column
+                         .search( val ? '^'+val+'$' : '', true, false )
+                         .draw();
+                 });
+                 column.cells('', column[0]).render('display').sort().unique().each( function ( d, j ) {
+                   if(column.search() === '^'+d+'$'){
+                       select.append( '<option value="'+d+'" selected="selected">'+d+'</option>' )
+                   }
+                   else {
+                       select.append( '<option value="'+d+'">'+d+'</option>' )
+                   }
+                 });
+             });
+           }
+       });
+     });
+   </script>
+<!--JavaScript End-->
+  </body>
+</html>
