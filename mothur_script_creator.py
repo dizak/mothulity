@@ -186,7 +186,7 @@ def draw_rarefaction(file_name):
         mpld3.plugins.connect(plt.gcf(), tooltip)
     plt.grid(True)
     plt.title("Rarefaction curve")
-    plt.ylabel("OTU count at 0.03 cutoff")
+    plt.ylabel("OTU count")
     plt.xlabel("hundreds of sequences")
     with open(output_file, "w") as fout:
         fout.write(mpld3.fig_to_html(fig))
