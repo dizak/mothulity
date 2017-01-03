@@ -623,22 +623,24 @@ cd ../
             print "Unpacking done!"
         except:
             print "Failed to extract file... skipping"
+        quit()
     else:
         pass
     if args.unite_ITS_s_02 != None:
-        download_path = "{0}/Unite_ITS_s_02.zip".format(args.Unite_ITS_s_02)
-        print "Downloading to {0}/Unite_ITS_s_02.zip".format(args.Unite_ITS_s_02)
+        download_path = "{0}/Unite_ITS_s_02.zip".format(args.unite_ITS_s_02)
+        print "Downloading to {0}/Unite_ITS_s_02.zip".format(args.unite_ITS_s_02)
         get_db("https://www.mothur.org/w/images/2/27/Unite_ITS_s_02.zip",
                download_path)
         print "Downloading done!"
         print "Unpacking..."
         try:
             os.system("unzip {0} -d {1}".format(download_path,
-                                                args.Unite_ITS_s_02))
+                                                args.unite_ITS_s_02))
             os.system("rm {0}".format(download_path))
             print "Failed to extract file... skipping"
         except:
             print "Unpacking done!"
+        quit()
     else:
         pass
     if args.silva_102 != None:
@@ -681,6 +683,7 @@ cd ../
             print "Unpacking done!"
         except:
             print "Failed to extract file... skipping"
+        quit()
     else:
         pass
     if args.silva_119 != None:
@@ -698,6 +701,7 @@ cd ../
             print "Unpacking done!"
         except:
             print "Failed to extract file... skipping"
+        quit()
     else:
         pass
     if args.silva_123 != None:
@@ -715,6 +719,7 @@ cd ../
             print "Unpacking done!"
         except:
             print "Failed to extract file... skipping"
+        quit()
     else:
         pass
     if args.render_html == True:
