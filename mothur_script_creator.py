@@ -617,7 +617,8 @@ cd ../
         print "Downloading done!"
         print "Unpacking..."
         try:
-            os.system("unzip {0}".format(download_path))
+            os.system("unzip {0} -d {1}".format(download_path,
+                                                args.unite_ITS_02))
             os.system("rm {0}".format(download_path))
             print "Unpacking done!"
         except:
