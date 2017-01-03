@@ -633,7 +633,8 @@ cd ../
         print "Downloading done!"
         print "Unpacking..."
         try:
-            os.system("unzip {0}".format(download_path))
+            os.system("unzip {0} -d {1}".format(download_path,
+                                                args.Unite_ITS_s_02))
             os.system("rm {0}".format(download_path))
             print "Failed to extract file... skipping"
         except:
@@ -648,7 +649,8 @@ cd ../
         print "Downloading done!"
         print "Unpacking..."
         try:
-            os.system("unzip {0}".format(download_path))
+            os.system("unzip {0} -d {1}".format(download_path,
+                                                args.silva_102))
             os.system("rm {0}".format(download_path))
             print "Unpacking done!"
         except:
@@ -660,7 +662,8 @@ cd ../
         print "Downloading done!"
         print "Unpacking..."
         try:
-            os.system("unzip {0}".format(download_path))
+            os.system("unzip {0} -d {1}".format(download_path,
+                                                args.silva_102))
             os.system("rm {0}".format(download_path))
             print "Unpacking done!"
         except:
@@ -672,7 +675,8 @@ cd ../
         print "Downloading done!"
         print "Unpacking..."
         try:
-            os.system("unzip {0}".format(download_path))
+            os.system("unzip {0} -d {1}".format(download_path,
+                                                args.silva_102))
             os.system("rm {0}".format(download_path))
             print "Unpacking done!"
         except:
