@@ -116,6 +116,58 @@ def get_db(url,
         pass
 
 
+def summary2html(file_name):
+    css_str = """<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">"""
+    js_str = """<!--JavaScript Start-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+ $(document).ready(function() {
+   $('.dataframe').DataTable( {
+       scrollX: true,
+       lengthMenu: [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
+       initComplete: function () {
+         this.api().columns().every( function () {
+           var column = this;
+           var select = $('<select><option value=""></option></select>')
+             .appendTo( $(column.header()))
+             .on( 'change', function () {
+                 var val = $.fn.dataTable.util.escapeRegex(
+                     $(this).val()
+                 );
+
+                 column
+                     .search( val ? '^'+val+'$' : '', true, false )
+                     .draw();
+             });
+             column.cells('', column[0]).render('display').sort().unique().each( function ( d, j ) {
+               if(column.search() === '^'+d+'$'){
+                   select.append( '<option value="'+d+'" selected="selected">'+d+'</option>' )
+               }
+               else {
+                   select.append( '<option value="'+d+'">'+d+'</option>' )
+               }
+             });
+         });
+       }
+   });
+ });
+</script>
+<!--JavaScript End-->
+"""
+    output_file = "{}.html".format(file_name)
+    df = read_csv(file_name, sep = "\t")
+    html_str = df.to_html(classes=["compact",
+                                   "hover",
+                                   "order-column"],
+                          index=False)
+    html_str = "{0}{1}{2}".format(css_str,
+                                  html_str,
+                                  js_str)
+    with open(output_file, "w") as fout:
+        fout.write(html_str)
+
+
 def draw_rarefaction(file_name):
     output_file = "{}.mpld3.html".format(file_name)
     df = read_csv(file_name,
@@ -252,6 +304,7 @@ mothur_krona_XML.py {{job_name}}.tax.summary > {{job_name}}.krona.xml
 ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
 {{msc_path}} --rarefaction {{job_name}}.groups.rarefaction
+{{msc_path}} --summary-table {{job_name}}.groups.summary
 
 #Go to beta directory and create dist files for Jaccard and YC measures
 
@@ -543,6 +596,11 @@ cd ../
                       dest = "axes",
                       metavar = "",
                       help = "path/to/axes-file. Use to draw scatter plots.")
+    draw.add_argument("--summary-table",
+                      action = "store",
+                      dest = "summary_table",
+                      help = "/path/to/summary-table. Use to convert summary\
+                              table into fancy DataTable.")
     draw.add_argument("--render-html",
                       action = "store_true",
                       dest = "render_html",
@@ -687,7 +745,7 @@ cd ../
         save_template(html_output_name,
                       rendered_template)
         quit()
-    if args.rarefaction or args.phylip or args.tree or args.axes != None:
+    if args.rarefaction or args.phylip or args.tree or args.axes or args.summary_table != None:
         if args.rarefaction != None:
             draw_rarefaction(args.rarefaction)
         else:
@@ -702,6 +760,10 @@ cd ../
             pass
         if args.axes != None:
             draw_scatter(args.axes)
+        else:
+            pass
+        if args.summary_table != None:
+            summary2html(args.summary_table)
         else:
             pass
         quit()
