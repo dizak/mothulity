@@ -187,7 +187,7 @@ def draw_rarefaction(file_name):
     plt.grid(True)
     plt.title("Rarefaction curve")
     plt.ylabel("OTU count")
-    plt.xlabel("hundreds of sequences")
+    plt.xlabel("number of sequences")
     with open(output_file, "w") as fout:
         fout.write(mpld3.fig_to_html(fig))
 
