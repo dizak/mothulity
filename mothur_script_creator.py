@@ -139,6 +139,7 @@ def draw_rarefaction(file_name):
     with open(output_file, "w") as fout:
         fout.write(mpld3.fig_to_html(fig))
 
+
 def draw_heatmap(file_name):
     df = read_csv(file_name,
                   sep="\t",
