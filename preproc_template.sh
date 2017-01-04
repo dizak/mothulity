@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#SBATCH --job-name="{{job_name}}"
+#SBATCH --partition={{partition}}
+#SBATCH --nodes={{nodes}}
+#SBATCH --ntasks-per-node={{ntasks_per_node}}
+#SBATCH --mem-per-cpu={{mem_per_cpu}}
+{%if node_list != None%}\
+#SBATCH --nodelist={{node_list}}
+{%endif%}\
+{%if analysis_only == True%}\
+{%else%}\
+
+###Sequence preprocessing###
+
+mothur '#set.current(processors={{processors}}); \
+make.contigs(file={{job_name}}.files); \
+summary.seqs(fasta=current); \
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); \
+summary.seqs(fasta=current); \
+{%if classify_ITS == True%}\
+chop.seqs(fasta=current, group=current, numbases={{chop_length}}); \
+{%endif%}\
+unique.seqs(fasta=current); \
+count.seqs(name=current, group=current); \
+{%if classify_ITS == True%}\
+{%else%}
+align.seqs(fasta=current, reference={{align_database}}); \
+summary.seqs(fasta=current, count=current); \
+screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); \
+summary.seqs(fasta=current, count=current); \
+filter.seqs(fasta=current, vertical=T, trump=.); \
+unique.seqs(fasta=current, count=current); \
+{%endif%}\
+summary.seqs(fasta=current, count=current); \
+pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); \
+chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); \
+remove.seqs(fasta=current, accnos=current); \
+summary.seqs(fasta=current, count=current); \
+classify.seqs(fasta=current, count=current, reference={{align_database}}, \
+taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
+{%if classify_ITS == True%}\
+remove.lineage(fasta=current, count=current, taxonomy=current, \
+taxon=Chloroplast-Mitochondria-unknown-Unknown); \
+pairwise.seqs(fasta=current, cutoff=0.15, output=lt); \
+cluster(phylip=current, cutoff=0.15); \
+{%else%}\
+remove.lineage(fasta=current, count=current, taxonomy=current, \
+taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
+cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
+{%endif%}\
+make.shared(list=current, count=current, label={{label}}); \
+classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
+count.groups(shared=current)'\
+{%endif%}\
+
+
+###Call msc for the analysis part###
+
+{%if classify_ITS == True%}
+{{msc_path}} -o {{output}} -n {{job_name}} --analysis-only --read-label --classify-ITS
+{%else%}
+{{msc_path}} -o {{output}} -n {{job_name}} --analysis-only --read-label
+{%endif%}
