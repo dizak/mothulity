@@ -8,8 +8,7 @@
 {%if node_list != None%}\
 #SBATCH --nodelist={{node_list}}
 {%endif%}\
-{%if analysis_only == True%}\
-{%else%}\
+
 
 ###Sequence preprocessing###
 
@@ -52,13 +51,12 @@ cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classi
 make.shared(list=current, count=current, label={{label}}); \
 classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
 count.groups(shared=current)'\
-{%endif%}\
 
 
 ###Call msc for the analysis part###
 
 {%if classify_ITS == True%}
-{{msc_path}} -o {{output}} -n {{job_name}} --analysis-only --read-label --classify-ITS
+{{msc_path}} -o {{output}} -n {{job_name}} --analysis-only --classify-ITS
 {%else%}
-{{msc_path}} -o {{output}} -n {{job_name}} --analysis-only --read-label
+{{msc_path}} -o {{output}} -n {{job_name}} --analysis-only
 {%endif%}

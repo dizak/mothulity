@@ -236,116 +236,6 @@ def draw_scatter(file_name):
 
 
 def main():
-    templ_str = """#!/bin/bash
-
-#SBATCH --job-name="{{job_name}}"
-#SBATCH --partition={{partition}}
-#SBATCH --nodes={{nodes}}
-#SBATCH --ntasks-per-node={{ntasks_per_node}}
-#SBATCH --mem-per-cpu={{mem_per_cpu}}
-{%if node_list != None%}\
-#SBATCH --nodelist={{node_list}}
-{%endif%}\
-{%if analysis_only == True%}\
-{%else%}\
-
-###Sequence preprocessing###
-
-mothur '#set.current(processors={{processors}}); \
-make.contigs(file={{job_name}}.files); \
-summary.seqs(fasta=current); \
-screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}}); \
-summary.seqs(fasta=current); \
-{%if classify_ITS == True%}\
-chop.seqs(fasta=current, group=current, numbases={{chop_length}}); \
-{%endif%}\
-unique.seqs(fasta=current); \
-count.seqs(name=current, group=current); \
-{%if classify_ITS == True%}\
-{%else%}
-align.seqs(fasta=current, reference={{align_database}}); \
-summary.seqs(fasta=current, count=current); \
-screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}}); \
-summary.seqs(fasta=current, count=current); \
-filter.seqs(fasta=current, vertical=T, trump=.); \
-unique.seqs(fasta=current, count=current); \
-{%endif%}\
-summary.seqs(fasta=current, count=current); \
-pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}}); \
-chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}}); \
-remove.seqs(fasta=current, accnos=current); \
-summary.seqs(fasta=current, count=current); \
-classify.seqs(fasta=current, count=current, reference={{align_database}}, \
-taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}}); \
-{%if classify_ITS == True%}\
-remove.lineage(fasta=current, count=current, taxonomy=current, \
-taxon=Chloroplast-Mitochondria-unknown-Unknown); \
-pairwise.seqs(fasta=current, cutoff=0.15, output=lt); \
-cluster(phylip=current, cutoff=0.15); \
-{%else%}\
-remove.lineage(fasta=current, count=current, taxonomy=current, \
-taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);\
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}}); \
-{%endif%}\
-make.shared(list=current, count=current, label={{label}}); \
-classify.otu(list=current, count=current, taxonomy=current, label={{label}}); \
-count.groups(shared=current)'\
-{%endif%}\
-
-
-###OTU approach analysis###
-
-#Create directories and shorten shared file name
-
-mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
-cp *shared ./analysis/OTU/{{job_name}}.shared
-cp *cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
-
-#Go to subdirectory and subsample shared file
-
-cd ./analysis/OTU
-mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub.sample(shared=current)'
-
-#Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory
-
-cp {{job_name}}.shared ./alpha
-cp {{job_name}}.{{label}}.subsample.shared ./beta
-
-#Go to alpha directory and create krona chart, rarefaction, summary table
-
-cd ./alpha
-mothur_krona_XML.py {{job_name}}.tax.summary > {{job_name}}.krona.xml
-ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
-mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
-{{msc_path}} --rarefaction {{job_name}}.groups.rarefaction
-{{msc_path}} --summary-table {{job_name}}.groups.summary
-
-#Go to beta directory and create dist files for Jaccard and YC measures
-
-cd ../beta
-mothur '#set.current(processors={{processors}}, shared={{job_name}}.{{label}}.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
-
-#Create phylogenetic tree for Jaccard and YC measures
-
-mothur '#tree.shared(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); tree.shared(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
-
-#Create scatter plots upon NMDS for Jaccard and YC measures
-
-mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
-
-#Draw beta directory pictures for Jaccard and YC measures
-
-{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
-{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
-
-#Go to OTU directory
-
-cd ../
-
-#Render html output
-{{msc_path}} --render-html --job-name {{job_name}} --label {{label}}
-"""
-
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
                                      version = "0.9.1")
@@ -392,14 +282,6 @@ cd ../
                         default = False,
                         help = "outputs just the part involved in statistical\
                                 analysis and drawing.")
-    parser.add_argument("--read-label",
-                        action = "store_true",
-                        dest = "read_label",
-                        default = False,
-                        help = "Reads cutoff label from file. Use for analysis\
-                                part, when shared and taxonomy files exist\
-                                already. Will override label value and spoil\
-                                everything otherwise.")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
@@ -802,19 +684,16 @@ cd ../
         quit()
     else:
         if args.template_file_name != None:
+            label = args.label
             loaded_template = load_template_file(args.template_file_name)
         else:
             templ_path = "/".join(sys.argv[0].split("/")[:-1])
             if args.analysis_only == True:
+                label = read_label_from_file("./*cons.taxonomy")
                 loaded_template = load_template_file("{0}/analysis_template.sh".format(templ_path))
             else:
+                label = args.label
                 loaded_template = load_template_file("{0}/preproc_template.sh".format(templ_path))
-        if args.read_label == True:
-            print "WARNING! Read-label option is active. It will override\
-                   manually set label!"
-            label = read_label_from_file("./*cons.taxonomy")
-        else:
-            label = args.label
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
                                             mock = args.mock,
