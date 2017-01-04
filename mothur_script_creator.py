@@ -797,7 +797,12 @@ cd ../
             loaded_template = load_template_file(args.template_file_name)
         else:
             loaded_template = load_template_str(templ_str)
-
+        if args.read-label == True:
+            print "WARNING! Read-label option is active. It will override\
+                   manually set label!"
+            label = read_label_from_file("./*cons.taxonomy")
+        else:
+            label = args.label
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
                                             mock = args.mock,
@@ -822,7 +827,7 @@ cd ../
                                             align_database = args.align_database,
                                             taxonomy_database = args.taxonomy_database,
                                             cluster_cutoff = args.cluster_cutoff,
-                                            label = args.label)
+                                            label = label)
         save_template(args.output_file_name,
                       rendered_template)
         if args.run != None:
