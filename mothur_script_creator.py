@@ -369,8 +369,9 @@ cd ../
                         metavar = "",
                         default = None,
                         help = "shell call. Use if you want to run the mothur\
-                                script immediately. eg -r sh for regular bash\
-                                or -r sbatch for slurm.")
+                                script immediately, in current directory.\
+                                eg -r sh for regular bash or -r sbatch for\
+                                slurm.")
     parser.add_argument("--analysis-only",
                         action = "store_true",
                         dest = "analysis_only",
