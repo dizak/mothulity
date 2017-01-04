@@ -6,6 +6,7 @@ import requests as rq
 from tqdm import tqdm
 import os
 import sys
+import glob
 from Bio import Phylo as ph
 import matplotlib
 matplotlib.use('Agg')
@@ -114,6 +115,19 @@ def get_db(url,
                 fout.write(i)
     else:
         pass
+
+
+def read_label_from_file(file_glob):
+    for i in glob.glob(file_glob):
+        for ii in i.split("."):
+            try:
+                temp_label = float("0.{0}".format(ii))
+                if len(str(temp_label)) > 3:
+                    return temp_label
+                else:
+                    pass
+            except:
+                pass
 
 
 def summary2html(file_name):
@@ -783,6 +797,7 @@ cd ../
             loaded_template = load_template_file(args.template_file_name)
         else:
             loaded_template = load_template_str(templ_str)
+
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
                                             mock = args.mock,
