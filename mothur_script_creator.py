@@ -392,6 +392,14 @@ cd ../
                         default = False,
                         help = "outputs just the part involved in statistical\
                                 analysis and drawing.")
+    parser.add_argument("--read-label",
+                        action = "store_true",
+                        dest = "read_label",
+                        default = False,
+                        help = "Reads cutoff label from file. Use for analysis\
+                                part, when shared and taxonomy files exist\
+                                already. Will override label value and spoil\
+                                everything otherwise.")
     parser.add_argument("-t",
                         "--template",
                         action = "store",
@@ -797,7 +805,7 @@ cd ../
             loaded_template = load_template_file(args.template_file_name)
         else:
             loaded_template = load_template_str(templ_str)
-        if args.read-label == True:
+        if args.read_label == True:
             print "WARNING! Read-label option is active. It will override\
                    manually set label!"
             label = read_label_from_file("./*cons.taxonomy")
