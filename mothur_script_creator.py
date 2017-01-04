@@ -804,7 +804,11 @@ cd ../
         if args.template_file_name != None:
             loaded_template = load_template_file(args.template_file_name)
         else:
-            loaded_template = load_template_str(templ_str)
+            templ_path = "/".join(sys.argv[0].split("/")[:-1])
+            if args.analysis_only == True:
+                loaded_template = load_template_file("{0}/analysis_template.sh".format(templ_path))
+            else:
+                loaded_template = load_template_file("{0}/preproc_template.sh".format(templ_path))
         if args.read_label == True:
             print "WARNING! Read-label option is active. It will override\
                    manually set label!"
