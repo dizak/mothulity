@@ -52,7 +52,7 @@ def render_template(template_loaded,
                     min_overlap = 25,
                     screen_criteria = 95,
                     chop_length = 250,
-                    precluster_diffs = 4,
+                    precluster_diffs = 2,
                     chimera_dereplicate = "T",
                     classify_seqs_cutoff = 80,
                     classify_ITS = False,
@@ -420,7 +420,7 @@ def main():
                         action = "store",
                         dest = "precluster_diffs",
                         metavar = "",
-                        default = 4,
+                        default = 2,
                         help = "number of differences between reads treated as\
                                 insignificant. screen.seqs param. Default <4>.")
     mothur.add_argument("--chimera-dereplicate",
