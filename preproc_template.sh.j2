@@ -8,14 +8,20 @@
 {% if node_list != None %}
 #SBATCH --nodelist={{node_list}}
 {% endif %}
-
-
 ###Sequence preprocessing###
 
 mothur '#set.current(processors={{processors}});
 make.contigs(file={{job_name}}.files);
 summary.seqs(fasta=current);
+{% if  min_length != None and max_length != None %}
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}});
+{% elif min_length != None and max_length == None %}
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, minoverlap={{min_overlap}}, optimize=end, criteria={{screen_criteria}});
+{% elif min_length == None and max_length != None %}
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, maxlength={{max_length}}, minoverlap={{min_overlap}}, optimize=start, criteria={{screen_criteria}});
+{% else %}
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minoverlap={{min_overlap}}, optimize=start-end, criteria={{screen_criteria}});
+{% endif %}
 summary.seqs(fasta=current);
 {% if classify_ITS == True %}
 chop.seqs(fasta=current, group=current, numbases={{chop_length}});
@@ -51,7 +57,6 @@ cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classi
 make.shared(list=current, count=current, label={{label}});
 classify.otu(list=current, count=current, taxonomy=current, label={{label}});
 count.groups(shared=current)'
-
 
 ###Call msc for the analysis part###
 
