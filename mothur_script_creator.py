@@ -690,10 +690,10 @@ def main():
             templ_path = "/".join(sys.argv[0].split("/")[:-1])
             if args.analysis_only == True:
                 label = read_label_from_file("./*cons.taxonomy")
-                loaded_template = load_template_file("{0}/analysis_template.sh".format(templ_path))
+                loaded_template = load_template_file("{0}/analysis_template.sh.j2".format(templ_path))
             else:
                 label = args.label
-                loaded_template = load_template_file("{0}/preproc_template.sh".format(templ_path))
+                loaded_template = load_template_file("{0}/preproc_template.sh.j2".format(templ_path))
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
                                             mock = args.mock,
