@@ -47,8 +47,8 @@ def render_template(template_loaded,
                     processors = 12,
                     max_ambig = 0,
                     max_homop = 8,
-                    min_length = 400,
-                    max_length = 500,
+                    min_length = None,
+                    max_length = None,
                     min_overlap = 25,
                     screen_criteria = 95,
                     chop_length = 250,
@@ -383,14 +383,14 @@ def main():
                         action = "store",
                         dest = "min_length",
                         metavar = "",
-                        default = 400,
+                        default = None,
                         help = "minimum length of read allowed.\
                                 screen.seqs param. Default <400>.")
     mothur.add_argument("--max-length",
                         action = "store",
                         dest = "max_length",
                         metavar = "",
-                        default = 500,
+                        default = None,
                         help = "minimum length of read allowed.\
                                 screen.seqs param. Default <500>.")
     mothur.add_argument("--min-overlap",
