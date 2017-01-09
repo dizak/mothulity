@@ -130,6 +130,16 @@ def read_label_from_file(file_glob):
                 pass
 
 
+def read_count_from_log(log_file,
+                        keyword = "contains",
+                        strip_char = ".\n"):
+    with open(log_file) as fin:
+        log = fin.readlines
+        log_list = [i.strip(strip_char) for i in log if keyword in i]
+        log_split_list = [i.split(" {0} ".format(keyword)) for i in log_list]
+        log_dict = {i[0]: i[1] for i in log_split_list}
+
+
 def summary2html(file_name):
     css_str = """<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">"""
     js_str = """<!--JavaScript Start-->
