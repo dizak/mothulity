@@ -132,12 +132,15 @@ def read_label_from_file(file_glob):
 
 def read_count_from_log(log_file,
                         keyword = "contains",
-                        strip_char = ".\n"):
+                        strip_char = ".\n",
+                        threshold = 100):
     with open(log_file) as fin:
-        log = fin.readlines
-        log_list = [i.strip(strip_char) for i in log if keyword in i]
-        log_split_list = [i.split(" {0} ".format(keyword)) for i in log_list]
-        log_dict = {i[0]: i[1] for i in log_split_list}
+        log = fin.readlines()
+    log_list = [i.strip(strip_char) for i in log if keyword in i]
+    log_split_list = [i.split(" {0} ".format(keyword)) for i in log_list]
+    log_dict = {i[0]: i[1] for i in log_split_list}
+    groups2remove = [k for k, v in log_dict.items() if int(v) < 100]
+    return groups2remove
 
 
 def summary2html(file_name):
