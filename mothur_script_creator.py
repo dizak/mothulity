@@ -381,6 +381,14 @@ def main():
                           metavar = "",
                           default = 12,
                           help = "number of logical processors. Default: <12>")
+    headnode.add_argument("--resources",
+                          action = "store",
+                          dest = "resources",
+                          metavar = "",
+                          default = None,
+                          help = "shortcut for headnode's resources\
+                                  reservation. Overrides all the other headnode\
+                                  arguments. Use if you are lazy.")
     mothur.add_argument("--max-ambig",
                         action = "store",
                         dest = "max_ambig",
@@ -711,18 +719,18 @@ def main():
             loaded_template = load_template_file(args.template_file_name)
         else:
             templ_path = "/".join(sys.argv[0].split("/")[:-1])
-            if args.analysis_only == True:
-                label = read_label_from_file("./*cons.taxonomy")
-                if args.remove_below != None:
-                    junk_grps = read_count_from_log("./*logfile",
-                                                    threshold = args.remove_below)
-                else:
-                    junk_grps = None
-                loaded_template = load_template_file("{0}/analysis_template.sh.j2".format(templ_path))
+        if args.analysis_only == True:
+            label = read_label_from_file("./*cons.taxonomy")
+            if args.remove_below != None:
+                junk_grps = read_count_from_log("./*logfile",
+                                                threshold = args.remove_below)
             else:
-                label = args.label
                 junk_grps = None
-                loaded_template = load_template_file("{0}/preproc_template.sh.j2".format(templ_path))
+            loaded_template = load_template_file("{0}/analysis_template.sh.j2".format(templ_path))
+        else:
+            label = args.label
+            junk_grps = None
+            loaded_template = load_template_file("{0}/preproc_template.sh.j2".format(templ_path))
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
                                             mock = args.mock,
