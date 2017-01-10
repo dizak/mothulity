@@ -717,10 +717,11 @@ def main():
                     junk_grps = read_count_from_log("./*logfile",
                                                     threshold = args.remove_below)
                 else:
-                    pass
+                    junk_grps = None
                 loaded_template = load_template_file("{0}/analysis_template.sh.j2".format(templ_path))
             else:
                 label = args.label
+                junk_grps = None
                 loaded_template = load_template_file("{0}/preproc_template.sh.j2".format(templ_path))
         rendered_template = render_template(loaded_template,
                                             job_name = args.job_name,
