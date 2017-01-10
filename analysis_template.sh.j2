@@ -6,15 +6,15 @@ mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
 cp *shared ./analysis/OTU/{{job_name}}.shared
 cp *cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
 
-#Go to subdirectory and subsample shared file
+#Go to subdirectory, remove junk groups and subsample shared file
 
 cd ./analysis/OTU
-mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub.sample(shared=current)'
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); remove.groups(shared=current, groups={{junk_grps}}); sub.sample(shared=current)'
 
 #Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory
 
 cp {{job_name}}.shared ./alpha
-cp {{job_name}}.{{label}}.subsample.shared ./beta
+cp {{job_name}}.{{label}}.pick.{{label}}.subsample.shared ./beta
 
 #Go to alpha directory and create krona chart, rarefaction, summary table
 
@@ -28,20 +28,20 @@ mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rar
 #Go to beta directory and create dist files for Jaccard and YC measures
 
 cd ../beta
-mothur '#set.current(processors={{processors}}, shared={{job_name}}.{{label}}.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.{{label}}.pick.{{label}}.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
 
 #Create phylogenetic tree for Jaccard and YC measures
 
-mothur '#tree.shared(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); tree.shared(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
+mothur '#tree.shared(phylip={{job_name}}.{{label}}.pick.{{label}}.subsample.jclass.{{label}}.square.dist); tree.shared(phylip={{job_name}}.{{label}}.pick.{{label}}.subsample.thetayc.{{label}}.square.dist)'
 
 #Create scatter plots upon NMDS for Jaccard and YC measures
 
-mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
+mothur '#nmds(phylip={{job_name}}.{{label}}.pick.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{job_name}}.{{label}}.pick.{{label}}.subsample.thetayc.{{label}}.square.dist)'
 
 #Draw beta directory pictures for Jaccard and YC measures
 
-{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
-{{msc_path}} --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
+{{msc_path}} --phylip {{job_name}}.{{label}}.pick.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.pick.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.pick.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
+{{msc_path}} --phylip {{job_name}}.{{label}}.pick.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.pick.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.pick.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
 
 #Go to OTU directory
 

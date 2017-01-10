@@ -59,7 +59,8 @@ def render_template(template_loaded,
                     align_database = None,
                     taxonomy_database = None,
                     cluster_cutoff = 0.15,
-                    label = 0.03):
+                    label = 0.03,
+                    junk_grps = None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     msc_path = sys.argv[0]
     template_vars = {"msc_path": msc_path,
@@ -86,7 +87,8 @@ def render_template(template_loaded,
                      "align_database": align_database,
                      "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff,
-                     "label": label}
+                     "label": label,
+                     "junk_grps": junk_grps}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -134,12 +136,13 @@ def read_count_from_log(log_file,
                         keyword = "contains",
                         strip_char = ".\n",
                         threshold = 100):
+    log_file = str(glob.glob(log_file)[0])
     with open(log_file) as fin:
         log = fin.readlines()
     log_list = [i.strip(strip_char) for i in log if keyword in i]
     log_split_list = [i.split(" {0} ".format(keyword)) for i in log_list]
     log_dict = {i[0]: i[1] for i in log_split_list}
-    groups2remove = [k for k, v in log_dict.items() if int(v) < 100]
+    groups2remove = "".join([k for k, v in log_dict.items() if int(v) < 100])
     return groups2remove
 
 
@@ -493,6 +496,13 @@ def main():
                         default = 0.03,
                         help = "label argument for number of commands for OTU\
                                 analysis approach. Default 0.03.")
+    mothur.add_argument("--remove-below",
+                        action = "store",
+                        dest = "remove_below",
+                        metavar = "",
+                        default = None,
+                        help = "remove groups below this threshold. Omit this\
+                                argument if you want to keep them all.")
     draw.add_argument("--rarefaction",
                       action = "store",
                       dest = "rarefaction",
@@ -703,6 +713,11 @@ def main():
             templ_path = "/".join(sys.argv[0].split("/")[:-1])
             if args.analysis_only == True:
                 label = read_label_from_file("./*cons.taxonomy")
+                if args.remove_below != None:
+                    junk_grps = read_count_from_log("./*logfile",
+                                                    threshold = args.remove_below)
+                else:
+                    pass
                 loaded_template = load_template_file("{0}/analysis_template.sh.j2".format(templ_path))
             else:
                 label = args.label
@@ -731,7 +746,8 @@ def main():
                                             align_database = args.align_database,
                                             taxonomy_database = args.taxonomy_database,
                                             cluster_cutoff = args.cluster_cutoff,
-                                            label = label)
+                                            label = label,
+                                            junk_grps = junk_grps)
         save_template(args.output_file_name,
                       rendered_template)
         if args.run != None:
