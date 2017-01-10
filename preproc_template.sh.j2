@@ -9,8 +9,11 @@
 #SBATCH --nodelist={{node_list}}
 {% endif %}
 ###Sequence preprocessing###
-
+{% if nodes > 1 %}
+mpiexec mothur '#set.current(processors={{processors}});
+{% else %}
 mothur '#set.current(processors={{processors}});
+{% endif %}
 make.contigs(file={{job_name}}.files);
 summary.seqs(fasta=current);
 {% if  min_length != None and max_length != None %}
