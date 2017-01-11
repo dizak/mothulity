@@ -765,6 +765,7 @@ def main():
             processors = 480
         elif resources == "PHI":
             partition = "accel"
+            nodes = 1
             ntasks_per_node = 16
             mem_per_cpu = 128
             processors = 32
