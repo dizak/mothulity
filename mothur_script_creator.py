@@ -771,10 +771,10 @@ def main():
             processors = 32
         elif resources == "JUMBO":
             partition = "accel"
-            nodes = 2
+            nodes = 4
             ntasks_per_node = 16
             mem_per_cpu = 128
-            processors = 64
+            processors = 128
         else:
             pass
     else:
