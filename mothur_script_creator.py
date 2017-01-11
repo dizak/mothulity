@@ -740,30 +740,47 @@ def main():
         node_list = None
         resources = args.resources.upper()
         if resources == "S":
-            partition = args.partition
-            nodes = args.nodes * 2
-            processors = args.processors * 2
+            partition = "long"
+            nodes = 2
+            ntasks_per_node = 6
+            mem_per_cpu = 24
+            processors = 24
         elif resources == "M":
-            partition = args.partition
-            nodes = args.nodes * 10
-            processors = args.processors * 10
+            partition = "long"
+            nodes = 10
+            ntasks_per_node = 6
+            mem_per_cpu = 24
+            processors = 120
         elif resources == "L":
-            partition = args.partition
-            nodes = args.nodes * 20
-            processors = args.processors * 20
+            partition = "long"
+            nodes = 20
+            ntasks_per_node = 6
+            mem_per_cpu = 24
+            processors = 240
         elif resources == "XL":
-            partition = args.partition
-            nodes = args.nodes * 40
-            processors = args.processors * 40
+            partition = "long"
+            nodes = 40
+            ntasks_per_node = 6
+            mem_per_cpu = 24
+            processors = 480
+        elif resources == "PHI":
+            partition = "accel"
+            ntasks_per_node = 16
+            mem_per_cpu = 128
+            processors = 32
         elif resources == "JUMBO":
             partition = "accel"
-            nodes = args.nodes * 2
+            nodes = 2
+            ntasks_per_node = 16
+            mem_per_cpu = 128
             processors = 64
         else:
             pass
     else:
         nodes = args.nodes
         node_list = args.node_list
+        ntasks_per_node = args.ntasks_per_node
+        mem_per_cpu = args.mem_per_cpu
         processors = args.processors
         partition = args.partition
     rendered_template = render_template(loaded_template,
@@ -772,8 +789,8 @@ def main():
                                         analysis_only = args.analysis_only,
                                         partition = partition,
                                         nodes = nodes,
-                                        ntasks_per_node = args.ntasks_per_node,
-                                        mem_per_cpu = args.mem_per_cpu,
+                                        ntasks_per_node = ntasks_per_node,
+                                        mem_per_cpu = mem_per_cpu,
                                         node_list = node_list,
                                         processors = processors,
                                         max_ambig = args.max_ambig,
