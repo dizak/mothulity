@@ -387,8 +387,11 @@ def main():
                           metavar = "",
                           default = None,
                           help = "shortcut for headnode's resources\
-                                  reservation. Overrides all the other headnode\
-                                  arguments. Use if you are lazy.")
+                                  reservation. Accepted values are: <S>mall,\
+                                  <M>edium, <L>arge, <XL>arge for regular nodes\
+                                  with mpi. <JUMBO> for two phi nodes.\
+                                  Overrides all the other headnode arguments.\
+                                  Use if you are lazy.")
     mothur.add_argument("--max-ambig",
                         action = "store",
                         dest = "max_ambig",
@@ -691,6 +694,8 @@ def main():
         save_template(html_output_name,
                       rendered_template)
         quit()
+    else:
+        pass
     if args.rarefaction or args.phylip or args.tree or args.axes or args.summary_table != None:
         if args.rarefaction != None:
             draw_rarefaction(args.rarefaction)
@@ -714,54 +719,92 @@ def main():
             pass
         quit()
     else:
-        if args.template_file_name != None:
-            label = args.label
-            loaded_template = load_template_file(args.template_file_name)
+        pass
+    if args.template_file_name != None:
+        loaded_template = load_template_file(args.template_file_name)
+    else:
+        templ_path = "/".join(sys.argv[0].split("/")[:-1])
+    if args.analysis_only == True:
+        label = read_label_from_file("./*cons.taxonomy")
+        if args.remove_below != None:
+            junk_grps = read_count_from_log("./*logfile",
+                                            threshold = args.remove_below)
         else:
-            templ_path = "/".join(sys.argv[0].split("/")[:-1])
-        if args.analysis_only == True:
-            label = read_label_from_file("./*cons.taxonomy")
-            if args.remove_below != None:
-                junk_grps = read_count_from_log("./*logfile",
-                                                threshold = args.remove_below)
-            else:
-                junk_grps = None
-            loaded_template = load_template_file("{0}/analysis_template.sh.j2".format(templ_path))
-        else:
-            label = args.label
             junk_grps = None
-            loaded_template = load_template_file("{0}/preproc_template.sh.j2".format(templ_path))
-        rendered_template = render_template(loaded_template,
-                                            job_name = args.job_name,
-                                            mock = args.mock,
-                                            analysis_only = args.analysis_only,
-                                            partition = args.partition,
-                                            nodes = args.nodes,
-                                            ntasks_per_node = args.ntasks_per_node,
-                                            mem_per_cpu = args.mem_per_cpu,
-                                            node_list = args.node_list,
-                                            processors = args.processors,
-                                            max_ambig = args.max_ambig,
-                                            max_homop = args.max_homop,
-                                            min_length = args.min_length,
-                                            max_length = args.max_length,
-                                            min_overlap = args.min_overlap,
-                                            screen_criteria = args.screen_criteria,
-                                            chop_length = args.chop_length,
-                                            precluster_diffs = args.precluster_diffs,
-                                            chimera_dereplicate = args.chimera_dereplicate,
-                                            classify_seqs_cutoff = args.classify_seqs_cutoff,
-                                            classify_ITS = args.classify_ITS,
-                                            align_database = args.align_database,
-                                            taxonomy_database = args.taxonomy_database,
-                                            cluster_cutoff = args.cluster_cutoff,
-                                            label = label,
-                                            junk_grps = junk_grps)
-        save_template(args.output_file_name,
-                      rendered_template)
-        if args.run != None:
-            os.system("{0} {1}".format(args.run, args.output_file_name))
+        loaded_template = load_template_file("{0}/analysis_template.sh.j2".format(templ_path))
+    else:
+        label = args.label
+        junk_grps = None
+        loaded_template = load_template_file("{0}/preproc_template.sh.j2".format(templ_path))
+    if args.resources != None:
+        node_list = None
+        resources = args.resources.upper()
+        if resources == "S":
+            nodes = args.nodes * 2
+            ntasks_per_node = args.ntasks_per_node * 2
+            mem_per_cpu = args.mem_per_cpu * 2
+            processors = args.processors * 2
+        elif resources == "M":
+            nodes = args.nodes * 10
+            ntasks_per_node = args.ntasks_per_node * 10
+            mem_per_cpu = args.mem_per_cpu * 10
+            processors = args.processors * 10
+        elif resources == "L":
+            nodes = args.nodes * 20
+            ntasks_per_node = args.ntasks_per_node * 20
+            mem_per_cpu = args.mem_per_cpu * 20
+            processors = args.processors * 20
+        elif resources == "XL":
+            nodes = args.nodes * 40
+            ntasks_per_node = args.ntasks_per_node * 40
+            mem_per_cpu = args.mem_per_cpu * 40
+            processors = args.processors * 40
+        elif resources == "JUMBO":
+            partition = "accel"
+            nodes = args.nodes * 2
+            ntasks_per_node = 16
+            mem_per_cpu = 128
+            processors = 64
         else:
             pass
+    else:
+        nodes = args.nodes
+        ntasks_per_node = args.ntasks_per_node
+        mem_per_cpu = args.mem_per_cpu
+        node_list = args.node_list
+        processors = args.processors
+        partition = args.partition
+    rendered_template = render_template(loaded_template,
+                                        job_name = args.job_name,
+                                        mock = args.mock,
+                                        analysis_only = args.analysis_only,
+                                        partition = partition,
+                                        nodes = nodes,
+                                        ntasks_per_node = ntasks_per_node,
+                                        mem_per_cpu = mem_per_cpu,
+                                        node_list = node_list,
+                                        processors = processors,
+                                        max_ambig = args.max_ambig,
+                                        max_homop = args.max_homop,
+                                        min_length = args.min_length,
+                                        max_length = args.max_length,
+                                        min_overlap = args.min_overlap,
+                                        screen_criteria = args.screen_criteria,
+                                        chop_length = args.chop_length,
+                                        precluster_diffs = args.precluster_diffs,
+                                        chimera_dereplicate = args.chimera_dereplicate,
+                                        classify_seqs_cutoff = args.classify_seqs_cutoff,
+                                        classify_ITS = args.classify_ITS,
+                                        align_database = args.align_database,
+                                        taxonomy_database = args.taxonomy_database,
+                                        cluster_cutoff = args.cluster_cutoff,
+                                        label = label,
+                                        junk_grps = junk_grps)
+    save_template(args.output_file_name,
+                  rendered_template)
+    if args.run != None:
+        os.system("{0} {1}".format(args.run, args.output_file_name))
+    else:
+        pass
 if __name__ == "__main__":
     main()
