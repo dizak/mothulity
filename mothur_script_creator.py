@@ -742,39 +742,27 @@ def main():
         if resources == "S":
             partition = args.partition
             nodes = args.nodes * 2
-            ntasks_per_node = args.ntasks_per_node * 2
-            mem_per_cpu = args.mem_per_cpu * 2
             processors = args.processors * 2
         elif resources == "M":
             partition = args.partition
             nodes = args.nodes * 10
-            ntasks_per_node = args.ntasks_per_node * 10
-            mem_per_cpu = args.mem_per_cpu * 10
             processors = args.processors * 10
         elif resources == "L":
             partition = args.partition
             nodes = args.nodes * 20
-            ntasks_per_node = args.ntasks_per_node * 20
-            mem_per_cpu = args.mem_per_cpu * 20
             processors = args.processors * 20
         elif resources == "XL":
             partition = args.partition
             nodes = args.nodes * 40
-            ntasks_per_node = args.ntasks_per_node * 40
-            mem_per_cpu = args.mem_per_cpu * 40
             processors = args.processors * 40
         elif resources == "JUMBO":
             partition = "accel"
             nodes = args.nodes * 2
-            ntasks_per_node = 16
-            mem_per_cpu = 128
             processors = 64
         else:
             pass
     else:
         nodes = args.nodes
-        ntasks_per_node = args.ntasks_per_node
-        mem_per_cpu = args.mem_per_cpu
         node_list = args.node_list
         processors = args.processors
         partition = args.partition
@@ -784,8 +772,8 @@ def main():
                                         analysis_only = args.analysis_only,
                                         partition = partition,
                                         nodes = nodes,
-                                        ntasks_per_node = ntasks_per_node,
-                                        mem_per_cpu = mem_per_cpu,
+                                        ntasks_per_node = args.ntasks_per_node,
+                                        mem_per_cpu = args.mem_per_cpu,
                                         node_list = node_list,
                                         processors = processors,
                                         max_ambig = args.max_ambig,
