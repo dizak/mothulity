@@ -740,21 +740,25 @@ def main():
         node_list = None
         resources = args.resources.upper()
         if resources == "S":
+            partition = args.partition
             nodes = args.nodes * 2
             ntasks_per_node = args.ntasks_per_node * 2
             mem_per_cpu = args.mem_per_cpu * 2
             processors = args.processors * 2
         elif resources == "M":
+            partition = args.partition
             nodes = args.nodes * 10
             ntasks_per_node = args.ntasks_per_node * 10
             mem_per_cpu = args.mem_per_cpu * 10
             processors = args.processors * 10
         elif resources == "L":
+            partition = args.partition
             nodes = args.nodes * 20
             ntasks_per_node = args.ntasks_per_node * 20
             mem_per_cpu = args.mem_per_cpu * 20
             processors = args.processors * 20
         elif resources == "XL":
+            partition = args.partition
             nodes = args.nodes * 40
             ntasks_per_node = args.ntasks_per_node * 40
             mem_per_cpu = args.mem_per_cpu * 40
