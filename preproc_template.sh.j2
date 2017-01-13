@@ -63,7 +63,7 @@ count.groups(shared=current)'
 
 ###Send mail###
 
-headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body '{{job_name}} sequence preprocessing part has finished. Please login and inspect the results.'
+headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body 'Please login and inspect the results of {{job_name}}.'
 
 ###Call msc for the analysis part###
 {% if classify_ITS == True %}

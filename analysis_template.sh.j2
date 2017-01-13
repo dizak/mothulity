@@ -61,4 +61,4 @@ cd ../
 {{msc_path}} --render-html --job-name {{job_name}} --label {{label}}
 
 #Send mail
-headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has finished' --body '{{job_name}} analysis part has finished. Please login and inspect the results.'
+headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please login and inspect the results of {{job_name}}.'
