@@ -67,7 +67,15 @@ headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} sequence prep
 
 ###Call msc for the analysis part###
 {% if classify_ITS == True %}
+  {% if run != None %}
+{{msc_path}} -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only --classify-ITS -r {{run}}
+  {% else %}
 {{msc_path}} -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only --classify-ITS
+  {% endif %}
 {% else %}
+  {% if run != None %}
+{{msc_path}} -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only -r {{run}}
+  {% else %}
 {{msc_path}} -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only
+  {% endif %}
 {% endif %}
