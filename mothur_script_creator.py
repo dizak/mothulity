@@ -36,6 +36,7 @@ def load_template_file(template_file):
 
 
 def render_template(template_loaded,
+                    output_file_name = "mothur.sh",
                     job_name = "mothur.job",
                     mock = False,
                     analysis_only = False,
@@ -60,10 +61,12 @@ def render_template(template_loaded,
                     taxonomy_database = None,
                     cluster_cutoff = 0.15,
                     label = 0.03,
-                    junk_grps = None):
+                    junk_grps = None,
+                    notify_email = None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     msc_path = sys.argv[0]
     template_vars = {"msc_path": msc_path,
+                     "output_file_name": output_file_name,
                      "job_name": job_name,
                      "mock": mock,
                      "analysis_only": analysis_only,
@@ -88,7 +91,8 @@ def render_template(template_loaded,
                      "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff,
                      "label": label,
-                     "junk_grps": junk_grps}
+                     "junk_grps": junk_grps,
+                     "notify_email": notify_email}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -392,6 +396,13 @@ def main():
                                   with mpi. <JUMBO> for two phi nodes.\
                                   Overrides all the other headnode arguments.\
                                   Use if you are lazy.")
+    headnode.add_argument("--notify-email",
+                          action = "store",
+                          dest = "notify_email",
+                          metavar = "",
+                          default = None,
+                          help = "email address you want to notify when job is\
+                                  done.")
     mothur.add_argument("--max-ambig",
                         action = "store",
                         dest = "max_ambig",
@@ -785,6 +796,7 @@ def main():
         processors = args.processors
         partition = args.partition
     rendered_template = render_template(loaded_template,
+                                        output_file_name = args.output_file_name,
                                         job_name = args.job_name,
                                         mock = args.mock,
                                         analysis_only = args.analysis_only,
@@ -809,7 +821,8 @@ def main():
                                         taxonomy_database = args.taxonomy_database,
                                         cluster_cutoff = args.cluster_cutoff,
                                         label = label,
-                                        junk_grps = junk_grps)
+                                        junk_grps = junk_grps,
+                                        notify_email = args.notify_email)
     save_template(args.output_file_name,
                   rendered_template)
     if args.run != None:
