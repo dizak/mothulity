@@ -539,6 +539,7 @@ def main():
                               tree.")
     draw.add_argument("--tree",
                       action = "store",
+                      dest = "tree",
                       metavar = "",
                       help = "path/to/tree-file. Use to draw dendrogram.")
     draw.add_argument("--axes",
@@ -549,6 +550,7 @@ def main():
     draw.add_argument("--summary-table",
                       action = "store",
                       dest = "summary_table",
+                      metavar = "",
                       help = "/path/to/summary-table. Use to convert summary\
                               table into fancy DataTable.")
     draw.add_argument("--render-html",
