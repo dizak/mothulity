@@ -74,7 +74,7 @@ cd ../../
 
 #Zip the results
 
-zip analysis analysis
+zip -r analysis.zip analysis/
 
 #Send mail
 headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please login and inspect the results of {{job_name}}.' --attach analysis.zip
