@@ -393,9 +393,9 @@ def main():
                           help = "shortcut for headnode's resources\
                                   reservation. Accepted values are: <S>mall,\
                                   <M>edium, <L>arge, <XL>arge for regular nodes\
-                                  with mpi. <JUMBO> for two phi nodes.\
-                                  Overrides all the other headnode arguments.\
-                                  Use if you are lazy.")
+                                  with mpi. <PHI> for single phi node, <JUMBO>\
+                                  for two phi nodes. Overrides all the other\
+                                  headnode arguments. Use if you are lazy.")
     headnode.add_argument("--notify-email",
                           action = "store",
                           dest = "notify_email",
