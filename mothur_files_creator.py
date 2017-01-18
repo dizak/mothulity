@@ -1,11 +1,13 @@
 #! /usr/bin/env python
 
+
 import os
 import argparse
 import pandas as pd
 
+
 __author__ = "Dariusz Izak IBB PAS"
-__version__ = "1.0"
+__version__ = "1.0.1"
 
 
 def names_sanitizer(unwanted_sign,
@@ -48,7 +50,7 @@ def main():
                                                     <.files> file just upon the\
                                                     input file names. Removes\
                                                     <-> from file names",
-                                     version = "1.0")
+                                     version = "1.0.1")
     parser.add_argument(action = "store",
                         dest = "files_directory",
                         metavar = "path/to/files",
