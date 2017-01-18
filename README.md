@@ -44,7 +44,7 @@ group002  group002_S1_R1.fastq  group004_S1_R2.fastq
 
 #### Unusual names, extensions, etc.
 
-If using _ sign is not the best idea in your case, use ```--split-sign```. Running ```mothur_files_creator --split-sign _L``` on this set:
+If using ```_``` sign is not the best idea in your case, use ```--split-sign```. Running ```mothur_files_creator --split-sign _L``` on this set:
 
 ```
 F3D0_S188_L001_R1_001.fastq    F3D147_S213_L001_R1_001.fastq  F3D5_S193_L001_R1_001.fastq
