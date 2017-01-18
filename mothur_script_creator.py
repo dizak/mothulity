@@ -45,7 +45,7 @@ def render_template(template_loaded,
                     ntasks_per_node = 6,
                     mem_per_cpu = 24,
                     node_list = None,
-                    processors = 12,
+                    processors = 24,
                     max_ambig = 0,
                     max_homop = 8,
                     min_length = None,
@@ -383,7 +383,7 @@ def main():
                           action = "store",
                           dest = "processors",
                           metavar = "",
-                          default = 12,
+                          default = 24,
                           help = "number of logical processors. Default: <12>")
     headnode.add_argument("--resources",
                           action = "store",
@@ -561,7 +561,7 @@ def main():
                               fancy html.")
     args = parser.parse_args()
 
-    if args.unite_ITS_02 != None:
+    if args.unite_ITS_02 is not None:
         download_path = "{0}/Unite_ITS_02.zip".format(args.unite_ITS_02)
         print "Downloading to {0}".format(download_path)
         get_db("https://www.mothur.org/w/images/4/49/Unite_ITS_02.zip",
@@ -578,7 +578,7 @@ def main():
         quit()
     else:
         pass
-    if args.unite_ITS_s_02 != None:
+    if args.unite_ITS_s_02 is not None:
         download_path = "{0}/Unite_ITS_s_02.zip".format(args.unite_ITS_s_02)
         print "Downloading to {0}/Unite_ITS_s_02.zip".format(args.unite_ITS_s_02)
         get_db("https://www.mothur.org/w/images/2/27/Unite_ITS_s_02.zip",
@@ -595,7 +595,7 @@ def main():
         quit()
     else:
         pass
-    if args.silva_102 != None:
+    if args.silva_102 is not None:
         download_path = "{0}/Silva.bacteria.zip".format(args.silva_102)
         print "Downloading to {0}/Silva.bacteria.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/9/98/Silva.bacteria.zip",
@@ -638,7 +638,7 @@ def main():
         quit()
     else:
         pass
-    if args.silva_119 != None:
+    if args.silva_119 is not None:
         download_path = "{0}/Silva.nr_v119.tgz".format(args.silva_119)
         print "Downloading to {0}/Silva.nr_v119.tgz".format(args.silva_119)
         get_db("http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz",
@@ -656,7 +656,7 @@ def main():
         quit()
     else:
         pass
-    if args.silva_123 != None:
+    if args.silva_123 is not None:
         download_path = "{0}/Silva.nr_v123.tgz".format(args.silva_123)
         print "Downloading to {0}/Silva.nr_v123.tgz".format(args.silva_123)
         get_db("https://www.mothur.org/w/images/b/be/Silva.nr_v123.tgz",
@@ -674,7 +674,7 @@ def main():
         quit()
     else:
         pass
-    if args.render_html == True:
+    if args.render_html is True:
         html_template_path = sys.argv[0].replace(sys.argv[0].split("/")[-1],
                                                  "output_template.html")
         html_output_name = "{0}.html".format(args.job_name)
@@ -708,37 +708,37 @@ def main():
         quit()
     else:
         pass
-    if args.rarefaction or args.phylip or args.tree or args.axes or args.summary_table != None:
-        if args.rarefaction != None:
+    if args.rarefaction or args.phylip or args.tree or args.axes or args.summary_table is not None:
+        if args.rarefaction is not None:
             draw_rarefaction(args.rarefaction)
         else:
             pass
-        if args.phylip != None:
+        if args.phylip is not None:
             draw_heatmap(args.phylip)
         else:
             pass
-        if args.tree != None:
+        if args.tree is not None:
             draw_tree(args.tree)
         else:
             pass
-        if args.axes != None:
+        if args.axes is not None:
             draw_scatter(args.axes)
         else:
             pass
-        if args.summary_table != None:
+        if args.summary_table is not None:
             summary2html(args.summary_table)
         else:
             pass
         quit()
     else:
         pass
-    if args.template_file_name != None:
+    if args.template_file_name is not None:
         loaded_template = load_template_file(args.template_file_name)
     else:
         templ_path = "/".join(sys.argv[0].split("/")[:-1])
-    if args.analysis_only == True:
+    if args.analysis_only is True:
         label = read_label_from_file("./*cons.taxonomy")
-        if args.remove_below != None:
+        if args.remove_below is not None:
             junk_grps = read_count_from_log("./*logfile",
                                             threshold = args.remove_below)
         else:
@@ -748,7 +748,7 @@ def main():
         label = args.label
         junk_grps = None
         loaded_template = load_template_file("{0}/preproc_template.sh.j2".format(templ_path))
-    if args.resources != None:
+    if args.resources is not None:
         node_list = None
         resources = args.resources.upper()
         if resources == "S":
@@ -756,25 +756,25 @@ def main():
             nodes = 2
             ntasks_per_node = 6
             mem_per_cpu = 24
-            processors = 24
+            processors = 48
         elif resources == "M":
             partition = "long"
             nodes = 10
             ntasks_per_node = 6
             mem_per_cpu = 24
-            processors = 120
+            processors = 240
         elif resources == "L":
             partition = "long"
             nodes = 20
             ntasks_per_node = 6
             mem_per_cpu = 24
-            processors = 240
+            processors = 480
         elif resources == "XL":
             partition = "long"
             nodes = 40
             ntasks_per_node = 6
             mem_per_cpu = 24
-            processors = 480
+            processors = 960
         elif resources == "PHI":
             partition = "accel"
             nodes = 1
@@ -826,7 +826,7 @@ def main():
                                         notify_email = args.notify_email)
     save_template(args.output_file_name,
                   rendered_template)
-    if args.run != None:
+    if args.run is not None:
         os.system("{0} {1}".format(args.run, args.output_file_name))
     else:
         pass
