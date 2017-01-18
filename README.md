@@ -87,3 +87,9 @@ F3D141_S207	F3D141_S207_L001_R1_001.fastq	F3D141_S207_L001_R2_001.fastq
 F3D7_S195	F3D7_S195_L001_R1_001.fastq	F3D7_S195_L001_R2_001.fastq
 F3D149_S215	F3D149_S215_L001_R1_001.fastq	F3D149_S215_L001_R2_001.fastq
 ```
+
+You can specify left and right read sign by using ```--left-reads-sign``` and ```--right-reads-sign```.
+
+mothur_files_creator recognizes the files containing reads by extension. It allows running it in the directory with other files, like metadata. The extension used by default is fastq. You can change it by using ```--files-extension myext```
+
+Since [mothur](https://www.mothur.org/) does not really like hyphens ```-```, these are removed from the file names by default. If you do not like it, use ```--original-names```
