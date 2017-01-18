@@ -97,7 +97,7 @@ def main():
                         help = "use if you do not want to modify file names")
     args = parser.parse_args()
 
-    if args.original_names == False:
+    if args.original_names is False:
         names_sanitizer("-",
                         args.files_directory)
     else:
