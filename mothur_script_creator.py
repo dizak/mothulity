@@ -384,7 +384,7 @@ def main():
                           dest = "processors",
                           metavar = "",
                           default = 24,
-                          help = "number of logical processors. Default: <12>")
+                          help = "number of logical processors. Default: <24>")
     headnode.add_argument("--resources",
                           action = "store",
                           dest = "resources",
