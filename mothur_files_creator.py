@@ -42,9 +42,11 @@ def left_n_right_generator(files_directory,
 
 
 def main():
-    parser = argparse.ArgumentParser(description = "creates mothur-suitable\
+    parser = argparse.ArgumentParser(prog = "mothur_files_creator",
+                                     usage = "mothur_files_creator [directory] [OPTION]",
+                                     description = "creates mothur-suitable\
                                                     <.files> file just upon the\
-                                                    input file names. removes\
+                                                    input file names. Removes\
                                                     <-> from file names",
                                      version = "1.0")
     parser.add_argument(action = "store",
