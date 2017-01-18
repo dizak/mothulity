@@ -6,6 +6,16 @@
 #SBATCH --ntasks-per-node={{ntasks_per_node}}
 #SBATCH --mem-per-cpu={{mem_per_cpu}}
 
+###Test whether there are *shared and *cons.taxonomy file. Exit otherwise###
+
+if [[ "$(echo *shared)" != '*shared' && "$(echo *cons.taxonomy)" != '*cons.taxonomy' ]]; then
+  echo *shared and *cons.taxonomy files found.;
+else
+  echo *shared or *cons.taxonomy file not found. Quitting...;
+  headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has failed' --body 'Failure due to a lack of *shared and *cons.taxonomy file. See the logfile attach to inspect the cause.' --attach *logfile;
+  exit;
+fi
+
 ###OTU approach analysis###
 
 #Create directories and shorten shared file name
