@@ -258,7 +258,9 @@ def draw_scatter(file_name):
 
 
 def main():
-    parser = argparse.ArgumentParser(description = "creates headnode-suitable\
+    parser = argparse.ArgumentParser(prog = "mothur_script_creator",
+                                     usage = "mothur_script_creator [OPTION]",
+                                     description = "creates headnode-suitable\
                                                     mothur script",
                                      version = "0.9.4")
     database = parser.add_argument_group("database download options")
