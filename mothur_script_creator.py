@@ -60,6 +60,7 @@ def render_template(template_loaded,
                     align_database = None,
                     taxonomy_database = None,
                     cluster_cutoff = 0.15,
+                    full_ram_load = False,
                     label = 0.03,
                     junk_grps = None,
                     notify_email = None):
@@ -90,6 +91,7 @@ def render_template(template_loaded,
                      "align_database": align_database,
                      "taxonomy_database": taxonomy_database,
                      "cluster_cutoff": cluster_cutoff,
+                     "full_ram_load": full_ram_load,
                      "label": label,
                      "junk_grps": junk_grps,
                      "notify_email": notify_email}
@@ -511,6 +513,12 @@ def main():
                         default = 0.15,
                         help = "cutoff value. Smaller == faster cluster param.\
                                 Default <0.15>.")
+    mothur.add_argument("--full-ram-load",
+                        action = "store_true",
+                        dest = "full_ram_load",
+                        default = False,
+                        help = "Use if you want to use cluster command instead\
+                                of cluster.split.")
     mothur.add_argument("--label",
                         action = "store",
                         dest = "label",
@@ -821,6 +829,7 @@ def main():
                                         align_database = args.align_database,
                                         taxonomy_database = args.taxonomy_database,
                                         cluster_cutoff = args.cluster_cutoff,
+                                        full_ram_load = args.full_ram_load,
                                         label = label,
                                         junk_grps = junk_grps,
                                         notify_email = args.notify_email)

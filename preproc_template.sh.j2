@@ -51,11 +51,19 @@ taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}});
 remove.lineage(fasta=current, count=current, taxonomy=current,
 taxon=Chloroplast-Mitochondria-unknown-Unknown);
 pairwise.seqs(fasta=current, cutoff=0.15, output=lt);
-cluster(phylip=current, cutoff=0.15);
+  {% if full_ram_load == True %}
+cluster(phylip=current, cutoff={{cluster_cutoff}});
+  {% else %}
+cluster.split(phylip=current, cutoff={{cluster_cutoff}}, large=T);
+  {% endif %}
 {% else %}
-remove.lineage(fasta=current, count=current, taxonomy=current,
-taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=4, cutoff={{cluster_cutoff}});
+remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);
+  {% if full_ram_load == True %}
+dis.seqs(fasta=current, cutoff={{cluster_cutoff}});
+cluster(column=current, count=current);
+  {% else%}
+cluster.split(fasta=current, count=current, taxonomy=current, cutoff={{cluster_cutoff}}, large=T);
+  {% endif %}
 {% endif %}
 make.shared(list=current, count=current, label={{label}});
 classify.otu(list=current, count=current, taxonomy=current, label={{label}});
