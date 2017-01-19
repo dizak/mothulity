@@ -20,7 +20,7 @@ from seaborn import pairplot
 from seaborn import lmplot
 
 __author__ = "Dariusz Izak IBB PAS"
-__veersion = "0.9.1"
+__veersion = "0.9.4"
 
 
 def load_template_str(template_str):
@@ -260,7 +260,7 @@ def draw_scatter(file_name):
 def main():
     parser = argparse.ArgumentParser(description = "creates headnode-suitable\
                                                     mothur script",
-                                     version = "0.9.1")
+                                     version = "0.9.4")
     database = parser.add_argument_group("database download options")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
