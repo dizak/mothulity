@@ -28,7 +28,8 @@ def left_n_right_generator(files_directory,
     left_name_reads_list = []
     right_name_reads_list = []
     files_list = os.listdir(files_directory)
-    sample_names_list = [i.split(split_sign)[0] for i in files_list if files_extension in i]
+    files_list = [i for i in files_list if files_extension == i.split(".")[-1]]
+    sample_names_list = [i.split(split_sign)[0] for i in files_list]
     sample_names_list = list(set(sample_names_list))
     for i in sample_names_list:
         for ii in files_list:
