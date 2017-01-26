@@ -281,15 +281,15 @@ def main():
                         metavar="",
                         default="mothur.job",
                         help="job name. MUST be same as <name>.files.\
-                                Default <mothur>.")
+                        Default <mothur>.")
     parser.add_argument("-m",
                         "--mock",
                         action="store_true",
                         dest="mock",
                         default=False,
-                        help="use if you have mock community group and\
-                                want to calculate sequencing errors, classify\
-                                mock OTUs and draw mock rarefaction curve.")
+                        help="use if you have mock community group and want to\
+                        calculate sequencing errors, classify mock OTUs and\
+                        draw mock rarefaction curve.")
     parser.add_argument("-r",
                         "--run",
                         action="store",
@@ -297,15 +297,14 @@ def main():
                         metavar="",
                         default=None,
                         help="shell call. Use if you want to run the mothur\
-                                script immediately, in current directory.\
-                                eg -r sh for regular bash or -r sbatch for\
-                                slurm.")
+                        script immediately, in current directory. eg -r sh for\
+                         regular bash or -r sbatch for slurm.")
     parser.add_argument("--analysis-only",
                         action="store_true",
                         dest="analysis_only",
                         default=False,
                         help="outputs just the part involved in statistical\
-                                analysis and drawing.")
+                        analysis and drawing.")
     parser.add_argument("-t",
                         "--template",
                         action="store",
@@ -313,50 +312,50 @@ def main():
                         metavar="",
                         default=None,
                         help="path/to/template. Use if you want to use other\
-                                template than default.")
+                        template than default.")
     database.add_argument("--unite-ITS-02",
                           action="store",
                           dest="unite_ITS_02",
                           metavar="",
                           default=None,
                           help="path/to/download-database. Use if you want to\
-                                  download UNITE ITS 02 database.")
+                          download UNITE ITS 02 database.")
     database.add_argument("--unite-ITS-s-02",
                           action="store",
                           dest="unite_ITS_s_02",
                           metavar="",
                           default=None,
                           help="path/to/download-database. Use if you want to\
-                                  download UNITE ITS s 02 database.")
+                          download UNITE ITS s 02 database.")
     database.add_argument("--silva-102",
                           action="store",
                           dest="silva_102",
                           metavar="",
                           default=None,
                           help="path/to/download-database. Use if you want to\
-                                  download Silva v102.")
+                          download Silva v102.")
     database.add_argument("--silva-119",
                           action="store",
                           dest="silva_119",
                           metavar="",
                           default=None,
                           help="path/to/download-database. Use if you want to\
-                                  download Silva v119.")
+                          download Silva v119.")
     database.add_argument("--silva-123",
                           action="store",
                           dest="silva_123",
                           metavar="",
                           default=None,
                           help="path/to/download-database. Use if you want to\
-                                  download Silva v123.")
+                          download Silva v123.")
     headnode.add_argument("--partition",
                           action="store",
                           dest="partition",
                           metavar="",
                           default="long",
                           help="headnode's partition. Values: test, short, big,\
-                                  long, accel. Accel necessary for phi/gpu nodes\
-                                  Default <long>.")
+                          long, accel. Accel necessary for phi/gpu nodes\
+                          Default <long>.")
     headnode.add_argument("--nodes",
                           action="store",
                           dest="nodes",
@@ -369,14 +368,14 @@ def main():
                           metavar="",
                           default=6,
                           help="number of tasks to invoke on each node.\
-                                  Default <6>")
+                          Default <6>")
     headnode.add_argument("--mem-per-cpu",
                           action="store",
                           dest="mem_per_cpu",
                           metavar="",
                           default=24,
                           help="maximum amount of real memory per node in\
-                                  gigabytes. Default <24>.")
+                          gigabytes. Default <24>.")
     headnode.add_argument("--node-list",
                           action="store",
                           dest="node_list",
@@ -394,159 +393,159 @@ def main():
                           dest="resources",
                           metavar="",
                           default=None,
-                          help="shortcut for headnode's resources\
-                                  reservation. Accepted values are: <S>mall,\
-                                  <M>edium, <L>arge, <XL>arge for regular nodes\
-                                  with mpi. <PHI> for single phi node, <JUMBO>\
-                                  for two phi nodes. Overrides all the other\
-                                  headnode arguments. Use if you are lazy.")
+                          help="shortcut for headnode's resources reservation.\
+                          Accepted values are: <S>mall, <M>edium, <L>arge,\
+                          <XL>arge for regular nodes with mpi. <PHI> for\
+                          single phi node, <JUMBO> for two phi nodes.\
+                          Overrides all the other headnode arguments. Use if\
+                          you are lazy.")
     headnode.add_argument("--notify-email",
                           action="store",
                           dest="notify_email",
                           metavar="",
                           default=None,
                           help="email address you want to notify when job is\
-                                  done.")
+                          done.")
     mothur.add_argument("--max-ambig",
                         action="store",
                         dest="max_ambig",
                         metavar="",
                         default=0,
                         help="maximum number of ambiguous bases allowed.\
-                                screen.seqs param. Default <0>.")
+                        screen.seqs param. Default <0>.")
     mothur.add_argument("--max-homop",
                         action="store",
                         dest="max_homop",
                         metavar="",
                         default=8,
                         help="maximum number of homopolymers allowed.\
-                                screen.seqs param. Default <8>.")
+                        screen.seqs param. Default <8>.")
     mothur.add_argument("--min-length",
                         action="store",
                         dest="min_length",
                         metavar="",
                         default=None,
                         help="minimum length of read allowed.\
-                                screen.seqs param. Default <400>.")
+                        screen.seqs param. Default <400>.")
     mothur.add_argument("--max-length",
                         action="store",
                         dest="max_length",
                         metavar="",
                         default=None,
                         help="minimum length of read allowed.\
-                                screen.seqs param. Default <500>.")
+                        screen.seqs param. Default <500>.")
     mothur.add_argument("--min-overlap",
                         action="store",
                         dest="min_overlap",
                         metavar="",
                         default=25,
                         help="minimum number of bases overlap in contig.\
-                                screen.seqs param. Default <25>.")
+                        screen.seqs param. Default <25>.")
     mothur.add_argument("--screen-criteria",
                         action="store",
                         dest="screen_criteria",
                         metavar="",
                         default=95,
                         help="trim start and end of read to fit this\
-                                percentage of all reads.\
-                                screen.seqs param. Default <95>.")
+                        percentage of all reads.\
+                        screen.seqs param. Default <95>.")
     mothur.add_argument("--chop-length",
                         action="store",
                         dest="chop_length",
                         metavar="",
                         default=250,
                         help="cut all the reads to this length. Keeps front\
-                                of the sequences. chop.seqs argument.\
-                                Default <250>")
+                        of the sequences. chop.seqs argument.\
+                        Default <250>")
     mothur.add_argument("--precluster-diffs",
                         action="store",
                         dest="precluster_diffs",
                         metavar="",
                         default=2,
                         help="number of differences between reads treated as\
-                                insignificant. screen.seqs param. Default <2>.")
+                        insignificant. screen.seqs param. Default <2>.")
     mothur.add_argument("--chimera-dereplicate",
                         action="store",
                         dest="chimera_dereplicate",
                         metavar="",
                         default="T",
                         help="checking for chimeras by group. chimera.uchime\
-                                param. Default <T>.")
+                        param. Default <T>.")
     mothur.add_argument("--classify-seqs-cutoff",
                         action="store",
                         dest="classify_seqs_cutoff",
                         metavar="",
                         default=80,
                         help="bootstrap value for taxonomic assignment.\
-                                classify.seqs param. Default <80>.")
+                        classify.seqs param. Default <80>.")
     mothur.add_argument("--classify-ITS",
                         action="store_true",
                         dest="classify_ITS",
                         default=False,
                         help="removes align.seqs step and modifies\
-                                classify.seqs with <method=knn>,\
-                                                   <search=blast>,\
-                                                   <match=2>,\
-                                                   <mismatch=-2>,\
-                                                   <gapopen=-2>,\
-                                                   <gapextend=-1>,\
-                                                   <numwanted=1>).\
-                                Default <False>")
+                        classify.seqs with <method=knn>,\
+                                           <search=blast>,\
+                                           <match=2>,\
+                                           <mismatch=-2>,\
+                                           <gapopen=-2>,\
+                                           <gapextend=-1>,\
+                                           <numwanted=1>).\
+                        Default <False>")
     mothur.add_argument("--align-database",
                         action="store",
                         dest="align_database",
                         metavar="",
                         default="~/db/Silva.nr_v119/silva.nr_v119.align",
                         help="path/to/align-database. Used by align.seqs\
-                                command as <reference> argument. Default\
-                                <~/db/Silva.nr_v119/silva.nr_v119.align>.")
+                        command as <reference> argument. Default\
+                        <~/db/Silva.nr_v119/silva.nr_v119.align>.")
     mothur.add_argument("--taxonomy-database",
                         action="store",
                         dest="taxonomy_database",
                         metavar="",
                         default="~/db/Silva.nr_v119/silva.nr_v119.tax",
                         help="path/to/taxonomy-database. Used by\
-                                classify.seqs as <taxonomy> argument.\
-                                Default <~/db/Silva.nr_v119/silva.nr_v119.tax>")
+                        classify.seqs as <taxonomy> argument.\
+                        Default <~/db/Silva.nr_v119/silva.nr_v119.tax>")
     mothur.add_argument("--cluster-cutoff",
                         action="store",
                         dest="cluster_cutoff",
                         metavar="",
                         default=0.15,
                         help="cutoff value. Smaller == faster cluster param.\
-                                Default <0.15>.")
+                        Default <0.15>.")
     mothur.add_argument("--full-ram-load",
                         action="store_true",
                         dest="full_ram_load",
                         default=False,
                         help="Use if you want to use cluster command instead\
-                                of cluster.split.")
+                        of cluster.split.")
     mothur.add_argument("--label",
                         action="store",
                         dest="label",
                         metavar="",
                         default=0.03,
                         help="label argument for number of commands for OTU\
-                                analysis approach. Default 0.03.")
+                        analysis approach. Default 0.03.")
     mothur.add_argument("--remove-below",
                         action="store",
                         dest="remove_below",
                         metavar="",
                         default=None,
                         help="remove groups below this threshold. Omit this\
-                                argument if you want to keep them all.")
+                        argument if you want to keep them all.")
     draw.add_argument("--rarefaction",
                       action="store",
                       dest="rarefaction",
                       metavar="",
                       help="path/to/rarefaction-file. Use to draw rarefaction\
-                              curves plot.")
+                      curves plot.")
     draw.add_argument("--phylip",
                       action="store",
                       dest="phylip",
                       metavar="",
                       help="path/to/phylip-file. Use to draw heatmap and\
-                              tree.")
+                      tree.")
     draw.add_argument("--tree",
                       action="store",
                       dest="tree",
@@ -562,13 +561,13 @@ def main():
                       dest="summary_table",
                       metavar="",
                       help="/path/to/summary-table. Use to convert summary\
-                              table into fancy DataTable.")
+                      table into fancy DataTable.")
     draw.add_argument("--render-html",
                       action="store_true",
                       dest="render_html",
                       default=False,
                       help="path/to/html-template-file. Use to pass args into\
-                              fancy html.")
+                      fancy html.")
     args = parser.parse_args()
 
     if args.unite_ITS_02 is not None:
