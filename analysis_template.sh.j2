@@ -12,7 +12,7 @@ if [[ "$(echo *shared)" != '*shared' && "$(echo *cons.taxonomy)" != '*cons.taxon
   echo *shared and *cons.taxonomy files found.;
 else
   echo *shared or *cons.taxonomy file not found. Quitting...;
-  headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has failed' --body 'Failure due to a lack of *shared and *cons.taxonomy file. See the logfile attach to inspect the cause.' --attach *logfile;
+  headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has failed' --body 'Failure due to lack of *shared and *cons.taxonomy files. See the logfile attached in order to inspect the cause.' --attach *logfile;
   exit;
 fi
 
