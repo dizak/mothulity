@@ -6,25 +6,22 @@ Simple script for generating [mothur](https://www.mothur.org/), drawing few figu
 ### Installation
 
 1. Requirements.
-  * Python2.7
+  * Python 2.7
   * jinja2
-  import argparse
-  import requests as rq
-  from tqdm import tqdm
-  import os
-  import sys
-  import glob
-  from Bio import Phylo as ph
-  import matplotlib
-  matplotlib.use('Agg')
-  import pylab
-  import matplotlib.pyplot as plt
-  import matplotlib.style as style
-  import mpld3
-  from pandas import read_csv
-  from seaborn import heatmap
-  from seaborn import pairplot
-  from seaborn import lmplot
+  * argparse
+  * requests as rq
+  * tqdm
+  * os
+  * sys
+  * glob
+  * Biopython
+  * matplotlib
+  * pylab
+  * matplotlib.pyplot as plt
+  * matplotlib.style as style
+  * mpld3
+  * pandas
+  * seaborn
 
 2. External scripts/programs.
   * [headnode_notifier](https://github.com/dizak/headnode_notifier/releases))
