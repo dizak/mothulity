@@ -20,7 +20,7 @@ from seaborn import pairplot
 from seaborn import lmplot
 
 __author__ = "Dariusz Izak IBB PAS"
-__version = "0.9.4"
+__version = "0.9.6"
 
 
 def load_template_str(template_str):

@@ -7,7 +7,6 @@ from tqdm import tqdm
 
 
 __author__ = "Dariusz Izak IBB PAS"
-__version__ = "1.0.1"
 
 
 def get_db(url,

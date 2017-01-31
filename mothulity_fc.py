@@ -7,7 +7,6 @@ import pandas as pd
 
 
 __author__ = "Dariusz Izak IBB PAS"
-__version__ = "1.0.1"
 
 
 def names_sanitizer(unwanted_sign,
