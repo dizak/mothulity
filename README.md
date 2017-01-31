@@ -1,4 +1,4 @@
-# mothur_script_creator
+# mothulity
 
 Simple script for generating [mothur](https://www.mothur.org/), drawing few figures and wrapping it all into nice-looking html. Handles slurm and sends e-mail notifications when the job is done (using [headnode_notifier](https://github.com/dizak/headnode_notifier/releases)).
 
@@ -37,7 +37,7 @@ Simple script for generating [mothur](https://www.mothur.org/), drawing few figu
 ### Usage examples
 
 ```
-usage: mothur_script_creator [OPTION]
+usage: mothulity [OPTION]
 
 creates headnode-suitable mothur script
 
