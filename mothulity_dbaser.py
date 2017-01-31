@@ -6,6 +6,10 @@ import requests as rq
 from tqdm import tqdm
 
 
+__author__ = "Dariusz Izak IBB PAS"
+__version__ = "1.0.1"
+
+
 def get_db(url,
            save_path,
            chunk=8192):
