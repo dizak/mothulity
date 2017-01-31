@@ -55,18 +55,6 @@ optional arguments:
   -t , --template       path/to/template. Use if you want to use other
                         template than default.
 
-database download options:
-  --unite-ITS-02        path/to/download-database. Use if you want to download
-                        UNITE ITS 02 database.
-  --unite-ITS-s-02      path/to/download-database. Use if you want to download
-                        UNITE ITS s 02 database.
-  --silva-102           path/to/download-database. Use if you want to download
-                        Silva v102.
-  --silva-119           path/to/download-database. Use if you want to download
-                        Silva v119.
-  --silva-123           path/to/download-database. Use if you want to download
-                        Silva v123.
-
 headnode options:
   --partition           headnode's partition. Values: test, short, big, long,
                         accel. Accel necessary for phi/gpu nodes Default
@@ -137,5 +125,3 @@ drawing options:
   --render-html         path/to/html-template-file. Use to pass args into
                         fancy html.
 ```
-
-#### Let's
