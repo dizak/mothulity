@@ -6,25 +6,22 @@ Simple script for generating [mothur](https://www.mothur.org/), drawing few figu
 ### Installation
 
 1. Requirements.
-  * Python2.7
+  * Python 2.7
   * jinja2
-  import argparse
-  import requests as rq
-  from tqdm import tqdm
-  import os
-  import sys
-  import glob
-  from Bio import Phylo as ph
-  import matplotlib
-  matplotlib.use('Agg')
-  import pylab
-  import matplotlib.pyplot as plt
-  import matplotlib.style as style
-  import mpld3
-  from pandas import read_csv
-  from seaborn import heatmap
-  from seaborn import pairplot
-  from seaborn import lmplot
+  * argparse
+  * requests as rq
+  * tqdm
+  * os
+  * sys
+  * glob
+  * Biopython
+  * matplotlib
+  * pylab
+  * matplotlib.pyplot as plt
+  * matplotlib.style as style
+  * mpld3
+  * pandas
+  * seaborn
 
 2. External scripts/programs.
   * [headnode_notifier](https://github.com/dizak/headnode_notifier/releases))
@@ -57,18 +54,6 @@ optional arguments:
                         and drawing.
   -t , --template       path/to/template. Use if you want to use other
                         template than default.
-
-database download options:
-  --unite-ITS-02        path/to/download-database. Use if you want to download
-                        UNITE ITS 02 database.
-  --unite-ITS-s-02      path/to/download-database. Use if you want to download
-                        UNITE ITS s 02 database.
-  --silva-102           path/to/download-database. Use if you want to download
-                        Silva v102.
-  --silva-119           path/to/download-database. Use if you want to download
-                        Silva v119.
-  --silva-123           path/to/download-database. Use if you want to download
-                        Silva v123.
 
 headnode options:
   --partition           headnode's partition. Values: test, short, big, long,
@@ -140,5 +125,3 @@ drawing options:
   --render-html         path/to/html-template-file. Use to pass args into
                         fancy html.
 ```
-
-#### Let's
