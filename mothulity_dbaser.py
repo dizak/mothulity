@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import argparse
 import requests as rq
 from tqdm import tqdm
