@@ -6,19 +6,14 @@ Simple script for generating [mothur](https://www.mothur.org/), drawing few figu
 ### Installation
 
 1. Requirements.
-  * Python 2.7
   * jinja2
   * argparse
-  * requests as rq
+  * requests
   * tqdm
-  * os
-  * sys
-  * glob
   * Biopython
   * matplotlib
   * pylab
-  * matplotlib.pyplot as plt
-  * matplotlib.style as style
+  * matplotlib
   * mpld3
   * pandas
   * seaborn
