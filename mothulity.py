@@ -92,8 +92,8 @@ def render_template(template_loaded,
                     junk_grps=None,
                     notify_email=None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
-    mothulity_path = sys.argv[0]
-    template_vars = {"mothulity_path": mothulity_path,
+    dir_path = get_dir_path()
+    template_vars = {"dir_path": dir_path,
                      "output_file_name": output_file_name,
                      "job_name": job_name,
                      "mock": mock,
