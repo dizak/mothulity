@@ -63,6 +63,7 @@ def load_template_file(template_file):
 
 
 def render_template(template_loaded,
+                    files_directory=".",
                     output_file_name="mothur.sh",
                     job_name="mothur.job",
                     mock=False,
@@ -94,6 +95,7 @@ def render_template(template_loaded,
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     dir_path = get_dir_path()
     template_vars = {"dir_path": dir_path,
+                     "files_directory": files_directory,
                      "output_file_name": output_file_name,
                      "job_name": job_name,
                      "mock": mock,
@@ -674,6 +676,7 @@ def main():
         processors = args.processors
         partition = args.partition
     rendered_template = render_template(loaded_template,
+                                        files_directory=args.files_directory,
                                         output_file_name=args.output_file_name,
                                         job_name=args.job_name,
                                         mock=args.mock,
