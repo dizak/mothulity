@@ -20,7 +20,7 @@ def get_db(url,
                           total=total_len / chunk):
                 fout.write(i)
     else:
-        pass
+        print "Status code {0}".format(status_code)
 
 
 def main():
