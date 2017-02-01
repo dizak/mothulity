@@ -279,6 +279,10 @@ def main():
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
     draw = parser.add_argument_group("drawing options")
+    parser.add_argument(action="store",
+                        dest="files_directory",
+                        metavar="path/to/files",
+                        help="input directory path.")
     parser.add_argument("-o",
                         "--output",
                         action="store",
