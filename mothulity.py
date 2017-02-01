@@ -158,58 +158,6 @@ def read_count_from_log(log_file,
     return groups2remove
 
 
-def summary2html(file_name):
-    css_str = """<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">"""
-    js_str = """<!--JavaScript Start-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript">
- $(document).ready(function() {
-   $('.dataframe').DataTable( {
-       scrollX: true,
-       lengthMenu: [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
-       initComplete: function () {
-         this.api().columns().every( function () {
-           var column = this;
-           var select = $('<select><option value=""></option></select>')
-             .appendTo( $(column.header()))
-             .on( 'change', function () {
-                 var val = $.fn.dataTable.util.escapeRegex(
-                     $(this).val()
-                 );
-
-                 column
-                     .search( val ? '^'+val+'$' : '', true, false )
-                     .draw();
-             });
-             column.cells('', column[0]).render('display').sort().unique().each( function ( d, j ) {
-               if(column.search() === '^'+d+'$'){
-                   select.append( '<option value="'+d+'" selected="selected">'+d+'</option>' )
-               }
-               else {
-                   select.append( '<option value="'+d+'">'+d+'</option>' )
-               }
-             });
-         });
-       }
-   });
- });
-</script>
-<!--JavaScript End-->
-"""
-    output_file = "{}.html".format(file_name)
-    df = read_csv(file_name, sep="\t")
-    html_str = df.to_html(classes=["compact",
-                                   "hover",
-                                   "order-column"],
-                          index=False)
-    html_str = "{0}{1}{2}".format(css_str,
-                                  html_str,
-                                  js_str)
-    with open(output_file, "w") as fout:
-        fout.write(html_str)
-
-
 def main():
     parser = argparse.ArgumentParser(prog="mothulity",
                                      usage="mothulity [OPTION]",
@@ -222,6 +170,7 @@ def main():
     parser.add_argument(action="store",
                         dest="files_directory",
                         metavar="path/to/files",
+                        default=".",
                         help="input directory path.")
     parser.add_argument("-o",
                         "--output",
@@ -497,6 +446,7 @@ def main():
         html_output_name = "{0}.html".format(args.job_name)
         loaded_template = load_template_file(html_template_path)
         rendered_template = render_template(loaded_template,
+                                            files_directory=args.files_directory,
                                             job_name=args.job_name,
                                             mock=args.mock,
                                             partition=args.partition,
@@ -522,30 +472,6 @@ def main():
                                             label=args.label)
         save_template(html_output_name,
                       rendered_template)
-        quit()
-    else:
-        pass
-    if args.rarefaction or args.phylip or args.tree or args.axes or args.summary_table is not None:
-        if args.rarefaction is not None:
-            draw_rarefaction(args.rarefaction)
-        else:
-            pass
-        if args.phylip is not None:
-            draw_heatmap(args.phylip)
-        else:
-            pass
-        if args.tree is not None:
-            draw_tree(args.tree)
-        else:
-            pass
-        if args.axes is not None:
-            draw_scatter(args.axes)
-        else:
-            pass
-        if args.summary_table is not None:
-            summary2html(args.summary_table)
-        else:
-            pass
         quit()
     else:
         pass
