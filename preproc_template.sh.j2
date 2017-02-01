@@ -73,9 +73,9 @@ count.groups(shared=current)'
 
 headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body 'Please login and inspect the results of {{job_name}}.'
 
-###Call msc for the analysis part###
+###Call mothulity for the analysis part###
 {% if classify_ITS == True %}
-{{msc_path}} -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+{{mothulity_path}} -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% else %}
-{{msc_path}} -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+{{mothulity_path}} -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% endif %}

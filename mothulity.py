@@ -65,8 +65,8 @@ def render_template(template_loaded,
                     junk_grps=None,
                     notify_email=None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
-    msc_path = sys.argv[0]
-    template_vars = {"msc_path": msc_path,
+    mothulity_path = sys.argv[0]
+    template_vars = {"mothulity_path": mothulity_path,
                      "output_file_name": output_file_name,
                      "job_name": job_name,
                      "mock": mock,
@@ -244,8 +244,8 @@ def draw_scatter(file_name):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="msc",
-                                     usage="msc [OPTION]",
+    parser = argparse.ArgumentParser(prog="mothulity",
+                                     usage="mothulity [OPTION]",
                                      description="creates headnode-suitable\
                                                     mothur script",
                                      version="0.9.4")
