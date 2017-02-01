@@ -85,6 +85,8 @@ cd ../../
 #Zip the results
 
 zip -r {{job_name}}.zip analysis/
-
+{% if notify_email != None %}
 #Send mail
 headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please download the attachment and inspect the results of {{job_name}}.' --attach {{job_name}}.zip
+{% else %}
+{% endif %}
