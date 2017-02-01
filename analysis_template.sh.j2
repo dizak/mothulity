@@ -8,13 +8,13 @@
 
 ###Test whether there are *shared and *cons.taxonomy file. Exit otherwise###
 
-if [[ "$(echo *shared)" != '*shared' && "$(echo *cons.taxonomy)" != '*cons.taxonomy' ]]; then
-  echo *shared and *cons.taxonomy files found.;
-else
-  echo *shared or *cons.taxonomy file not found. Quitting...;
-  headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has failed' --body 'Failure due to lack of *shared and *cons.taxonomy files. See the logfile attached in order to inspect the cause.' --attach *logfile;
-  exit;
-fi
+#if [[ "$(echo *shared)" != '*shared' && "$(echo *cons.taxonomy)" != '*cons.taxonomy' ]]; then
+#  echo '*shared and *cons.taxonomy files found.';
+#else
+#  echo '*shared or *cons.taxonomy file not found. Quitting...';
+#  headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has failed' --body 'Failure due to lack of *shared and *cons.taxonomy files. See the logfile attached in order to inspect the cause.' --attach *logfile;
+#  exit;
+#fi
 
 ###OTU approach analysis###
 
@@ -50,8 +50,8 @@ cd ./alpha
 mothur_krona_XML.py {{job_name}}.tax.summary > {{job_name}}.krona.xml
 ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
-{{dir_path}}mothulity.py --rarefaction {{job_name}}.groups.rarefaction
-{{dir_path}}mothulity.py --summary-table {{job_name}}.groups.summary
+{{dir_path}}mothulity_draw.py --rarefaction {{job_name}}.groups.rarefaction
+{{dir_path}}mothulity_draw.py --summary-table {{job_name}}.groups.summary
 
 #Go to beta directory and create dist files for Jaccard and YC measures
 
@@ -68,15 +68,15 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 
 #Draw beta directory pictures for Jaccard and YC measures
 
-{{dir_path}}mothulity.py --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
-{{dir_path}}mothulity.py --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
+{{dir_path}}mothulity_draw.py --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
+{{dir_path}}mothulity_draw.py --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
 
 #Go to OTU directory
 
 cd ../
 
 #Render html output
-{{dir_path}}mothulity.py --render-html --job-name {{job_name}} --label {{label}}
+{{dir_path}}mothulity.py {{files_directory}} --render-html --job-name {{job_name}} --label {{label}}
 
 #Go to project's root directory
 
