@@ -75,12 +75,13 @@ classify.otu(list=current, count=current, taxonomy=current, label={{label}});
 count.groups(shared=current)'
 
 ###Send mail###
-
+{% if notify_email != None %}
 headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body 'Please login and inspect the results of {{job_name}}.'
-
+{% else %}
+{% endif %}
 ###Call mothulity for the analysis part###
 {% if classify_ITS == True %}
-{{dir_path}}mothulity.py -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+{{dir_path}}mothulity.py . -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% else %}
-{{dir_path}}mothulity.py -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+{{dir_path}}mothulity.py . -o analysis_{{output_file_name}} -n {{job_name}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% endif %}
