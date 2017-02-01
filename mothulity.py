@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+
 import jinja2 as jj2
 import argparse
 import requests as rq
@@ -7,17 +8,7 @@ from tqdm import tqdm
 import os
 import sys
 import glob
-from Bio import Phylo as ph
-import matplotlib
-matplotlib.use('Agg')
-import pylab
-import matplotlib.pyplot as plt
-import matplotlib.style as style
-import mpld3
-from pandas import read_csv
-from seaborn import heatmap
-from seaborn import pairplot
-from seaborn import lmplot
+
 
 __author__ = "Dariusz Izak IBB PAS"
 __version = "0.9.6"
@@ -219,64 +210,11 @@ def summary2html(file_name):
         fout.write(html_str)
 
 
-def draw_rarefaction(file_name):
-    output_file = "{}.mpld3.html".format(file_name)
-    df = read_csv(file_name,
-                  sep="\t",
-                  index_col="numsampled")
-    cols = [i for i in df.columns if "lci" not in i]
-    cols = [i for i in cols if "hci" not in i]
-    df = df[cols]
-    fig, ax = plt.subplots()
-    df[cols].plot(ax=ax,
-                  figsize=(15, 8))
-    labels = list(df.columns.values)
-    for i in range(len(labels)):
-        tooltip = mpld3.plugins.LineLabelTooltip(ax.get_lines()[i],
-                                                 labels[i])
-        mpld3.plugins.connect(plt.gcf(), tooltip)
-    plt.grid(True)
-    plt.title("Rarefaction curve")
-    plt.ylabel("OTU count")
-    plt.xlabel("number of sequences")
-    with open(output_file, "w") as fout:
-        fout.write(mpld3.fig_to_html(fig))
-
-
-def draw_heatmap(file_name):
-    df = read_csv(file_name,
-                  sep="\t",
-                  skiprows=1,
-                  header=None,
-                  index_col=0)
-    df.columns = df.index
-    fig = heatmap(df, square=True, cmap="plasma").get_figure()
-    fig.savefig("{}.svg".format(file_name))
-
-
-def draw_tree(file_name):
-    pylab.ion()
-    tree = ph.read(file_name, "newick")
-    ph.draw(tree)
-    pylab.savefig("{}.svg".format(file_name))
-
-
-def draw_scatter(file_name):
-    df = read_csv(file_name,
-                  sep="\t")
-    fig = lmplot(x="axis1",
-                 y="axis2",
-                 data=df,
-                 hue="group",
-                 fit_reg=False)
-    fig.savefig("{}.svg".format(file_name))
-
-
 def main():
     parser = argparse.ArgumentParser(prog="mothulity",
                                      usage="mothulity [OPTION]",
                                      description="creates headnode-suitable\
-                                                    mothur script",
+                                     mothur script",
                                      version="0.9.4")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")

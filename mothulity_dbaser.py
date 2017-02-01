@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 import os
 import argparse
 import requests as rq
@@ -27,7 +28,7 @@ def main():
     parser = argparse.ArgumentParser(prog="mothulity_dbaser",
                                      usage="mothulity_dbaser [OPTION]",
                                      description="downloads mothur-suitable\
-                                     parsers",
+                                     databases",
                                      version="0.9.4")
     parser.add_argument("--unite-ITS-02",
                         action="store",
