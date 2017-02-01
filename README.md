@@ -28,7 +28,13 @@ It can download a proper database, run SOP provided with just fastq files direct
 
 ### Usage
 
+The simplest example is:
 
+```
+mothulity.py /path/to/fastq/files -r sh
+```
+
+Above command will run MiSeq SOP, draw plots, render html output and zip everything.
 
 # mothur_files_creator
 
