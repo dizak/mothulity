@@ -559,7 +559,7 @@ def main():
         html_output_name = "{0}.html".format(args.job_name)
         loaded_template = load_template_file(html_template_path)
         rendered_template = render_template(loaded_template,
-                                            job_name1args.job_name,
+                                            job_name=args.job_name,
                                             mock=args.mock,
                                             partition=args.partition,
                                             nodes=args.nodes,
