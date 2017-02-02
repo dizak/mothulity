@@ -166,7 +166,6 @@ def main():
                                      version="0.9.4")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
-    draw = parser.add_argument_group("drawing options")
     parser.add_argument(action="store",
                         dest="files_directory",
                         metavar="path/to/files",
@@ -204,7 +203,8 @@ def main():
                         help="shell call. Use if you want to run the mothur\
                         script immediately, in current directory. eg -r sh for\
                          regular bash or -r sbatch for slurm.")
-    parser.add_argument("--analysis-only",
+    parser.add_argument("-a",
+                        "--analysis-only",
                         action="store_true",
                         dest="analysis_only",
                         default=False,
@@ -218,6 +218,19 @@ def main():
                         default=None,
                         help="path/to/template. Use if you want to use other\
                         template than default.")
+    parser.add_argument("--render-html",
+                        action="store_true",
+                        dest="render_html",
+                        default=False,
+                        help="path/to/html-template-file. Use to pass args into\
+                        fancy html.")
+    parser.add_argument("--notify-email",
+                        action="store",
+                        dest="notify_email",
+                        metavar="",
+                        default=None,
+                        help="email address you want to notify when job is\
+                        done.")
     headnode.add_argument("--partition",
                           action="store",
                           dest="partition",
@@ -269,13 +282,6 @@ def main():
                           single phi node, <JUMBO> for two phi nodes.\
                           Overrides all the other headnode arguments. Use if\
                           you are lazy.")
-    headnode.add_argument("--notify-email",
-                          action="store",
-                          dest="notify_email",
-                          metavar="",
-                          default=None,
-                          help="email address you want to notify when job is\
-                          done.")
     mothur.add_argument("--max-ambig",
                         action="store",
                         dest="max_ambig",
@@ -404,40 +410,6 @@ def main():
                         default=None,
                         help="remove groups below this threshold. Omit this\
                         argument if you want to keep them all.")
-    draw.add_argument("--rarefaction",
-                      action="store",
-                      dest="rarefaction",
-                      metavar="",
-                      help="path/to/rarefaction-file. Use to draw rarefaction\
-                      curves plot.")
-    draw.add_argument("--phylip",
-                      action="store",
-                      dest="phylip",
-                      metavar="",
-                      help="path/to/phylip-file. Use to draw heatmap and\
-                      tree.")
-    draw.add_argument("--tree",
-                      action="store",
-                      dest="tree",
-                      metavar="",
-                      help="path/to/tree-file. Use to draw dendrogram.")
-    draw.add_argument("--axes",
-                      action="store",
-                      dest="axes",
-                      metavar="",
-                      help="path/to/axes-file. Use to draw scatter plots.")
-    draw.add_argument("--summary-table",
-                      action="store",
-                      dest="summary_table",
-                      metavar="",
-                      help="/path/to/summary-table. Use to convert summary\
-                      table into fancy DataTable.")
-    draw.add_argument("--render-html",
-                      action="store_true",
-                      dest="render_html",
-                      default=False,
-                      help="path/to/html-template-file. Use to pass args into\
-                      fancy html.")
     args = parser.parse_args()
 
     if args.render_html is True:
