@@ -8,8 +8,8 @@
 
 ###Test whether there are *shared and *cons.taxonomy file. Exit otherwise###
 
-SHARED="$(echo *shared)"
-TAXONOMY="$(echo *cons.taxonomy)"
+SHARED="$(echo {{files_directory}}*shared)"
+TAXONOMY="$(echo {{files_directory}}*cons.taxonomy)"
 if [ $SHARED != '*shared' ] || [ $TAXONOMY != '*cons.taxonomy' ]; then
   echo "$SHARED and $TAXONOMY files found.";
 else
@@ -25,13 +25,13 @@ fi
 
 #Create directories and shorten shared file name
 
-mkdir -p ./analysis/OTU/alpha ./analysis/OTU/beta
-cp *shared ./analysis/OTU/{{job_name}}.shared
-cp *cons.tax.summary ./analysis/OTU/alpha/{{job_name}}.tax.summary
+mkdir -p {{files_directory}}analysis/OTU/alpha {{files_directory}}analysis/OTU/beta
+cp {{files_directory}}*shared {{files_directory}}analysis/OTU/{{job_name}}.shared
+cp {{files_directory}}*cons.tax.summary {{files_directory}}analysis/OTU/alpha/{{job_name}}.tax.summary
 {% if junk_grps != None %}
 #Go to subdirectory, remove junk groups and subsample shared file
 
-cd ./analysis/OTU
+cd {{files_directory}}analysis/OTU
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); remove.groups(shared=current, groups={{junk_grps}}); sub.sample(shared=current)'
 
 #Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory
@@ -41,7 +41,7 @@ cp {{job_name}}.{{label}}.pick.{{label}}.subsample.shared ./beta/{{job_name}}.{{
 {% else %}
 #Go to subdirectory, and subsample shared file
 
-cd ./analysis/OTU
+cd {{files_directory}}analysis/OTU
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub.sample(shared=current)'
 
 #Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory

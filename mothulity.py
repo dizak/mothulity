@@ -452,9 +452,9 @@ def main():
     else:
         templ_path = "/".join(sys.argv[0].split("/")[:-1])
     if args.analysis_only is True:
-        label = read_label_from_file("./*cons.taxonomy")
+        label = read_label_from_file("{0}*cons.taxonomy".format(args.files_directory))
         if args.remove_below is not None:
-            junk_grps = read_count_from_log("./*logfile",
+            junk_grps = read_count_from_log("{0}*logfile".format(args.files_directory),
                                             threshold=args.remove_below)
         else:
             junk_grps = None
