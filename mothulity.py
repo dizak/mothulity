@@ -55,7 +55,6 @@ def load_template_file(template_file):
 
 def render_template(template_loaded,
                     files_directory=".",
-                    output_file_name="mothur.sh",
                     job_name="mothur.job",
                     mock=False,
                     run=None,
@@ -87,7 +86,6 @@ def render_template(template_loaded,
     dir_path = get_dir_path()
     template_vars = {"dir_path": dir_path,
                      "files_directory": files_directory,
-                     "output_file_name": output_file_name,
                      "job_name": job_name,
                      "mock": mock,
                      "run": run,
@@ -171,13 +169,6 @@ def main():
                         metavar="path/to/files",
                         default=".",
                         help="input directory path.")
-    parser.add_argument("-o",
-                        "--output",
-                        action="store",
-                        dest="output_file_name",
-                        metavar="",
-                        default="mothur.sh",
-                        help="output file name. Default <mothur.sh>.")
     parser.add_argument("-n",
                         "--job-name",
                         action="store",
@@ -513,7 +504,6 @@ def main():
         partition = args.partition
     rendered_template = render_template(loaded_template,
                                         files_directory=args.files_directory,
-                                        output_file_name=args.output_file_name,
                                         job_name=args.job_name,
                                         mock=args.mock,
                                         run=args.run,
@@ -541,10 +531,10 @@ def main():
                                         label=label,
                                         junk_grps=junk_grps,
                                         notify_email=args.notify_email)
-    save_template(args.output_file_name,
+    save_template("{0}.sh".format(args.job_name),
                   rendered_template)
     if args.run is not None:
-        os.system("{0} {1}".format(args.run, args.output_file_name))
+        os.system("{0} {1}".format(args.run, "{0}.sh".format(args.job_name)))
     else:
         pass
 if __name__ == "__main__":
