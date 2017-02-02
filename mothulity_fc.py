@@ -33,9 +33,9 @@ def left_n_right_generator(files_directory,
     for i in sample_names_list:
         for ii in files_list:
             if i == ii.split(split_sign)[0] and left_reads_sign in ii:
-                left_name_reads_list.append({"name": i, "left_reads": ii})
+                left_name_reads_list.append({"name": i, "left_reads": "{0}{1}".format(files_directory, ii)})
             elif i == ii.split(split_sign)[0] and right_reads_sign in ii:
-                right_name_reads_list.append({"name": i, "right_reads": ii})
+                right_name_reads_list.append({"name": i, "right_reads": "{0}{1}".format(files_directory, ii)})
             else:
                 pass
     name_reads = {"left": left_name_reads_list,
