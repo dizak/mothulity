@@ -10,12 +10,12 @@
 {% endif %}
 {% if nodes > 1 %}
 ###Create *files file###
-{{dir_path}}mothulity_fc.py {{files_directory}} -o {{job_name}}.files
+mpiexec {{dir_path}}mothulity_fc.py {{files_directory}} -o {{job_name}}.files
 ###Sequence preprocessing###
 mpiexec mothur '#set.current(processors={{processors}});
 {% else %}
 ###Create *files file###
-mpiexec {{dir_path}}mothulity_fc.py {{files_directory}} -o {{job_name}}.files
+{{dir_path}}mothulity_fc.py {{files_directory}} -o {{job_name}}.files
 ###Sequence preprocessing###
 mothur '#set.current(processors={{processors}});
 {% endif %}
