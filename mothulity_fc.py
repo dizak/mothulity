@@ -20,10 +20,10 @@ def names_sanitizer(unwanted_sign,
 
 
 def left_n_right_generator(files_directory,
-                           split_sign,
-                           files_extension,
-                           left_reads_sign,
-                           right_reads_sign):
+                           split_sign="_",
+                           files_extension="fastq",
+                           left_reads_sign="R1",
+                           right_reads_sign="R2"):
     left_name_reads_list = []
     right_name_reads_list = []
     files_list = os.listdir(files_directory)
