@@ -76,7 +76,7 @@ count.groups(shared=current)'
 
 ###Send mail###
 {% if notify_email != None %}
-headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body 'Please login and inspect the results of {{job_name}}.'
+headnode_notifier.py {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body 'Please login and inspect the results of {{job_name}}.'
 {% else %}
 {% endif %}
 ###Call mothulity for the analysis part###

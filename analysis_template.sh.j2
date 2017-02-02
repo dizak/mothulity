@@ -15,7 +15,7 @@ if [ $SHARED != '*shared' ] || [ $TAXONOMY != '*cons.taxonomy' ]; then
 else
   echo '*shared or *cons.taxonomy file not found. Quitting...';
   {% if notify_email != None %}
-  headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has failed' --body 'Failure due to lack of *shared and *cons.taxonomy files. See the logfile attached in order to inspect the cause.' --attach *logfile;
+  headnode_notifier.py {{notify_email}} --subject '{{job_name}} analysis part has failed' --body 'Failure due to lack of *shared and *cons.taxonomy files. See the logfile attached in order to inspect the cause.' --attach *logfile;
   {% else %}
   {% endif %}
   exit;
@@ -92,6 +92,6 @@ cd ../../
 zip -r {{job_name}}.zip analysis/
 {% if notify_email != None %}
 #Send mail
-headnode_notifier.py --to {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please download the attachment and inspect the results of {{job_name}}.' --attach {{job_name}}.zip
+headnode_notifier.py {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please download the attachment and inspect the results of {{job_name}}.' --attach {{job_name}}.zip
 {% else %}
 {% endif %}
