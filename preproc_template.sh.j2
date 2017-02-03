@@ -83,7 +83,7 @@ headnode_notifier.py {{notify_email}} --subject '{{job_name}} sequence preproces
 {% endif %}
 ###Call mothulity for the analysis part###
 {% if classify_ITS == True %}
-{{dir_path}}mothulity.py {{files_directory}} -n analysis_{{job_name}} --output_dir {{output_dir}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+{{dir_path}}mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% else %}
-{{dir_path}}mothulity.py {{files_directory}} -n analysis_{{job_name}} --output_dir {{output_dir}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+{{dir_path}}mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% endif %}
