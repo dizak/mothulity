@@ -177,14 +177,6 @@ def main():
                         default="mothur.job",
                         help="job name. Used for naming scripts, queued job\
                         and html output. Default <mothur.job>.")
-    parser.add_argument("-m",
-                        "--mock",
-                        action="store_true",
-                        dest="mock",
-                        default=False,
-                        help="use if you have mock community group and want to\
-                        calculate sequencing errors, classify mock OTUs and\
-                        draw mock rarefaction curve.")
     parser.add_argument("-r",
                         "--run",
                         action="store",
