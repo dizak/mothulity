@@ -177,6 +177,13 @@ def main():
                         default="mothur.job",
                         help="job name. Used for naming scripts, queued job\
                         and html output. Default <mothur.job>.")
+    parser.add_argument("-d",
+                        "--output-dir",
+                        action="store",
+                        dest="output_dir",
+                        default=".",
+                        help="output directory path for script. It is NOT\
+                        output directory for actual job.")
     parser.add_argument("-r",
                         "--run",
                         action="store",
