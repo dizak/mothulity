@@ -184,6 +184,7 @@ def main():
                         "--output-dir",
                         action="store",
                         dest="output_dir",
+                        metavar=".",
                         default=".",
                         help="output directory path for script. It is NOT\
                         output directory for actual job.")
