@@ -55,6 +55,7 @@ def load_template_file(template_file):
 
 def render_template(template_loaded,
                     files_directory=".",
+                    output_dir=".",
                     job_name="mothur.job",
                     mock=False,
                     run=None,
@@ -86,6 +87,7 @@ def render_template(template_loaded,
     dir_path = get_dir_path()
     template_vars = {"dir_path": dir_path,
                      "files_directory": files_directory,
+                     "output_dir": output_dir,
                      "job_name": job_name,
                      "mock": mock,
                      "run": run,
@@ -168,7 +170,8 @@ def main():
                         dest="files_directory",
                         metavar="path/to/files",
                         default=".",
-                        help="input directory path.")
+                        help="input directory path. It is used as working\
+                        directory for the job. Default CWD.")
     parser.add_argument("-n",
                         "--job-name",
                         action="store",
@@ -503,6 +506,7 @@ def main():
         partition = args.partition
     rendered_template = render_template(loaded_template,
                                         files_directory=args.files_directory,
+                                        output_dir=args.output_dir,
                                         job_name=args.job_name,
                                         mock=args.mock,
                                         run=args.run,
