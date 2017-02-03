@@ -538,7 +538,8 @@ def main():
                                       args.job_name),
                   rendered_template)
     if args.run is not None:
-        os.system("{0} {1}".format(args.run, "{0}.sh".format(args.job_name)))
+        os.system("{0} {1}".format(args.run, "{0}/{1}.sh".format(output_dir_abs,
+                                                                 args.job_name)))
     else:
         pass
 if __name__ == "__main__":
