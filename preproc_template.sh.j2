@@ -10,13 +10,13 @@
 {% endif %}
 {% if nodes > 1 %}
 ###Create *files file###
-mpiexec {{dir_path}}mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
+mpiexec mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
 ###Sequence preprocessing###
 mpiexec mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 set.current(processors={{processors}});
 {% else %}
 ###Create *files file###
-{{dir_path}}mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
+mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
 ###Sequence preprocessing###
 mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 set.current(processors={{processors}});
@@ -83,7 +83,7 @@ headnode_notifier.py {{notify_email}} --subject '{{job_name}} sequence preproces
 {% endif %}
 ###Call mothulity for the analysis part###
 {% if classify_ITS == True %}
-{{dir_path}}mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% else %}
-{{dir_path}}mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% endif %}
