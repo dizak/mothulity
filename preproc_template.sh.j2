@@ -10,13 +10,13 @@
 {% endif %}
 {% if nodes > 1 %}
 ###Create *files file###
-mpiexec {{dir_path}}mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
+mpiexec {{dir_path}}mothulity_fc.py {{files_directory}} -o {{files_directory}}/{{job_name}}.files
 ###Sequence preprocessing###
 mpiexec mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 set.current(processors={{processors}});
 {% else %}
 ###Create *files file###
-{{dir_path}}mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
+{{dir_path}}mothulity_fc.py {{files_directory}} -o {{files_directory}}/{{job_name}}.files
 ###Sequence preprocessing###
 mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 set.current(processors={{processors}});
