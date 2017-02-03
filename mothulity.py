@@ -57,7 +57,6 @@ def render_template(template_loaded,
                     files_directory=".",
                     output_dir=".",
                     job_name="mothur.job",
-                    mock=False,
                     run=None,
                     partition="long",
                     nodes=1,
@@ -89,7 +88,6 @@ def render_template(template_loaded,
                      "files_directory": files_directory,
                      "output_dir": output_dir,
                      "job_name": job_name,
-                     "mock": mock,
                      "run": run,
                      "partition": partition,
                      "nodes": nodes,
@@ -406,13 +404,14 @@ def main():
                         argument if you want to keep them all.")
     args = parser.parse_args()
 
+    files_directory_abs = os.path.abspath(args.files_directory)
     if args.render_html is True:
         html_template_path = sys.argv[0].replace(sys.argv[0].split("/")[-1],
                                                  "output_template.html")
         html_output_name = "{0}.html".format(args.job_name)
         loaded_template = load_template_file(html_template_path)
         rendered_template = render_template(loaded_template,
-                                            files_directory=args.files_directory,
+                                            files_directory=files_directory_abs,
                                             job_name=args.job_name,
                                             mock=args.mock,
                                             partition=args.partition,
@@ -446,9 +445,9 @@ def main():
     else:
         templ_path = "/".join(sys.argv[0].split("/")[:-1])
     if args.analysis_only is True:
-        label = read_label_from_file("{0}*cons.taxonomy".format(args.files_directory))
+        label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
         if args.remove_below is not None:
-            junk_grps = read_count_from_log("{0}*logfile".format(args.files_directory),
+            junk_grps = read_count_from_log("{0}*logfile".format(files_directory_abs),
                                             threshold=args.remove_below)
         else:
             junk_grps = None
@@ -506,10 +505,9 @@ def main():
         processors = args.processors
         partition = args.partition
     rendered_template = render_template(loaded_template,
-                                        files_directory=args.files_directory,
+                                        files_directory=files_directory_abs,
                                         output_dir=args.output_dir,
                                         job_name=args.job_name,
-                                        mock=args.mock,
                                         run=args.run,
                                         partition=partition,
                                         nodes=nodes,
@@ -535,7 +533,8 @@ def main():
                                         label=label,
                                         junk_grps=junk_grps,
                                         notify_email=args.notify_email)
-    save_template("{0}.sh".format(args.job_name),
+    save_template("{0}/{1}.sh".format(args.output_dir,
+                                      args.job_name),
                   rendered_template)
     if args.run is not None:
         os.system("{0} {1}".format(args.run, "{0}.sh".format(args.job_name)))
