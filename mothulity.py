@@ -11,7 +11,7 @@ import glob
 
 
 __author__ = "Dariusz Izak IBB PAS"
-__version = "0.9.6"
+__version = "0.9.7"
 
 
 def load_template_str(template_str):
