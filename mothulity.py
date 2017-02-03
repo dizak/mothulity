@@ -175,8 +175,8 @@ def main():
                         dest="job_name",
                         metavar="",
                         default="mothur.job",
-                        help="job name. MUST be same as <name>.files.\
-                        Default <mothur>.")
+                        help="job name. Used for naming scripts, queued job\
+                        and html output. Default <mothur.job>.")
     parser.add_argument("-m",
                         "--mock",
                         action="store_true",
