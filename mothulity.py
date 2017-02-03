@@ -405,6 +405,7 @@ def main():
     args = parser.parse_args()
 
     files_directory_abs = os.path.abspath(args.files_directory)
+    output_dir_abs = os.path.abspath(args.output_dir)
     if args.render_html is True:
         html_template_path = sys.argv[0].replace(sys.argv[0].split("/")[-1],
                                                  "output_template.html")
@@ -506,7 +507,7 @@ def main():
         partition = args.partition
     rendered_template = render_template(loaded_template,
                                         files_directory=files_directory_abs,
-                                        output_dir=args.output_dir,
+                                        output_dir=output_dir_abs,
                                         job_name=args.job_name,
                                         run=args.run,
                                         partition=partition,
@@ -533,7 +534,7 @@ def main():
                                         label=label,
                                         junk_grps=junk_grps,
                                         notify_email=args.notify_email)
-    save_template("{0}/{1}.sh".format(args.output_dir,
+    save_template("{0}/{1}.sh".format(output_dir_abs,
                                       args.job_name),
                   rendered_template)
     if args.run is not None:
