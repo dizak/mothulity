@@ -35,36 +35,36 @@ def main():
                         dest="unite_ITS_02",
                         metavar="",
                         default=None,
-                        help="path/to/where/you/want/database. Use if you want\
-                        to download UNITE ITS 02.")
+                        help="path/to/download-parser. Use if you want to\
+                        download UNITE ITS 02 parser.")
     parser.add_argument("--unite-ITS-s-02",
                         action="store",
                         dest="unite_ITS_s_02",
                         metavar="",
                         default=None,
-                        help="path/to/where/you/want/database. Use if you want\
-                        to download UNITE ITS s 02.")
+                        help="path/to/download-parser. Use if you want to\
+                        download UNITE ITS s 02 parser.")
     parser.add_argument("--silva-102",
                         action="store",
                         dest="silva_102",
                         metavar="",
                         default=None,
-                        help="path/to/where/you/want/database. Use if you want\
-                        to download Silva v102.")
+                        help="path/to/download-parser. Use if you want to\
+                        download Silva v102.")
     parser.add_argument("--silva-119",
                         action="store",
                         dest="silva_119",
                         metavar="",
                         default=None,
-                        help="path/to/where/you/want/database. Use if you want\
-                        to download Silva v119.")
+                        help="path/to/download-parser. Use if you want to\
+                        download Silva v119.")
     parser.add_argument("--silva-123",
                         action="store",
                         dest="silva_123",
                         metavar="",
                         default=None,
-                        help="path/to/where/you/want/database. Use if you want\
-                        to download Silva v123.")
+                        help="path/to/download-parser. Use if you want to\
+                        download Silva v123.")
     args = parser.parse_args()
 
     if args.unite_ITS_02 is not None:
