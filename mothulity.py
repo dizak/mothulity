@@ -140,6 +140,12 @@ def read_label_from_file(file_glob):
                 pass
 
 
+def read_sampl_num(files_file):
+    with open(files_file) as fin:
+        lines_num = len(fin.readlines())
+    return lines_num
+
+
 def read_count_from_log(log_file,
                         keyword="contains",
                         strip_char=".\n",
