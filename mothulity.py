@@ -81,7 +81,8 @@ def render_template(template_loaded,
                     full_ram_load=False,
                     label=0.03,
                     junk_grps=None,
-                    notify_email=None):
+                    notify_email=None,
+                    sampl_num=None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"files_directory": files_directory,
                      "output_dir": output_dir,
@@ -110,7 +111,8 @@ def render_template(template_loaded,
                      "full_ram_load": full_ram_load,
                      "label": label,
                      "junk_grps": junk_grps,
-                     "notify_email": notify_email}
+                     "notify_email": notify_email,
+                     "sampl_num": sampl_num}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -449,6 +451,7 @@ def main():
         pass
     if args.analysis_only is True:
         label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
+        sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
         if args.remove_below is not None:
             junk_grps = read_count_from_log("{0}*logfile".format(files_directory_abs),
                                             threshold=args.remove_below)
@@ -535,7 +538,8 @@ def main():
                                         full_ram_load=args.full_ram_load,
                                         label=label,
                                         junk_grps=junk_grps,
-                                        notify_email=args.notify_email)
+                                        notify_email=args.notify_email,
+                                        sampl_num=sampl_num)
     save_template("{0}{1}.sh".format(output_dir_abs,
                                      args.job_name),
                   rendered_template)
