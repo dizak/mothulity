@@ -25,7 +25,7 @@ fi
 
 #Create directories and shorten shared file name
 
-mkdir -p {{files_directory}}analysis/OTU/alpha {{files_directory}}analysis/OTU/beta
+mkdir -p {{files_directory}}analysis/OTU/alpha {% if sampl_num > 1 %}{{files_directory}}analysis/OTU/beta{% else %}
 cp {{files_directory}}*shared {{files_directory}}analysis/OTU/{{job_name}}.shared
 cp {{files_directory}}*cons.tax.summary {{files_directory}}analysis/OTU/alpha/{{job_name}}.tax.summary
 {% if junk_grps != None %}
@@ -47,7 +47,9 @@ mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub
 #Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory
 
 cp {{job_name}}.shared ./alpha
+{% if sampl_num > 1 %}
 cp {{job_name}}.{{label}}.subsample.shared ./beta/
+{% endif %}
 {% endif %}
 #Go to alpha directory and create krona chart, rarefaction, summary table
 
@@ -57,6 +59,7 @@ ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-invsimpson-shannon)'
 mothulity_draw.py --rarefaction {{job_name}}.groups.rarefaction
 mothulity_draw.py --summary-table {{job_name}}.groups.summary
+{% if sampl_num > 1 %}
 
 #Go to beta directory and create dist files for Jaccard and YC measures
 
@@ -75,7 +78,7 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 
 mothulity_draw.py --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
 mothulity_draw.py --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
-
+{% endif %}
 #Go to OTU directory
 
 cd ../
@@ -92,6 +95,6 @@ cd ../../
 zip -r {{job_name}}.zip analysis/
 {% if notify_email != None %}
 #Send mail
-headnode_notifier.py {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please download the attachment and inspect the results of {{job_name}}.' --attach {{job_name}}.zip
+headnode_notifier.py {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please download the attachment and inspect the results of {{job_name}}. Please note, that there was only one sample, therefore no beta analysis was carried out.' --attach {{job_name}}.zip
 {% else %}
 {% endif %}
