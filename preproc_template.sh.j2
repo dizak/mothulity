@@ -8,6 +8,12 @@
 {% if node_list != None %}
 #SBATCH --nodelist={{node_list}}
 {% endif %}
+###Gunzip if gzipped###
+FASTQGZ_FILES="$(echo *fastq.gz)"
+if [ FASTQGZ_FILES != '*fastq.gz' ]; then
+  echo 'Compressed files found. Uncompressing...'
+  gunzip ./*fastq.gz
+fi
 {% if nodes > 1 %}
 ###Create *files file###
 mpiexec mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
