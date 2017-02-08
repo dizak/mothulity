@@ -25,7 +25,7 @@ fi
 
 #Create directories and shorten shared file name
 
-mkdir -p {{files_directory}}analysis/OTU/alpha {% if sampl_num > 1 %}{{files_directory}}analysis/OTU/beta{% else %}
+mkdir -p {{files_directory}}analysis/OTU/alpha {% if sampl_num > 1 %}{{files_directory}}analysis/OTU/beta{% else %}{% endif %}
 cp {{files_directory}}*shared {{files_directory}}analysis/OTU/{{job_name}}.shared
 cp {{files_directory}}*cons.tax.summary {{files_directory}}analysis/OTU/alpha/{{job_name}}.tax.summary
 {% if junk_grps != None %}
@@ -49,6 +49,7 @@ mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub
 cp {{job_name}}.shared ./alpha
 {% if sampl_num > 1 %}
 cp {{job_name}}.{{label}}.subsample.shared ./beta/
+{% else %}
 {% endif %}
 {% endif %}
 #Go to alpha directory and create krona chart, rarefaction, summary table
@@ -78,6 +79,7 @@ mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.di
 
 mothulity_draw.py --phylip {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes
 mothulity_draw.py --phylip {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --tree {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --axes {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes
+{% else %}
 {% endif %}
 #Go to OTU directory
 

@@ -142,7 +142,8 @@ def read_label_from_file(file_glob):
                 pass
 
 
-def read_sampl_num(files_file):
+def read_sampl_num(file_glob):
+    files_file = glob.glob(file_glob)[0]
     with open(files_file) as fin:
         lines_num = len(fin.readlines())
     return lines_num
@@ -451,7 +452,7 @@ def main():
         pass
     if args.analysis_only is True:
         label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
-        sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
+        sampl_num = read_sampl_num("*files")
         if args.remove_below is not None:
             junk_grps = read_count_from_log("{0}*logfile".format(files_directory_abs),
                                             threshold=args.remove_below)
@@ -461,6 +462,7 @@ def main():
     else:
         label = args.label
         junk_grps = None
+        sampl_num = None
         loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
     if args.resources is not None:
         node_list = None
