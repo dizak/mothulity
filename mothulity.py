@@ -405,8 +405,7 @@ def main():
     files_directory_abs = "{0}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{0}/".format(os.path.abspath(args.output_dir))
     if args.render_html is True:
-        html_template_path = sys.argv[0].replace(sys.argv[0].split("/")[-1],
-                                                 "output_template.html")
+        html_template_path = get_dir_path("output_template.html")
         html_output_name = "{0}.html".format(args.job_name)
         loaded_template = load_template_file(html_template_path)
         rendered_template = render_template(loaded_template,
@@ -441,7 +440,7 @@ def main():
     if args.template_file_name is not None:
         loaded_template = load_template_file(args.template_file_name)
     else:
-        templ_path = "/".join(sys.argv[0].split("/")[:-1])
+        pass
     if args.analysis_only is True:
         label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
         if args.remove_below is not None:
@@ -449,11 +448,11 @@ def main():
                                             threshold=args.remove_below)
         else:
             junk_grps = None
-        loaded_template = load_template_file("{0}/analysis_template.sh.j2".format(templ_path))
+        loaded_template = load_template_file(get_dir_path("analysis_template.sh.j2"))
     else:
         label = args.label
         junk_grps = None
-        loaded_template = load_template_file("{0}/preproc_template.sh.j2".format(templ_path))
+        loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
     if args.resources is not None:
         node_list = None
         resources = args.resources.upper()
