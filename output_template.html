@@ -57,6 +57,7 @@
           </div>
         </div>
       </article>
+      {% if sampl_num > 1 %}
       <article class="w3-container w3-margin w3-card-8 w3-white">
         <h1>Beta Biodiversity</h1>
         <h2>Biodiversity among the samples</h2>
@@ -134,6 +135,8 @@
           </div>
         </div>
       </article>
+      {% else %}
+      {% endif %}
     </section>
   </body>
 </html>
