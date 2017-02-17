@@ -209,14 +209,6 @@ def main():
                         default=False,
                         help="outputs just the part involved in statistical\
                         analysis and drawing.")
-    parser.add_argument("-t",
-                        "--template",
-                        action="store",
-                        dest="template_file_name",
-                        metavar="",
-                        default=None,
-                        help="path/to/template. Use if you want to use other\
-                        template than default.")
     parser.add_argument("--render-html",
                         action="store_true",
                         dest="render_html",
@@ -410,60 +402,8 @@ def main():
                         help="remove groups below this threshold. Omit this\
                         argument if you want to keep them all.")
     args = parser.parse_args()
-
     files_directory_abs = "{0}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{0}/".format(os.path.abspath(args.output_dir))
-    if args.render_html is True:
-        html_template_path = get_dir_path("output_template.html")
-        html_output_name = "{0}.html".format(args.job_name)
-        loaded_template = load_template_file(html_template_path)
-        rendered_template = render_template(loaded_template,
-                                            files_directory=files_directory_abs,
-                                            job_name=args.job_name,
-                                            partition=args.partition,
-                                            nodes=args.nodes,
-                                            ntasks_per_node=args.ntasks_per_node,
-                                            mem_per_cpu=args.mem_per_cpu,
-                                            node_list=args.node_list,
-                                            processors=args.processors,
-                                            max_ambig=args.max_ambig,
-                                            max_homop=args.max_homop,
-                                            min_length=args.min_length,
-                                            max_length=args.max_length,
-                                            min_overlap=args.min_overlap,
-                                            screen_criteria=args.screen_criteria,
-                                            chop_length=args.chop_length,
-                                            precluster_diffs=args.precluster_diffs,
-                                            chimera_dereplicate=args.chimera_dereplicate,
-                                            classify_seqs_cutoff=args.classify_seqs_cutoff,
-                                            classify_ITS=args.classify_ITS,
-                                            align_database=args.align_database,
-                                            taxonomy_database=args.taxonomy_database,
-                                            cluster_cutoff=args.cluster_cutoff,
-                                            label=args.label)
-        save_template(html_output_name,
-                      rendered_template)
-        quit()
-    else:
-        pass
-    if args.template_file_name is not None:
-        loaded_template = load_template_file(args.template_file_name)
-    else:
-        pass
-    if args.analysis_only is True:
-        label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
-        sampl_num = read_sampl_num("*files")
-        if args.remove_below is not None:
-            junk_grps = read_count_from_log("{0}*logfile".format(files_directory_abs),
-                                            threshold=args.remove_below)
-        else:
-            junk_grps = None
-        loaded_template = load_template_file(get_dir_path("analysis_template.sh.j2"))
-    else:
-        label = args.label
-        junk_grps = None
-        sampl_num = None
-        loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
     if args.resources is not None:
         node_list = None
         resources = args.resources.upper()
@@ -512,6 +452,31 @@ def main():
         mem_per_cpu = args.mem_per_cpu
         processors = args.processors
         partition = args.partition
+    if args.analysis_only is True:
+        loaded_template = load_template_file(get_dir_path("analysis_template.sh.j2"))
+        print loaded_template
+        label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
+        sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
+        if args.remove_below is not None:
+            junk_grps = read_count_from_log("{0}*logfile".format(files_directory_abs),
+                                            threshold=args.remove_below)
+        else:
+            junk_grps = None
+    else:
+        if args.render_html is True:
+            loaded_template = load_template_file(get_dir_path("output_template.html"))
+            print loaded_template
+            label = args.label
+            junk_grps = None
+            sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
+            print "{0}*files".format(files_directory_abs)
+            print sampl_num
+        else:
+            loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
+            print loaded_template
+            label = args.label
+            junk_grps = None
+            sampl_num = None
     rendered_template = render_template(loaded_template,
                                         files_directory=files_directory_abs,
                                         output_dir=output_dir_abs,
@@ -542,9 +507,11 @@ def main():
                                         junk_grps=junk_grps,
                                         notify_email=args.notify_email,
                                         sampl_num=sampl_num)
-    save_template("{0}{1}.sh".format(output_dir_abs,
-                                     args.job_name),
-                  rendered_template)
+    if args.render_html is True:
+        save_template("{0}.html".format(args.job_name), rendered_template)
+    else:
+        save_template("{0}{1}.sh".format(output_dir_abs, args.job_name),
+                      rendered_template)
     if args.run is not None:
         os.system("{0} {1}".format(args.run, "{0}{1}.sh".format(output_dir_abs,
                                                                 args.job_name)))
