@@ -21,6 +21,7 @@ It can download a proper database, run SOP provided with just fastq files direct
 2. External scripts/programs.
   * [headnode_notifier](https://github.com/dizak/headnode_notifier/releases))
   * [mothur_krona](https://github.com/accaldwell/mothur_krona.git)
+  * [Krona](https://github.com/marbl/Krona.git)
 
 3. How to install.
   1. Use python package manager to download and install dependencies.
