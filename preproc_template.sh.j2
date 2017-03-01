@@ -1,32 +1,16 @@
 #!/bin/bash
 
-#SBATCH --job-name="{{job_name}}"
-#SBATCH --partition={{partition}}
-#SBATCH --nodes={{nodes}}
-#SBATCH --ntasks-per-node={{ntasks_per_node}}
-#SBATCH --mem-per-cpu={{mem_per_cpu}}
-{% if node_list != None %}
-#SBATCH --nodelist={{node_list}}
-{% endif %}
 ###Gunzip if gzipped###
 FASTQGZ_FILES="$(echo *fastq.gz)"
 if [ FASTQGZ_FILES != '*fastq.gz' ]; then
   echo 'Compressed files found. Uncompressing...'
   gunzip ./*fastq.gz
 fi
-{% if nodes > 1 %}
-###Create *files file###
-mpiexec mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
-###Sequence preprocessing###
-mpiexec mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
-set.current(processors={{processors}});
-{% else %}
 ###Create *files file###
 mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
 ###Sequence preprocessing###
 mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 set.current(processors={{processors}});
-{% endif %}
 make.contigs(file={{job_name}}.files);
 summary.seqs(fasta=current);
 {% if  min_length != None and max_length != None %}
