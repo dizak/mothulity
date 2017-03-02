@@ -222,6 +222,12 @@ def main():
                         default=None,
                         help="email address you want to notify when job is\
                         done.")
+    parser.add_argument("--dry-run",
+                        action="store_true",
+                        dest="dry_run",
+                        default=False,
+                        help="prevents mothur script execution. Default\
+                        <False>")
     headnode.add_argument("--partition",
                           action="store",
                           dest="partition",
@@ -512,7 +518,7 @@ def main():
     else:
         save_template("{0}{1}.sh".format(output_dir_abs, args.job_name),
                       rendered_template)
-    if args.run is not None:
+    if args.run is not None and args.dry_run is not True:
         os.system("{0} {1}".format(args.run, "{0}{1}.sh".format(output_dir_abs,
                                                                 args.job_name)))
     else:
