@@ -8,13 +8,6 @@
   {% if node_list != None %}
 #SBATCH --nodelist={{node_list}}
   {% endif %}
-########################
-# WARNING
-# Mothur was invoked on multiple nodes.
-# Please make sure it is the MPI-enabled version.
-# Processors argument will be removed from within Mothur.
-########################
-{% else %}
 {% endif %}
 ###Gunzip if gzipped###
 FASTQGZ_FILES="$(echo *fastq.gz)"
@@ -22,10 +15,15 @@ if [ FASTQGZ_FILES != '*fastq.gz' ]; then
   echo 'Compressed files found. Uncompressing...'
   gunzip ./*fastq.gz
 fi
-{% if nodes > 1 %}
 ###Create *files file###
 mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
-
+{% if nodes > 1 %}
+########################
+# WARNING
+# Mothur was invoked on multiple nodes.
+# Please make sure it is the MPI-enabled version.
+# Processors argument will be removed from within Mothur.
+########################
 ###Sequence preprocessing###
 srun mpirun mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 {% else %}
