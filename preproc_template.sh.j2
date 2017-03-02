@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash
 
 #SBATCH --job-name="{{job_name}}"
 #SBATCH --partition={{partition}}
@@ -8,6 +8,13 @@
 {% if node_list != None %}
 #SBATCH --nodelist={{node_list}}
 {% endif %}
+########################
+# WARNING
+# Mothur was invoked on multiple nodes.
+# Please make sure it is the MPI-enabled version.
+# Processors argument will be removed from within Mothur.
+########################
+
 ###Gunzip if gzipped###
 FASTQGZ_FILES="$(echo *fastq.gz)"
 if [ FASTQGZ_FILES != '*fastq.gz' ]; then
@@ -16,13 +23,11 @@ if [ FASTQGZ_FILES != '*fastq.gz' ]; then
 fi
 {% if nodes > 1 %}
 ###Create *files file###
-mpiexec mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
-###Sequence preprocessing###
-mpiexec mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
-set.current(processors={{processors}});
-{% else %}
-###Create *files file###
 mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
+
+###Sequence preprocessing###
+srun mpirun mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
+{% else %}
 ###Sequence preprocessing###
 mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 set.current(processors={{processors}});
