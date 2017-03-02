@@ -63,7 +63,7 @@ def render_template(template_loaded,
                     ntasks_per_node=6,
                     mem_per_cpu=24,
                     node_list=None,
-                    processors=24,
+                    processors=1,
                     max_ambig=0,
                     max_homop=8,
                     min_length=None,
@@ -266,7 +266,7 @@ def main():
                           action="store",
                           dest="processors",
                           metavar="",
-                          default=24,
+                          default=1,
                           help="number of logical processors. Default: <24>")
     headnode.add_argument("--resources",
                           action="store",
@@ -413,30 +413,36 @@ def main():
     if args.resources is not None:
         node_list = None
         resources = args.resources.upper()
-        if resources == "S":
+        if resources == "N":
+            partition = "long"
+            nodes = 1
+            ntasks_per_node = 6
+            mem_per_cpu = 24
+            processors = 12
+        elif resources == "S":
             partition = "long"
             nodes = 2
             ntasks_per_node = 6
             mem_per_cpu = 24
-            processors = 48
+            processors = 24
         elif resources == "M":
             partition = "long"
             nodes = 10
             ntasks_per_node = 6
             mem_per_cpu = 24
-            processors = 240
+            processors = 120
         elif resources == "L":
             partition = "long"
             nodes = 20
             ntasks_per_node = 6
             mem_per_cpu = 24
-            processors = 480
+            processors = 240
         elif resources == "XL":
             partition = "long"
             nodes = 40
             ntasks_per_node = 6
             mem_per_cpu = 24
-            processors = 960
+            processors = 480
         elif resources == "PHI":
             partition = "accel"
             nodes = 1
