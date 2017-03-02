@@ -1,5 +1,5 @@
 #!/bin/bash
-
+{% if run == "sbatch" %}
 #SBATCH --job-name="{{job_name}}"
 #SBATCH --partition={{partition}}
 #SBATCH --nodes={{nodes}}
@@ -14,7 +14,8 @@
 # Please make sure it is the MPI-enabled version.
 # Processors argument will be removed from within Mothur.
 ########################
-
+{% else %}
+{% endif %}
 ###Gunzip if gzipped###
 FASTQGZ_FILES="$(echo *fastq.gz)"
 if [ FASTQGZ_FILES != '*fastq.gz' ]; then
