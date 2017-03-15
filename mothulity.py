@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 
+import time
 import jinja2 as jj2
 import argparse
 import requests as rq
@@ -408,6 +409,20 @@ def main():
                         help="remove groups below this threshold. Omit this\
                         argument if you want to keep them all.")
     args = parser.parse_args()
+
+    with open("{}{}.{}{}{}{}{}{}".format(args.files_directory,
+                                         args.job_name,
+                                         time.localtime().tm_year,
+                                         time.localtime().tm_mon,
+                                         time.localtime().tm_mday,
+                                         time.localtime().tm_hour,
+                                         time.localtime().tm_min,
+                                         time.localtime().tm_sec),
+              "a") as fin:
+        fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
+        for k, v in vars(args).iteritems():
+            if v is not None:
+                fin.write("--{}: {}\n".format(k, v))
     files_directory_abs = "{0}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{0}/".format(os.path.abspath(args.output_dir))
     if args.resources is not None:
