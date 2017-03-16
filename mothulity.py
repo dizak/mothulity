@@ -481,7 +481,6 @@ def main():
         partition = args.partition
     if args.analysis_only is True:
         loaded_template = load_template_file(get_dir_path("analysis_template.sh.j2"))
-        print loaded_template
         label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
         sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
         if args.remove_below is not None:
@@ -492,7 +491,6 @@ def main():
     else:
         if args.render_html is True:
             loaded_template = load_template_file(get_dir_path("output_template.html"))
-            print loaded_template
             label = args.label
             junk_grps = None
             sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
@@ -500,7 +498,6 @@ def main():
             print sampl_num
         else:
             loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
-            print loaded_template
             label = args.label
             junk_grps = None
             sampl_num = None
