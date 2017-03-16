@@ -423,8 +423,8 @@ def main():
         for k, v in vars(args).iteritems():
             if v is not None:
                 fin.write("--{}: {}\n".format(k, v))
-    files_directory_abs = "{0}/".format(os.path.abspath(args.files_directory))
-    output_dir_abs = "{0}/".format(os.path.abspath(args.output_dir))
+    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
+    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
     if args.resources is not None:
         node_list = None
         resources = args.resources.upper()
@@ -483,10 +483,10 @@ def main():
         loaded_template = load_template_file(get_dir_path("analysis_template.sh.j2"))
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-        label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
-        sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
+        label = read_label_from_file("{}*cons.taxonomy".format(files_directory_abs))
+        sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
         if args.remove_below is not None:
-            junk_grps = read_count_from_log("{0}*logfile".format(files_directory_abs),
+            junk_grps = read_count_from_log("{}*logfile".format(files_directory_abs),
                                             threshold=args.remove_below)
         else:
             junk_grps = None
@@ -497,8 +497,8 @@ def main():
                 fin.write("\nTemplate used:\n\n{}".format(loaded_template))
             label = args.label
             junk_grps = None
-            sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
-            print "{0}*files".format(files_directory_abs)
+            sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
+            print "{}*files".format(files_directory_abs)
             print sampl_num
         else:
             loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
@@ -538,13 +538,13 @@ def main():
                                         notify_email=args.notify_email,
                                         sampl_num=sampl_num)
     if args.render_html is True:
-        save_template("{0}.html".format(args.job_name), rendered_template)
+        save_template("{}.html".format(args.job_name), rendered_template)
     else:
-        save_template("{0}{1}.sh".format(output_dir_abs, args.job_name),
+        save_template("{}{}.sh".format(output_dir_abs, args.job_name),
                       rendered_template)
     if args.run is not None and args.dry_run is not True:
-        os.system("{0} {1}".format(args.run, "{0}{1}.sh".format(output_dir_abs,
-                                                                args.job_name)))
+        os.system("{} {}".format(args.run, "{}{}.sh".format(output_dir_abs,
+                                                            args.job_name)))
     else:
         pass
 
