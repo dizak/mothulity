@@ -410,15 +410,15 @@ def main():
                         argument if you want to keep them all.")
     args = parser.parse_args()
 
-    with open("{}{}.{}{}{}{}{}{}".format(args.files_directory,
-                                         args.job_name,
-                                         time.localtime().tm_year,
-                                         time.localtime().tm_mon,
-                                         time.localtime().tm_mday,
-                                         time.localtime().tm_hour,
-                                         time.localtime().tm_min,
-                                         time.localtime().tm_sec),
-              "a") as fin:
+    logfile_name = "{}{}.{}{}{}{}{}{}".format(args.files_directory,
+                                              args.job_name,
+                                              time.localtime().tm_year,
+                                              time.localtime().tm_mon,
+                                              time.localtime().tm_mday,
+                                              time.localtime().tm_hour,
+                                              time.localtime().tm_min,
+                                              time.localtime().tm_sec)
+    with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
         for k, v in vars(args).iteritems():
             if v is not None:
@@ -481,6 +481,8 @@ def main():
         partition = args.partition
     if args.analysis_only is True:
         loaded_template = load_template_file(get_dir_path("analysis_template.sh.j2"))
+        with open(logfile_name, "a") as fin:
+            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = read_label_from_file("{0}*cons.taxonomy".format(files_directory_abs))
         sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
         if args.remove_below is not None:
@@ -491,6 +493,8 @@ def main():
     else:
         if args.render_html is True:
             loaded_template = load_template_file(get_dir_path("output_template.html"))
+            with open(logfile_name, "a") as fin:
+                fin.write("\nTemplate used:\n\n{}".format(loaded_template))
             label = args.label
             junk_grps = None
             sampl_num = read_sampl_num("{0}*files".format(files_directory_abs))
@@ -498,6 +502,8 @@ def main():
             print sampl_num
         else:
             loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
+            with open(logfile_name, "a") as fin:
+                fin.write("\nTemplate used:\n\n{}".format(loaded_template))
             label = args.label
             junk_grps = None
             sampl_num = None
