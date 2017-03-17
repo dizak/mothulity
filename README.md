@@ -19,7 +19,7 @@ It can download a proper database, run SOP provided with just fastq files direct
   * seaborn
 
 2. External scripts/programs.
-  * [headnode_notifier](https://github.com/dizak/headnode_notifier/releases))
+  * [headnode_notifier](https://github.com/dizak/headnode_notifier/releases)
   * [mothur_krona](https://github.com/accaldwell/mothur_krona.git)
   * [Krona](https://github.com/marbl/Krona.git)
 
