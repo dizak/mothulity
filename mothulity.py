@@ -83,7 +83,11 @@ def render_template(template_loaded,
                     label=0.03,
                     junk_grps=None,
                     notify_email=None,
-                    sampl_num=None):
+                    sampl_num=None,
+                    manual_mode=False,
+                    fasta=None,
+                    group=None,
+                    man_sampl_num=None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"files_directory": files_directory,
                      "output_dir": output_dir,
@@ -113,7 +117,11 @@ def render_template(template_loaded,
                      "label": label,
                      "junk_grps": junk_grps,
                      "notify_email": notify_email,
-                     "sampl_num": sampl_num}
+                     "sampl_num": sampl_num,
+                     "manual_mode": manual_mode,
+                     "fasta": fasta,
+                     "group": group,
+                     "man_sampl_num": man_sampl_num}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -172,6 +180,7 @@ def main():
                                      version="0.9.4")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
+    manual = parser.add_argument_group("manual settings")
     parser.add_argument(action="store",
                         dest="files_directory",
                         metavar="path/to/files",
@@ -408,8 +417,42 @@ def main():
                         default=None,
                         help="remove groups below this threshold. Omit this\
                         argument if you want to keep them all.")
+    manual.add_argument("--manual-mode",
+                        action="store_true",
+                        dest="manual_mode",
+                        default=False,
+                        help="Manual mode activation. Required for using other\
+                        arguments of manual group.")
+    manual.add_argument("--fasta",
+                        action="store",
+                        dest="fasta",
+                        metavar="",
+                        default=None,
+                        help="/path/to/fasta/file. Use for manually prepared\
+                        fasta file containing all groups.")
+    manual.add_argument("--group",
+                        action="store",
+                        dest="group",
+                        metavar="",
+                        default=None,
+                        help="/path/to/group/file. Use for manually prepared\
+                        group file containing read-group info.")
+    manual.add_argument("--samples-number",
+                        action="store",
+                        dest="man_sampl_num",
+                        metavar="",
+                        default=None,
+                        help="Number of samples in the analysis.")
     args = parser.parse_args()
 
+    if args.manual_mode is True:
+        if any([args.fasta, args.group, args.man_sampl_num]) is None:
+            print "One of manual mode arguments was not passed. Quitting..."
+            exit()
+        else:
+            pass
+    else:
+        pass
     logfile_name = "{}{}.{}{}{}{}{}{}".format(args.files_directory,
                                               args.job_name,
                                               time.localtime().tm_year,
@@ -484,7 +527,10 @@ def main():
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = read_label_from_file("{}*cons.taxonomy".format(files_directory_abs))
-        sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
+        if args.manual_mode is True:
+            sampl_num = args.man_sampl_num
+        else:
+            sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
         if args.remove_below is not None:
             junk_grps = read_count_from_log("{}*logfile".format(files_directory_abs),
                                             threshold=args.remove_below)
@@ -497,7 +543,10 @@ def main():
                 fin.write("\nTemplate used:\n\n{}".format(loaded_template))
             label = args.label
             junk_grps = None
-            sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
+            if args.manual_mode is True:
+                sampl_num = args.man_sampl_num
+            else:
+                sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
             print "{}*files".format(files_directory_abs)
             print sampl_num
         else:
@@ -536,7 +585,11 @@ def main():
                                         label=label,
                                         junk_grps=junk_grps,
                                         notify_email=args.notify_email,
-                                        sampl_num=sampl_num)
+                                        sampl_num=sampl_num,
+                                        manual_mode=args.manual_mode,
+                                        fasta=args.fasta,
+                                        group=args.group,
+                                        man_sampl_num=args.man_sampl_num)
     if args.render_html is True:
         save_template("{}.html".format(args.job_name), rendered_template)
     else:
