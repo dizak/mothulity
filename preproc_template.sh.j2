@@ -45,13 +45,13 @@ make.contigs(file={{job_name}}.files);
 {% endif %}
 summary.seqs(fasta=current);
 {% if  min_length != None and max_length != None %}
-screen.seqs(fasta=current, {% if manual_mode %}contigsreport={{job_name}}.contigs.report{% endif %}, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, {% if manual_mode %}minoverlap={{min_overlap}}{% endif %});
+screen.seqs(fasta=current,{% if manual_mode %}{% else %} contigsreport={{job_name}}.contigs.report,{% endif %} group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, {% if manual_mode %}{% else %}minoverlap={{min_overlap}}{% endif %});
 {% elif min_length != None and max_length == None %}
-screen.seqs(fasta=current, {% if manual_mode %}contigsreport={{job_name}}.contigs.report{% endif %}, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, {% if manual_mode %}minoverlap={{min_overlap}}{% endif %}, optimize=end, criteria={{screen_criteria}});
+screen.seqs(fasta=current,{% if manual_mode %}{% else %} contigsreport={{job_name}}.contigs.report,{% endif %} group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, {% if manual_mode %}{% else %}minoverlap={{min_overlap}},{% endif %} optimize=end, criteria={{screen_criteria}});
 {% elif min_length == None and max_length != None %}
-screen.seqs(fasta=current, {% if manual_mode %}contigsreport={{job_name}}.contigs.report{% endif %}, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, maxlength={{max_length}}, {% if manual_mode %}minoverlap={{min_overlap}}{% endif %}, optimize=start, criteria={{screen_criteria}});
+screen.seqs(fasta=current,{% if manual_mode %}{% else %} contigsreport={{job_name}}.contigs.report,{% endif %} group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, maxlength={{max_length}}, {% if manual_mode %}{% else %}minoverlap={{min_overlap}},{% endif %} optimize=start, criteria={{screen_criteria}});
 {% else %}
-screen.seqs(fasta=current, {% if manual_mode %}contigsreport={{job_name}}.contigs.report{% endif %}, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, {% if manual_mode %}minoverlap={{min_overlap}}{% endif %}, optimize=start-end, criteria={{screen_criteria}});
+screen.seqs(fasta=current,{% if manual_mode %}{% else %} contigsreport={{job_name}}.contigs.report,{% endif %} group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, {% if manual_mode %}{% else %}minoverlap={{min_overlap}},{% endif %} optimize=start-end, criteria={{screen_criteria}});
 {% endif %}
 summary.seqs(fasta=current);
 {% if classify_ITS == True %}
