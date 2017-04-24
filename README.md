@@ -7,16 +7,20 @@ It can download a proper database, run SOP provided with just fastq files direct
 ### Installation
 
 1. Requirements.
-  * jinja2
-  * argparse
-  * requests
-  * tqdm
-  * Biopython
-  * matplotlib
-  * pylab
-  * mpld3
-  * pandas
-  * seaborn
+  * conda users: install dependencies with
+
+  ```
+  conda env create --file /path/to/mothulity.yaml
+  ```
+  or if you have access restrictions (eg. anaconda is installed system-wide)
+
+  ```
+  conda env create --file /path/to/mothulity.yaml -p /your/path/to/env/
+  ```
+
+  This environment includes mothur.
+
+  * non-conda users: install dependencies listed in mothulity.yaml by any other means.
 
 2. External scripts/programs.
   * [headnode_notifier](https://github.com/dizak/headnode_notifier/releases)
