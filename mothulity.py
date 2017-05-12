@@ -78,7 +78,7 @@ def render_template(template_loaded,
                     classify_ITS=False,
                     align_database=None,
                     taxonomy_database=None,
-                    cluster_cutoff=0.15,
+                    cluster_cutoff=0.06,
                     full_ram_load=False,
                     label=0.03,
                     junk_grps=None,
@@ -394,9 +394,9 @@ def main():
                         action="store",
                         dest="cluster_cutoff",
                         metavar="",
-                        default=0.15,
+                        default=0.06,
                         help="cutoff value. Smaller == faster cluster param.\
-                        Default <0.15>.")
+                        Default <0.06>.")
     mothur.add_argument("--full-ram-load",
                         action="store_true",
                         dest="full_ram_load",
