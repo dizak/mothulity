@@ -78,7 +78,7 @@ taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}});
 {% if classify_ITS == True %}
 remove.lineage(fasta=current, count=current, taxonomy=current,
 taxon=Chloroplast-Mitochondria-unknown-Unknown);
-pairwise.seqs(fasta=current, cutoff=0.15, output=lt);
+pairwise.seqs(fasta=current, cutoff={{cluster_cutoff}}, output=lt);
   {% if full_ram_load == True %}
 cluster(phylip=current, cutoff={{cluster_cutoff}});
   {% else %}
