@@ -468,8 +468,10 @@ def main():
         for k, v in vars(args).iteritems():
             if v is not None:
                 fin.write("--{}: {}\n".format(k, v))
+
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+
     if args.resources is not None:
         node_list = None
         ini_slurm = ConfigParser.SafeConfigParser()
@@ -487,6 +489,7 @@ def main():
         mem_per_cpu = args.mem_per_cpu
         processors = args.processors
         partition = args.partition
+
     if args.analysis_only is True:
         loaded_template = load_template_file(get_dir_path("analysis_template.sh.j2"))
         with open(logfile_name, "a") as fin:
@@ -521,6 +524,7 @@ def main():
             label = args.label
             junk_grps = None
             sampl_num = None
+
     rendered_template = render_template(loaded_template,
                                         files_directory=files_directory_abs,
                                         output_dir=output_dir_abs,
@@ -560,6 +564,7 @@ def main():
     else:
         save_template("{}{}.sh".format(output_dir_abs, args.job_name),
                       rendered_template)
+
     if args.run is not None and args.dry_run is not True:
         os.system("{} {}".format(args.run, "{}{}.sh".format(output_dir_abs,
                                                             args.job_name)))
