@@ -9,6 +9,7 @@ from tqdm import tqdm
 import os
 import sys
 import glob
+import ConfigParser
 
 
 __author__ = "Dariusz Izak IBB PAS"
@@ -453,6 +454,7 @@ def main():
             pass
     else:
         pass
+
     logfile_name = "{}.{}.{}{}{}{}{}{}".format(args.files_directory,
                                                args.job_name,
                                                time.localtime().tm_year,
@@ -470,51 +472,14 @@ def main():
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
     if args.resources is not None:
         node_list = None
+        ini_slurm = ConfigParser.SafeConfigParser()
+        ini_slurm.read("slurm.ini")
         resources = args.resources.upper()
-        if resources == "N":
-            partition = "long"
-            nodes = 1
-            ntasks_per_node = 1
-            mem_per_cpu = 24
-            processors = 12
-        elif resources == "S":
-            partition = "long"
-            nodes = 2
-            ntasks_per_node = 1
-            mem_per_cpu = 24
-            processors = 24
-        elif resources == "M":
-            partition = "long"
-            nodes = 10
-            ntasks_per_node = 1
-            mem_per_cpu = 24
-            processors = 120
-        elif resources == "L":
-            partition = "long"
-            nodes = 20
-            ntasks_per_node = 1
-            mem_per_cpu = 24
-            processors = 240
-        elif resources == "XL":
-            partition = "long"
-            nodes = 40
-            ntasks_per_node = 1
-            mem_per_cpu = 24
-            processors = 480
-        elif resources == "PHI":
-            partition = "accel"
-            nodes = 1
-            ntasks_per_node = 1
-            mem_per_cpu = 128
-            processors = 32
-        elif resources == "JUMBO":
-            partition = "accel"
-            nodes = 4
-            ntasks_per_node = 1
-            mem_per_cpu = 128
-            processors = 128
-        else:
-            pass
+        partition = ini_slurm.get(resources, "partition")
+        nodes = ini_slurm.get(resources, "nodes")
+        ntasks_per_node = ini_slurm.get(resources, "ntasks_per_node")
+        mem_per_cpu = ini_slurm.get(resources, "mem_per_cpu")
+        processors = ini_slurm.get(resources, "processors")
     else:
         nodes = args.nodes
         node_list = args.node_list
