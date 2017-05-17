@@ -505,25 +505,27 @@ def main():
         else:
             junk_grps = None
     else:
-        if args.render_html is True:
-            loaded_template = load_template_file(get_dir_path("output_template.html"))
-            with open(logfile_name, "a") as fin:
-                fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-            label = args.label
-            junk_grps = None
-            if args.manual_mode is True:
-                sampl_num = args.man_sampl_num
-            else:
-                sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
-            print "{}*files".format(files_directory_abs)
-            print sampl_num
+        pass
+
+    if args.render_html is True:
+        loaded_template = load_template_file(get_dir_path("output_template.html"))
+        with open(logfile_name, "a") as fin:
+            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
+        label = args.label
+        junk_grps = None
+        if args.manual_mode is True:
+            sampl_num = args.man_sampl_num
         else:
-            loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
-            with open(logfile_name, "a") as fin:
-                fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-            label = args.label
-            junk_grps = None
-            sampl_num = None
+            sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
+        print "{}*files".format(files_directory_abs)
+        print sampl_num
+    else:
+        loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
+        with open(logfile_name, "a") as fin:
+            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
+        label = args.label
+        junk_grps = None
+        sampl_num = None
 
     rendered_template = render_template(loaded_template,
                                         files_directory=files_directory_abs,
