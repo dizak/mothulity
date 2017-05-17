@@ -453,14 +453,14 @@ def main():
             pass
     else:
         pass
-    logfile_name = "{}{}.{}{}{}{}{}{}".format(args.files_directory,
-                                              args.job_name,
-                                              time.localtime().tm_year,
-                                              time.localtime().tm_mon,
-                                              time.localtime().tm_mday,
-                                              time.localtime().tm_hour,
-                                              time.localtime().tm_min,
-                                              time.localtime().tm_sec)
+    logfile_name = "{}.{}.{}{}{}{}{}{}".format(args.files_directory,
+                                               args.job_name,
+                                               time.localtime().tm_year,
+                                               time.localtime().tm_mon,
+                                               time.localtime().tm_mday,
+                                               time.localtime().tm_hour,
+                                               time.localtime().tm_min,
+                                               time.localtime().tm_sec)
     with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
         for k, v in vars(args).iteritems():
