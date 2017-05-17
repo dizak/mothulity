@@ -455,6 +455,13 @@ def main():
     else:
         pass
 
+    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
+    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+    ini_req_path = get_dir_path("req.ini")
+    ini_slurm_path = get_dir_path("slurm.ini")
+    output_template_path = get_dir_path("output_template.html")
+    analysis_template_path = get_dir_path("analysis_template.sh.j2")
+
     logfile_name = "{}.{}.{}{}{}{}{}{}".format(args.files_directory,
                                                args.job_name,
                                                time.localtime().tm_year,
@@ -469,13 +476,15 @@ def main():
             if v is not None:
                 fin.write("--{}: {}\n".format(k, v))
 
-    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
-    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+    ini_req = ConfigParser.SafeConfigParser()
+    ini_req.read(ini_req_path)
+    shared_glob = ini_req.get("file_globs", "shared")
+    tax_sum_glob = ini_req.get("file_globs", "tax_sum")
 
     if args.resources is not None:
         node_list = None
         ini_slurm = ConfigParser.SafeConfigParser()
-        ini_slurm.read("slurm.ini")
+        ini_slurm.read(ini_slurm_path)
         resources = args.resources.upper()
         partition = ini_slurm.get(resources, "partition")
         nodes = ini_slurm.get(resources, "nodes")
@@ -491,7 +500,7 @@ def main():
         partition = args.partition
 
     if args.analysis_only is True:
-        loaded_template = load_template_file(get_dir_path("analysis_template.sh.j2"))
+        loaded_template = load_template_file(analysis_template_path)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = read_label_from_file("{}*cons.taxonomy".format(files_directory_abs))
@@ -508,7 +517,7 @@ def main():
         pass
 
     if args.render_html is True:
-        loaded_template = load_template_file(get_dir_path("output_template.html"))
+        loaded_template = load_template_file(output_template_path)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = args.label
