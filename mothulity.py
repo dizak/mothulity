@@ -465,14 +465,14 @@ def main():
     config = ConfigParser.SafeConfigParser()
     config.read(config_path)
 
-    logfile_name = "{}.{}{}{}{}{}{}{}".format(args.files_directory,
-                                              args.job_name,
-                                              time.localtime().tm_year,
-                                              time.localtime().tm_mon,
-                                              time.localtime().tm_mday,
-                                              time.localtime().tm_hour,
-                                              time.localtime().tm_min,
-                                              time.localtime().tm_sec)
+    logfile_name = "{}.{}.{}{}{}{}{}{}".format(args.files_directory,
+                                               args.job_name,
+                                               time.localtime().tm_year,
+                                               time.localtime().tm_mon,
+                                               time.localtime().tm_mday,
+                                               time.localtime().tm_hour,
+                                               time.localtime().tm_min,
+                                               time.localtime().tm_sec)
     with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
         for k, v in vars(args).iteritems():
@@ -499,13 +499,19 @@ def main():
         loaded_template = load_template_file(analysis_template_path)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-        label = read_label_from_file("{}*cons.taxonomy".format(files_directory_abs))
+        label = read_label_from_file("{}{}".format(files_directory_abs,
+                                                   config.get("file_globs",
+                                                              "cons_tax")))
         if args.manual_mode is True:
             sampl_num = args.man_sampl_num
         else:
-            sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
+            sampl_num = read_sampl_num("{}{}".format(files_directory_abs,
+                                                     config.get("file_globs",
+                                                                "files")))
         if args.remove_below is not None:
-            junk_grps = read_count_from_log("{}*logfile".format(files_directory_abs),
+            junk_grps = read_count_from_log("{}{}".format(files_directory_abs,
+                                                          config.read("file_globs",
+                                                                      "log")),
                                             threshold=args.remove_below)
         else:
             junk_grps = None
