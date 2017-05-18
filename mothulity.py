@@ -457,40 +457,36 @@ def main():
 
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
-    ini_req_path = get_dir_path("req.ini")
-    ini_slurm_path = get_dir_path("slurm.ini")
-    output_template_path = get_dir_path("output_template.html")
+    config_path = get_dir_path("mothulity.config")
+    preproc_template_path = get_dir_path("preproc_template.sh.j2")
     analysis_template_path = get_dir_path("analysis_template.sh.j2")
+    output_template_path = get_dir_path("output_template.html")
 
-    logfile_name = "{}.{}.{}{}{}{}{}{}".format(args.files_directory,
-                                               args.job_name,
-                                               time.localtime().tm_year,
-                                               time.localtime().tm_mon,
-                                               time.localtime().tm_mday,
-                                               time.localtime().tm_hour,
-                                               time.localtime().tm_min,
-                                               time.localtime().tm_sec)
+    config = ConfigParser.SafeConfigParser()
+    config.read(config_path)
+
+    logfile_name = "{}.{}{}{}{}{}{}{}".format(args.files_directory,
+                                              args.job_name,
+                                              time.localtime().tm_year,
+                                              time.localtime().tm_mon,
+                                              time.localtime().tm_mday,
+                                              time.localtime().tm_hour,
+                                              time.localtime().tm_min,
+                                              time.localtime().tm_sec)
     with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
         for k, v in vars(args).iteritems():
             if v is not None:
                 fin.write("--{}: {}\n".format(k, v))
 
-    ini_req = ConfigParser.SafeConfigParser()
-    ini_req.read(ini_req_path)
-    shared_glob = ini_req.get("file_globs", "shared")
-    tax_sum_glob = ini_req.get("file_globs", "tax_sum")
-
     if args.resources is not None:
         node_list = None
-        ini_slurm = ConfigParser.SafeConfigParser()
-        ini_slurm.read(ini_slurm_path)
         resources = args.resources.upper()
-        partition = ini_slurm.get(resources, "partition")
-        nodes = ini_slurm.get(resources, "nodes")
-        ntasks_per_node = ini_slurm.get(resources, "ntasks_per_node")
-        mem_per_cpu = ini_slurm.get(resources, "mem_per_cpu")
-        processors = ini_slurm.get(resources, "processors")
+        partition = config.get(resources, "partition")
+        nodes = config.get(resources, "nodes")
+        ntasks_per_node = config.get(resources, "ntasks_per_node")
+        mem_per_cpu = config.get(resources, "mem_per_cpu")
+        processors = config.get(resources, "processors")
     else:
         nodes = args.nodes
         node_list = args.node_list
@@ -529,7 +525,7 @@ def main():
         print "{}*files".format(files_directory_abs)
         print sampl_num
     else:
-        loaded_template = load_template_file(get_dir_path("preproc_template.sh.j2"))
+        loaded_template = load_template_file(preproc_template_path)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = args.label
