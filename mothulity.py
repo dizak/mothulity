@@ -140,40 +140,6 @@ def save_template(out_file_name,
         fout.write(template_rendered)
 
 
-def read_label_from_file(file_glob):
-    for i in glob.glob(file_glob):
-        for ii in i.split("."):
-            try:
-                temp_label = float("0.{0}".format(ii))
-                if len(str(temp_label)) > 3:
-                    return temp_label
-                else:
-                    pass
-            except:
-                pass
-
-
-def read_sampl_num(file_glob):
-    files_file = glob.glob(file_glob)[0]
-    with open(files_file) as fin:
-        lines_num = len(fin.readlines())
-    return lines_num
-
-
-def read_count_from_log(log_file,
-                        keyword="contains",
-                        strip_char=".\n",
-                        threshold=100):
-    log_file = str(glob.glob(log_file)[0])
-    with open(log_file) as fin:
-        log = fin.readlines()
-    log_list = [i.strip(strip_char) for i in log if keyword in i]
-    log_split_list = [i.split(" {0} ".format(keyword)) for i in log_list]
-    log_dict = {i[0]: i[1] for i in log_split_list}
-    groups2remove = "".join([k for k, v in log_dict.items() if int(v) < 100])
-    return groups2remove
-
-
 def read_info_shared(input_file_name,
                      min_fold=5,
                      label_col="label",
@@ -489,7 +455,23 @@ def main():
     config = ConfigParser.SafeConfigParser()
     config.read(config_path)
 
-    logfile_name = "{}.{}.{}{}{}{}{}{}".format(args.files_directory,
+    shared_files_list = glob.glob("{}{}".format(files_directory_abs,
+                                                config.get("file_globs",
+                                                           "shared")))
+    if len(shared_files_list) > 1:
+        print "More than 1 shared files found. Quitting..."
+        exit()
+    elif len(shared_files_list) == 1:
+        shared_file_name = shared_files_list[0]
+    else:
+        if (any([args.analysis_only, args.render_html]) is True and
+                len(shared_files_list) == 0):
+            print "No shared file found. Quitting..."
+            exit()
+        else:
+            pass
+
+    logfile_name = "{}.{}.{}{}{}{}{}{}".format(files_directory_abs,
                                                args.job_name,
                                                time.localtime().tm_year,
                                                time.localtime().tm_mon,
@@ -523,20 +505,13 @@ def main():
         loaded_template = load_template_file(analysis_template_path)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-        label = read_label_from_file("{}{}".format(files_directory_abs,
-                                                   config.get("file_globs",
-                                                              "cons_tax")))
+        shared_info = read_info_shared(shared_file_name)
         if args.manual_mode is True:
             sampl_num = args.man_sampl_num
         else:
-            sampl_num = read_sampl_num("{}{}".format(files_directory_abs,
-                                                     config.get("file_globs",
-                                                                "files")))
+            sampl_num = shared_info["label"]
         if args.remove_below is not None:
-            junk_grps = read_count_from_log("{}{}".format(files_directory_abs,
-                                                          config.read("file_globs",
-                                                                      "log")),
-                                            threshold=args.remove_below)
+            junk_grps = shared_info["junk_grps"]
         else:
             junk_grps = None
     else:
