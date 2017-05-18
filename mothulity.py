@@ -10,6 +10,7 @@ import os
 import sys
 import glob
 import ConfigParser
+import pandas as pd
 
 
 __author__ = "Dariusz Izak IBB PAS"
@@ -171,6 +172,29 @@ def read_count_from_log(log_file,
     log_dict = {i[0]: i[1] for i in log_split_list}
     groups2remove = "".join([k for k, v in log_dict.items() if int(v) < 100])
     return groups2remove
+
+
+def read_info_shared(input_file_name,
+                     min_fold=5,
+                     label_col="label",
+                     group_col="Group",
+                     otu_col="Otu",
+                     num_col="numOtus",
+                     sep="\t"):
+    shared_df = pd.read_csv(input_file_name, sep=sep)
+    otus_cols = [i for i in shared_df.columns if otu_col in i and i != num_col]
+    grps_sizes = shared_df[[group_col] + otus_cols].sum(axis=1)
+    label = shared_df[label_col][0]
+    grps_num = len(shared_df[group_col])
+    sizes_df = pd.DataFrame({"GROUPS": shared_df[group_col],
+                             "GROUP_SIZES": grps_sizes})
+    threshold = sizes_df.GROUP_SIZES.mean() / min_fold
+    size_bool = (sizes_df.GROUP_SIZES < threshold)
+    junk_grps = list(sizes_df[size_bool].GROUPS)
+    out_dict = {"label": label,
+                "samples_number": grps_num,
+                "junk_grps": junk_grps}
+    return out_dict
 
 
 def main():
