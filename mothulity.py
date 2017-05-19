@@ -402,19 +402,23 @@ def main():
                         argument if you want to keep them all.")
     args = parser.parse_args()
 
-    config_path = get_dir_path("mothulity.config")
-    preproc_template_path = get_dir_path("preproc_template.sh.j2")
-    analysis_template_path = get_dir_path("analysis_template.sh.j2")
-    output_template_path = get_dir_path("output_template.html")
+    config_path_abs = os.path.abspath(get_dir_path("mothulity.config"))
+    config = ConfigParser.SafeConfigParser()
+    config.read(config_path_abs)
 
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+
+    preproc_template_name = config.get("templates", "preproc")
+    analysis_template_name = config.get("templates", "analysis")
+    output_template_name = config.get("templates", "output")
+
+    preproc_template_path = get_dir_path("preproc_template.sh.j2")
+    analysis_template_path = get_dir_path("analysis_template.sh.j2")
+    output_template_path = get_dir_path("output_template.html")
     preproc_template_path_abs = os.path.abspath(preproc_template_path)
     analysis_template_path_abs = os.path.abspath(analysis_template_path)
     output_template_path_abs = os.path.abspath(output_template_path)
-
-    config = ConfigParser.SafeConfigParser()
-    config.read(config_path)
 
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
@@ -424,6 +428,7 @@ def main():
         exit()
     elif len(shared_files_list) == 1:
         shared_file_name = shared_files_list[0]
+        shared_info = read_info_shared(shared_file_name)
     else:
         if (any([args.analysis_only, args.render_html]) is True and
                 len(shared_files_list) == 0):
@@ -462,7 +467,7 @@ def main():
         processors = args.processors
         partition = args.partition
 
-    if args.analysis_only and args.render_html is False:
+    if all([args.analysis_only, args.render_html]) is False:
         loaded_template = load_template_file(preproc_template_path_abs)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
@@ -474,14 +479,11 @@ def main():
         loaded_template = load_template_file(analysis_template_path_abs)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-        shared_info = read_info_shared(shared_file_name)
         sampl_num = shared_info["label"]
         if args.remove_below is not None:
             junk_grps = shared_info["junk_grps"]
         else:
             junk_grps = None
-    else:
-        pass
 
     if args.render_html is True:
         loaded_template = load_template_file(output_template_path_abs)
@@ -489,9 +491,7 @@ def main():
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = args.label
         junk_grps = None
-        sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
-    else:
-        pass
+        sampl_num = shared_info["label"]
 
     rendered_template = render_template(loaded_template,
                                         files_directory=files_directory_abs,
@@ -532,8 +532,6 @@ def main():
     if args.run is not None and args.dry_run is not True:
         os.system("{} {}".format(args.run, "{}{}.sh".format(output_dir_abs,
                                                             args.job_name)))
-    else:
-        pass
 
 
 if __name__ == "__main__":
