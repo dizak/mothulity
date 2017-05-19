@@ -80,7 +80,7 @@ def render_template(template_loaded,
                     classify_ITS=False,
                     align_database=None,
                     taxonomy_database=None,
-                    cluster_cutoff=0.06,
+                    cluster_cutoff=0.03,
                     full_ram_load=False,
                     label=0.03,
                     junk_grps=None,
@@ -377,9 +377,9 @@ def main():
                         action="store",
                         dest="cluster_cutoff",
                         metavar="",
-                        default=0.06,
+                        default=0.03,
                         help="cutoff value. Smaller == faster cluster param.\
-                        Default <0.06>.")
+                        Default <0.03>.")
     mothur.add_argument("--full-ram-load",
                         action="store_true",
                         dest="full_ram_load",
@@ -393,13 +393,12 @@ def main():
                         default=0.03,
                         help="label argument for number of commands for OTU\
                         analysis approach. Default 0.03.")
-    mothur.add_argument("--remove-below",
-                        action="store",
-                        dest="remove_below",
-                        metavar="",
-                        default=None,
-                        help="remove groups below this threshold. Omit this\
-                        argument if you want to keep them all.")
+    mothur.add_argument("--keep-all",
+                        action="store_true",
+                        dest="keep_all",
+                        default=False,
+                        help="Keep all groups, even if they can distort\
+                        analysis due to small size during subsampling.")
     args = parser.parse_args()
 
     config_path_abs = os.path.abspath(get_dir_path("mothulity.config"))
@@ -479,11 +478,20 @@ def main():
         loaded_template = load_template_file(analysis_template_path_abs)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-        sampl_num = shared_info["label"]
-        if args.remove_below is not None:
-            junk_grps = shared_info["junk_grps"]
-        else:
+        sampl_num = shared_info["samples_number"]
+        label = shared_info["label"]
+        if args.keep_all is True:
             junk_grps = None
+        else:
+            junk_grps = shared_info["junk_grps"]
+        if len(junk_grps) > 0:
+            print "Detected {} groups with {} label. {} would distort the\
+            analysis due to small size and will be removed".format(sampl_num,
+                                                                   label,
+                                                                   junk_grps)
+        else:
+            print "Detected {} groups with {} label.".format(sampl_num,
+                                                             label)
 
     if args.render_html is True:
         loaded_template = load_template_file(output_template_path_abs)
@@ -491,7 +499,7 @@ def main():
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = args.label
         junk_grps = None
-        sampl_num = shared_info["label"]
+        sampl_num = shared_info["samples_number"]
 
     rendered_template = render_template(loaded_template,
                                         files_directory=files_directory_abs,
