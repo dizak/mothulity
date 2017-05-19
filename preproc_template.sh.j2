@@ -10,11 +10,8 @@
 #SBATCH --nodelist={{node_list}}
   {% endif %}
 {% endif %}
-{% if manual_mode %}
-{% else %}
 ###Create *files file###
 mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
-{% endif %}
 {% if nodes > 1 %}
 ########################
 # WARNING
@@ -27,25 +24,18 @@ srun mpirun mothur '#set.dir(input={{files_directory}}, output={{files_directory
 {% else %}
 ###Sequence preprocessing###
 mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
-  {% if manual_mode %}
-set.current(processors={{processors}}, fasta={{fasta}}, group={{group}});
-  {% else %}
 set.current(processors={{processors}});
-  {% endif %}
 {% endif %}
-{% if manual_mode %}
-{% else %}
 make.contigs(file={{job_name}}.files);
-{% endif %}
 summary.seqs(fasta=current);
 {% if  min_length != None and max_length != None %}
-screen.seqs(fasta=current,{% if manual_mode %}{% else %} contigsreport={{job_name}}.contigs.report,{% endif %} group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, {% if manual_mode %}{% else %}minoverlap={{min_overlap}}{% endif %});
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}});
 {% elif min_length != None and max_length == None %}
-screen.seqs(fasta=current,{% if manual_mode %}{% else %} contigsreport={{job_name}}.contigs.report,{% endif %} group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, {% if manual_mode %}{% else %}minoverlap={{min_overlap}},{% endif %} optimize=end, criteria={{screen_criteria}});
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, minoverlap={{min_overlap}}, optimize=end, criteria={{screen_criteria}});
 {% elif min_length == None and max_length != None %}
-screen.seqs(fasta=current,{% if manual_mode %}{% else %} contigsreport={{job_name}}.contigs.report,{% endif %} group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, maxlength={{max_length}}, {% if manual_mode %}{% else %}minoverlap={{min_overlap}},{% endif %} optimize=start, criteria={{screen_criteria}});
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, maxlength={{max_length}}, minoverlap={{min_overlap}}, optimize=start, criteria={{screen_criteria}});
 {% else %}
-screen.seqs(fasta=current,{% if manual_mode %}{% else %} contigsreport={{job_name}}.contigs.report,{% endif %} group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, {% if manual_mode %}{% else %}minoverlap={{min_overlap}},{% endif %} optimize=start-end, criteria={{screen_criteria}});
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minoverlap={{min_overlap}}, optimize=start-end, criteria={{screen_criteria}});
 {% endif %}
 summary.seqs(fasta=current);
 {% if classify_ITS == True %}
@@ -98,7 +88,7 @@ headnode_notifier.py {{notify_email}} --subject '{{job_name}} sequence preproces
 {% endif %}
 ###Call mothulity for the analysis part###
 {% if classify_ITS == True %}
-mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}{%if manual_mode %} --manual-mode --fasta {{fasta}} --group {{group}} --samples-number {{man_sampl_num}}{% endif %}
+mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only --classify-ITS {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% else %}
-mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}{%if manual_mode %} --manual-mode --fasta {{fasta}} --group {{group}} --samples-number {{man_sampl_num}}{% endif %}
+mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
 {% endif %}
