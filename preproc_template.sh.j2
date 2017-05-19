@@ -10,12 +10,6 @@
 #SBATCH --nodelist={{node_list}}
   {% endif %}
 {% endif %}
-###Gunzip if gzipped###
-FASTQGZ_FILES="$(echo *fastq.gz)"
-if [ FASTQGZ_FILES != '*fastq.gz' ]; then
-  echo 'Compressed files found. Uncompressing...'
-  gunzip ./*fastq.gz
-fi
 {% if manual_mode %}
 {% else %}
 ###Create *files file###
