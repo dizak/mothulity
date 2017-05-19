@@ -85,11 +85,7 @@ def render_template(template_loaded,
                     label=0.03,
                     junk_grps=None,
                     notify_email=None,
-                    sampl_num=None,
-                    manual_mode=False,
-                    fasta=None,
-                    group=None,
-                    man_sampl_num=None):
+                    sampl_num=None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"files_directory": files_directory,
                      "output_dir": output_dir,
@@ -119,11 +115,7 @@ def render_template(template_loaded,
                      "label": label,
                      "junk_grps": junk_grps,
                      "notify_email": notify_email,
-                     "sampl_num": sampl_num,
-                     "manual_mode": manual_mode,
-                     "fasta": fasta,
-                     "group": group,
-                     "man_sampl_num": man_sampl_num}
+                     "sampl_num": sampl_num}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -408,49 +400,18 @@ def main():
                         default=None,
                         help="remove groups below this threshold. Omit this\
                         argument if you want to keep them all.")
-    manual.add_argument("--manual-mode",
-                        action="store_true",
-                        dest="manual_mode",
-                        default=False,
-                        help="Manual mode activation. Required for using other\
-                        arguments of manual group.")
-    manual.add_argument("--fasta",
-                        action="store",
-                        dest="fasta",
-                        metavar="",
-                        default=None,
-                        help="/path/to/fasta/file. Use for manually prepared\
-                        fasta file containing all groups.")
-    manual.add_argument("--group",
-                        action="store",
-                        dest="group",
-                        metavar="",
-                        default=None,
-                        help="/path/to/group/file. Use for manually prepared\
-                        group file containing read-group info.")
-    manual.add_argument("--samples-number",
-                        action="store",
-                        dest="man_sampl_num",
-                        metavar="",
-                        default=None,
-                        help="Number of samples in the analysis.")
     args = parser.parse_args()
 
-    if args.manual_mode is True:
-        if any([args.fasta, args.group, args.man_sampl_num]) is None:
-            print "One of manual mode arguments was not passed. Quitting..."
-            exit()
-        else:
-            pass
-    else:
-        pass
-
-    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
-    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
     config_path = get_dir_path("mothulity.config")
     preproc_template_path = get_dir_path("preproc_template.sh.j2")
     analysis_template_path = get_dir_path("analysis_template.sh.j2")
     output_template_path = get_dir_path("output_template.html")
+
+    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
+    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+    preproc_template_path_abs = os.path.abspath(preproc_template_path)
+    analysis_template_path_abs = os.path.abspath(analysis_template_path)
+    output_template_path_abs = os.path.abspath(output_template_path)
 
     config = ConfigParser.SafeConfigParser()
     config.read(config_path)
@@ -501,15 +462,20 @@ def main():
         processors = args.processors
         partition = args.partition
 
+    if args.analysis_only and args.render_html is False:
+        loaded_template = load_template_file(preproc_template_path_abs)
+        with open(logfile_name, "a") as fin:
+            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
+        label = args.label
+        junk_grps = None
+        sampl_num = None
+
     if args.analysis_only is True:
-        loaded_template = load_template_file(analysis_template_path)
+        loaded_template = load_template_file(analysis_template_path_abs)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         shared_info = read_info_shared(shared_file_name)
-        if args.manual_mode is True:
-            sampl_num = args.man_sampl_num
-        else:
-            sampl_num = shared_info["label"]
+        sampl_num = shared_info["label"]
         if args.remove_below is not None:
             junk_grps = shared_info["junk_grps"]
         else:
@@ -518,24 +484,14 @@ def main():
         pass
 
     if args.render_html is True:
-        loaded_template = load_template_file(output_template_path)
+        loaded_template = load_template_file(output_template_path_abs)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = args.label
         junk_grps = None
-        if args.manual_mode is True:
-            sampl_num = args.man_sampl_num
-        else:
-            sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
-        print "{}*files".format(files_directory_abs)
-        print sampl_num
+        sampl_num = read_sampl_num("{}*files".format(files_directory_abs))
     else:
-        loaded_template = load_template_file(preproc_template_path)
-        with open(logfile_name, "a") as fin:
-            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-        label = args.label
-        junk_grps = None
-        sampl_num = None
+        pass
 
     rendered_template = render_template(loaded_template,
                                         files_directory=files_directory_abs,
@@ -566,11 +522,7 @@ def main():
                                         label=label,
                                         junk_grps=junk_grps,
                                         notify_email=args.notify_email,
-                                        sampl_num=sampl_num,
-                                        manual_mode=args.manual_mode,
-                                        fasta=args.fasta,
-                                        group=args.group,
-                                        man_sampl_num=args.man_sampl_num)
+                                        sampl_num=sampl_num)
     if args.render_html is True:
         save_template("{}.html".format(args.job_name), rendered_template)
     else:
