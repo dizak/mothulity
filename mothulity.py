@@ -10,6 +10,7 @@ import os
 import sys
 import glob
 import ConfigParser
+import shelve
 import pandas as pd
 
 
@@ -42,6 +43,24 @@ def get_dir_path(file_name=""):
     prog_path = sys.argv[0].replace(sys.argv[0].split("/")[-1],
                                     file_name)
     return prog_path
+
+
+def dict2cache(cache_name,
+               input_dict):
+    try:
+        cache = shelve.open(cache_name)
+        for i in input_dict:
+            cache[i] = input_dict[i]
+    finally:
+        cache.close()
+
+
+def cache2dict(cache_name):
+    try:
+        cache = shelve.open(cache_name)
+        return dict(cache)
+    finally:
+        cache.close()
 
 
 def load_template_str(template_str):
