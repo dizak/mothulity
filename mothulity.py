@@ -434,12 +434,11 @@ def main():
     analysis_template_name = config.get("templates", "analysis")
     output_template_name = config.get("templates", "output")
 
-    preproc_template_path = get_dir_path("preproc_template.sh.j2")
-    analysis_template_path = get_dir_path("analysis_template.sh.j2")
-    output_template_path = get_dir_path("output_template.html")
-    preproc_template_path_abs = os.path.abspath(preproc_template_path)
-    analysis_template_path_abs = os.path.abspath(analysis_template_path)
-    output_template_path_abs = os.path.abspath(output_template_path)
+    preproc_template_path_abs = os.path.abspath(get_dir_path(preproc_template_name))
+    analysis_template_path_abs = os.path.abspath(get_dir_path(analysis_template_name))
+    output_template_path_abs = os.path.abspath(get_dir_path(output_template_name))
+
+    print preproc_template_path_abs, analysis_template_path_abs, output_template_path_abs
 
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
