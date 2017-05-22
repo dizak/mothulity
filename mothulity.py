@@ -483,18 +483,15 @@ def main():
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         sampl_num = shared_info["samples_number"]
         label = shared_info["label"]
-        if args.keep_all is True:
-            junk_grps = None
-        else:
-            junk_grps = shared_info["junk_grps"]
+        junk_grps = shared_info["junk_grps"]
+        print "Detected {} groups with {} label".format(sampl_num, label)
         if len(junk_grps) > 0:
-            print "Detected {} groups with {} label. {} would distort the\
-            analysis due to small size and will be removed".format(sampl_num,
-                                                                   label,
-                                                                   junk_grps)
-        else:
-            print "Detected {} groups with {} label.".format(sampl_num,
-                                                             label)
+            print "{} can distort the analysis due to size too small".format(junk_grps)
+            if args.keep_all is True:
+                print "All groups will be kept due to --keep-all argument"
+                junk_grps = None
+            else:
+                print "{} will be removed".format(junk_grps)
 
     if args.render_html is True:
         loaded_template = load_template_file(output_template_path_abs)
