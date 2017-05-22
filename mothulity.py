@@ -466,6 +466,7 @@ def main():
                                                time.localtime().tm_hour,
                                                time.localtime().tm_min,
                                                time.localtime().tm_sec)
+    cache_name = "{}.db".format(logfile_name)
     with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
         for k, v in vars(args).iteritems():
