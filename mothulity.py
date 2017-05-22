@@ -434,7 +434,7 @@ def main():
     preproc_template_path_abs = os.path.abspath(get_dir_path(preproc_template_name))
     analysis_template_path_abs = os.path.abspath(get_dir_path(analysis_template_name))
     output_template_path_abs = os.path.abspath(get_dir_path(output_template_name))
-    
+
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
 
