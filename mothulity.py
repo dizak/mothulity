@@ -438,8 +438,6 @@ def main():
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
 
-    print preproc_template_path_abs, analysis_template_path_abs, output_template_path_abs
-
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
                                                            "shared")))
