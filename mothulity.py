@@ -490,19 +490,18 @@ def main():
 
     if all([args.analysis_only, args.render_html]) is False:
         loaded_template = load_template_file(preproc_template_path_abs)
-        with open(logfile_name, "a") as fin:
-            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = args.label
         junk_grps = None
         sampl_num = None
+        with open(logfile_name, "a") as fin:
+            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     if args.analysis_only is True:
         loaded_template = load_template_file(analysis_template_path_abs)
-        with open(logfile_name, "a") as fin:
-            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         sampl_num = shared_info["samples_number"]
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
+
         print "Detected {} groups with {} label".format(sampl_num, label)
         if len(junk_grps) > 0:
             print "{} can distort the analysis due to size too small".format(junk_grps)
@@ -511,14 +510,16 @@ def main():
                 junk_grps = None
             else:
                 print "{} will be removed".format(junk_grps)
+        with open(logfile_name, "a") as fin:
+            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     if args.render_html is True:
         loaded_template = load_template_file(output_template_path_abs)
-        with open(logfile_name, "a") as fin:
-            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
         label = args.label
         junk_grps = None
         sampl_num = shared_info["samples_number"]
+        with open(logfile_name, "a") as fin:
+            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     rendered_template = render_template(loaded_template,
                                         files_directory=files_directory_abs,
