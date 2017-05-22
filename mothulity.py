@@ -501,7 +501,6 @@ def main():
         sampl_num = shared_info["samples_number"]
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
-
         print "Detected {} groups with {} label".format(sampl_num, label)
         if len(junk_grps) > 0:
             print "{} can distort the analysis due to size too small".format(junk_grps)
@@ -510,14 +509,16 @@ def main():
                 junk_grps = None
             else:
                 print "{} will be removed".format(junk_grps)
+        dict2cache(cache_name, shared_info)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     if args.render_html is True:
         loaded_template = load_template_file(output_template_path_abs)
-        label = args.label
-        junk_grps = None
-        sampl_num = shared_info["samples_number"]
+        post_analysis_info = cache2dict(cache_name)
+        label = post_analysis_info["label"]
+        junk_grps = post_analysis_info["junk_grps"]
+        sampl_num = post_analysis_info["samples_number"]
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
