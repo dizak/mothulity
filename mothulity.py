@@ -463,7 +463,6 @@ def main():
                                                time.localtime().tm_hour,
                                                time.localtime().tm_min,
                                                time.localtime().tm_sec)
-    cache_name = "{}.db".format(logfile_name)
     with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
         for k, v in vars(args).iteritems():
@@ -507,16 +506,14 @@ def main():
                 junk_grps = None
             else:
                 print "{} will be removed".format(junk_grps)
-        dict2cache(cache_name, shared_info)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     if args.render_html is True:
         loaded_template = load_template_file(output_template_path_abs)
-        post_analysis_info = cache2dict(cache_name)
-        label = post_analysis_info["label"]
-        junk_grps = post_analysis_info["junk_grps"]
-        sampl_num = post_analysis_info["samples_number"]
+        label = shared_info["label"]
+        junk_grps = shared_info["junk_grps"]
+        sampl_num = shared_info["samples_number"]
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
