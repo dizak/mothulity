@@ -444,12 +444,17 @@ def main():
     if len(shared_files_list) > 1:
         print "More than 1 shared files found. Quitting..."
         exit()
-    elif len(shared_files_list) == 1:
+    elif (len(shared_files_list) == 1 and
+            any([args.analysis_only, args.render_html]) is True):
         shared_file_name = shared_files_list[0]
         shared_info = read_info_shared(shared_file_name)
+    elif (len(shared_files_list) == 1 and
+            any([args.analysis_only, args.render_html]) is False):
+        print "Found shared file. Running this would overwrite it. Quitting..."
+        exit()
     else:
-        if (any([args.analysis_only, args.render_html]) is True and
-                len(shared_files_list) == 0):
+        if (len(shared_files_list) == 0 and
+                any([args.analysis_only, args.render_html]) is True):
             print "No shared file found. Quitting..."
             exit()
         else:
