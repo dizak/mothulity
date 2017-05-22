@@ -427,9 +427,6 @@ def main():
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 
-    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
-    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
-
     preproc_template_name = config.get("templates", "preproc")
     analysis_template_name = config.get("templates", "analysis")
     output_template_name = config.get("templates", "output")
@@ -437,6 +434,9 @@ def main():
     preproc_template_path_abs = os.path.abspath(get_dir_path(preproc_template_name))
     analysis_template_path_abs = os.path.abspath(get_dir_path(analysis_template_name))
     output_template_path_abs = os.path.abspath(get_dir_path(output_template_name))
+    
+    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
+    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
 
     print preproc_template_path_abs, analysis_template_path_abs, output_template_path_abs
 
