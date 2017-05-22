@@ -138,7 +138,8 @@ def read_info_shared(input_file_name,
                      group_col="Group",
                      otu_col="Otu",
                      num_col="numOtus",
-                     sep="\t"):
+                     sep="\t",
+                     format_junk_grps=True):
     shared_df = pd.read_csv(input_file_name, sep=sep)
     otus_cols = [i for i in shared_df.columns if otu_col in i and i != num_col]
     grps_sizes = shared_df[[group_col] + otus_cols].sum(axis=1)
@@ -149,6 +150,8 @@ def read_info_shared(input_file_name,
     threshold = sizes_df.GROUP_SIZES.mean() / min_fold
     size_bool = (sizes_df.GROUP_SIZES < threshold)
     junk_grps = list(sizes_df[size_bool].GROUPS)
+    if format_junk_grps is True:
+        junk_grps = "-".join(junk_grps)
     out_dict = {"label": label,
                 "samples_number": grps_num,
                 "junk_grps": junk_grps}
