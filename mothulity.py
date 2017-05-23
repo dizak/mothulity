@@ -104,7 +104,9 @@ def render_template(template_loaded,
                     label=0.03,
                     junk_grps=None,
                     notify_email=None,
-                    sampl_num=None):
+                    sampl_num=None,
+                    shared_glob=None,
+                    tax_sum_glob=None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"files_directory": files_directory,
                      "output_dir": output_dir,
@@ -134,7 +136,9 @@ def render_template(template_loaded,
                      "label": label,
                      "junk_grps": junk_grps,
                      "notify_email": notify_email,
-                     "sampl_num": sampl_num}
+                     "sampl_num": sampl_num,
+                     "shared_glob": shared_glob,
+                     "tax_sum_glob": tax_sum_glob}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -557,7 +561,11 @@ def main():
                                         label=label,
                                         junk_grps=junk_grps,
                                         notify_email=args.notify_email,
-                                        sampl_num=sampl_num)
+                                        sampl_num=sampl_num,
+                                        shared_glob=config.get("file_globs",
+                                                               "shared"),
+                                        tax_sum_glob=config.get("file_globs",
+                                                                "tax_sum"))
     if args.render_html is True:
         save_template("{}.html".format(args.job_name), rendered_template)
     else:
