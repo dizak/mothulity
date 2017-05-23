@@ -75,44 +75,10 @@ def draw_scatter(file_name):
 
 
 def summary2html(file_name,
-                 css_link):
-    js_str = """<!--JavaScript Start-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript">
- $(document).ready(function() {
-   $('.dataframe').DataTable( {
-       scrollX: true,
-       lengthMenu: [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
-       initComplete: function () {
-         this.api().columns().every( function () {
-           var column = this;
-           var select = $('<select><option value=""></option></select>')
-             .appendTo( $(column.header()))
-             .on( 'change', function () {
-                 var val = $.fn.dataTable.util.escapeRegex(
-                     $(this).val()
-                 );
-
-                 column
-                     .search( val ? '^'+val+'$' : '', true, false )
-                     .draw();
-             });
-             column.cells('', column[0]).render('display').sort().unique().each( function ( d, j ) {
-               if(column.search() === '^'+d+'$'){
-                   select.append( '<option value="'+d+'" selected="selected">'+d+'</option>' )
-               }
-               else {
-                   select.append( '<option value="'+d+'">'+d+'</option>' )
-               }
-             });
-         });
-       }
-   });
- });
-</script>
-<!--JavaScript End-->
-"""
+                 css_link,
+                 js_file_name):
+    with open(js_file_name) as fin:
+        js_str = fin.read()
     output_file = "{}.html".format(file_name)
     df = read_csv(file_name, sep="\t")
     html_str = df.to_html(classes=["compact",
@@ -168,11 +134,12 @@ def main():
                         fancy html.")
     args = parser.parse_args()
 
-    config_path_abs = os.path.abspath(get_dir_path("mothulity.config"))
+    config_path_abs = get_dir_path("mothulity.config")
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 
-    css_link = config.get("css", "datatables")
+    datatables_css_link = config.get("css", "datatables")
+    datatables_js_file_name = get_dir_path(config.get("js", "datatables"))
 
     if args.rarefaction is not None:
         draw_rarefaction(args.rarefaction)
@@ -192,7 +159,8 @@ def main():
         pass
     if args.summary_table is not None:
         summary2html(args.summary_table,
-                     css_link)
+                     datatables_css_link,
+                     datatables_js_file_name)
     else:
         pass
 
