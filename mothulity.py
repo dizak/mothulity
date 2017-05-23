@@ -441,24 +441,30 @@ def main():
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
                                                            "shared")))
+    tax_sum_files_list = glob.glob("{}{}".format(files_directory_abs,
+                                                 config.get("file_globs",
+                                                            "tax_sum")))
+    fastq_file_list = glob.glob("{}{}".format(files_directory_abs,
+                                              config.get("file_globs",
+                                                         "tax_sum")))
     if len(shared_files_list) > 1:
         print "More than 1 shared files found. Quitting..."
         exit()
-    elif (len(shared_files_list) == 1 and
-            any([args.analysis_only, args.render_html]) is True):
-        shared_file_name = shared_files_list[0]
-        shared_info = read_info_shared(shared_file_name)
-    elif (len(shared_files_list) == 1 and
-            any([args.analysis_only, args.render_html]) is False):
-        print "Found shared file. Running this would overwrite it. Quitting..."
-        exit()
-    else:
-        if (len(shared_files_list) == 0 and
-                any([args.analysis_only, args.render_html]) is True):
+    elif len(shared_files_list) == 1:
+        if len(tax_sum_files_list) != 1:
+            print "WARNING!!! No proper tax.summary file found. The analysis will be incomplete."
+        if any([args.analysis_only, args.render_html]) is True:
+            shared_file_name = shared_files_list[0]
+            shared_info = read_info_shared(shared_file_name)
+        elif any([args.analysis_only, args.render_html]) is False:
+            print "Found shared file. Running this would overwrite it. Quitting..."
+            exit()
+    elif len(shared_files_list) == 0:
+        if any([args.analysis_only, args.render_html]) is True:
             print "No shared file found. Quitting..."
             exit()
-        else:
-            pass
+    else:
+        "I don't know what you what me to do!!! There are no file files I can recognize in here!"
 
     logfile_name = "{}.{}.{}{}{}{}{}{}".format(files_directory_abs,
                                                args.job_name,
