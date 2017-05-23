@@ -7,20 +7,6 @@
 #SBATCH --mem-per-cpu={{mem_per_cpu}}
 #SBATCH --exclude=gpu[1-8]
 {% endif %}
-###Test whether there are *shared and *cons.taxonomy file. Exit otherwise###
-
-SHARED="$(echo {{files_directory}}*shared)"
-TAXONOMY="$(echo {{files_directory}}*cons.taxonomy)"
-if [ $SHARED != '*shared' ] || [ $TAXONOMY != '*cons.taxonomy' ]; then
-  echo "$SHARED and $TAXONOMY files found.";
-else
-  echo '*shared or *cons.taxonomy file not found. Quitting...';
-  {% if notify_email != None %}
-  headnode_notifier.py {{notify_email}} --subject '{{job_name}} analysis part has failed' --body 'Failure due to lack of *shared and *cons.taxonomy files. See the logfile attached in order to inspect the cause.' --attach *logfile;
-  {% else %}
-  {% endif %}
-  exit;
-fi
 
 ###OTU approach analysis###
 
