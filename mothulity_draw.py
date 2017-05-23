@@ -1,6 +1,9 @@
 #! /usr/bin/env python
 
 
+from utilities import get_dir_path
+import os
+import ConfigParser
 import argparse
 from Bio import Phylo as ph
 import matplotlib
@@ -71,8 +74,8 @@ def draw_scatter(file_name):
     fig.savefig("{}.svg".format(file_name))
 
 
-def summary2html(file_name):
-    css_str = """<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">"""
+def summary2html(file_name,
+                 css_link):
     js_str = """<!--JavaScript Start-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -116,7 +119,7 @@ def summary2html(file_name):
                                    "hover",
                                    "order-column"],
                           index=False)
-    html_str = "{0}{1}{2}".format(css_str,
+    html_str = "{0}{1}{2}".format(css_link,
                                   html_str,
                                   js_str)
     with open(output_file, "w") as fout:
@@ -165,6 +168,12 @@ def main():
                         fancy html.")
     args = parser.parse_args()
 
+    config_path_abs = os.path.abspath(get_dir_path("mothulity.config"))
+    config = ConfigParser.SafeConfigParser()
+    config.read(config_path_abs)
+
+    css_link = config.get("css", "datatables")
+
     if args.rarefaction is not None:
         draw_rarefaction(args.rarefaction)
     else:
@@ -182,7 +191,8 @@ def main():
     else:
         pass
     if args.summary_table is not None:
-        summary2html(args.summary_table)
+        summary2html(args.summary_table,
+                     css_link)
     else:
         pass
 
