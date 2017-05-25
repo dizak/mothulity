@@ -100,12 +100,6 @@ def save_template(out_file_name,
         fout.write(template_rendered)
 
 
-def save_template(out_file_name,
-                  template_rendered):
-    with open(out_file_name, "w") as fout:
-        fout.write(template_rendered)
-
-
 def read_info_shared(input_file_name,
                      min_fold=5,
                      label_col="label",
