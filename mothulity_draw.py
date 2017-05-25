@@ -21,6 +21,27 @@ from seaborn import lmplot
 __author__ = "Dariusz Izak IBB PAS"
 
 
+def load_template_file(template_file):
+    template_Loader = jj2.FileSystemLoader(searchpath="/")
+    template_Env = jj2.Environment(loader=template_Loader)
+    template = template_Env.get_template(template_file)
+    return template
+
+
+def render_template(template_loaded,
+                    venn_diagrams,
+                    javascript):
+    template_vars = {"venn_diagrams": venn_diagrams}
+    template_rendered = template_loaded.render(template_vars)
+    return template_rendered
+
+
+def save_template(out_file_name,
+                  template_rendered):
+    with open(out_file_name, "w") as fout:
+        fout.write(template_rendered)
+
+
 def draw_rarefaction(file_name):
     output_file = "{}.mpld3.html".format(file_name)
     df = read_csv(file_name,
@@ -90,6 +111,20 @@ def summary2html(file_name,
                                   js_str)
     with open(output_file, "w") as fout:
         fout.write(html_str)
+
+
+def venn2slides(input_file_names,
+                input_files_dir="beta",
+                css_link,
+                js_file_name,
+                img_class
+                img_alt_text="Venn diagram"):
+    img_tags = []
+    for i in input_file_names:
+        img_tags.append("<img class="{2}", src="{1}/{0}" alt="{3}">".format(i,
+                                                                            input_files_dir,
+                                                                            img_class,
+                                                                            img_alt_text))
 
 
 def main():
