@@ -19,11 +19,6 @@ __author__ = "Dariusz Izak IBB PAS"
 __version = "0.9.7"
 
 
-def load_template_str(template_str):
-    template = jj2.Environment().from_string(template_str)
-    return template
-
-
 def load_template_file(template_file):
     template_Loader = jj2.FileSystemLoader(searchpath="/")
     template_Env = jj2.Environment(loader=template_Loader)
