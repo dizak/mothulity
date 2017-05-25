@@ -57,7 +57,11 @@ def render_template(template_loaded,
                     notify_email=None,
                     sampl_num=None,
                     shared_glob=None,
-                    tax_sum_glob=None):
+                    tax_sum_glob=None,
+                    datatables_css=None,
+                    w3_css=None,
+                    datatables_js=None,
+                    slideshow_js=None):
     mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"files_directory": files_directory,
                      "output_dir": output_dir,
@@ -89,7 +93,11 @@ def render_template(template_loaded,
                      "notify_email": notify_email,
                      "sampl_num": sampl_num,
                      "shared_glob": shared_glob,
-                     "tax_sum_glob": tax_sum_glob}
+                     "tax_sum_glob": tax_sum_glob,
+                     "datatables_css": datatables_css,
+                     "w3_css": w3_css,
+                     "datatables_js": datatables_js,
+                     "slideshow_js": slideshow_js}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
@@ -380,9 +388,17 @@ def main():
     analysis_template_name = config.get("templates", "analysis")
     output_template_name = config.get("templates", "output")
 
+    datatables_css = config.get("css", "datatables")
+    w3_css = config.get("css", "w3")
+
+    datatables_js_name = get_dir_path(config.get("js", "datatables"))
+    slideshow_js_name = get_dir_path(config.get("js", "slideshow.js"))
+
     preproc_template_path_abs = get_dir_path(preproc_template_name)
     analysis_template_path_abs = get_dir_path(analysis_template_name)
     output_template_path_abs = get_dir_path(output_template_name)
+    datatables_js_path_abs = get_dir_path(datatables_js_name)
+    slideshow_js_path_abs = get_dir_path(slideshow_js_name)
 
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
@@ -510,7 +526,9 @@ def main():
                                         shared_glob=config.get("file_globs",
                                                                "shared"),
                                         tax_sum_glob=config.get("file_globs",
-                                                                "tax_sum"))
+                                                                "tax_sum"),
+                                        w3_css=w3_css,
+                                        datatables_css=datatables_css)
     if args.render_html is True:
         save_template("{}.html".format(args.job_name), rendered_template)
     else:
