@@ -424,7 +424,7 @@ def main():
             print "No shared file found. Quitting..."
             exit()
     else:
-        "I don't know what you what me to do!!! There are no file files I can recognize in here!"
+        "I don't know what you what me to do!!! There are no files I can recognize in here!"
 
     logfile_name = "{}.{}.{}{}{}{}{}{}".format(files_directory_abs,
                                                args.job_name,
