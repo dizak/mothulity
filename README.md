@@ -18,7 +18,7 @@ It can download a proper database, run SOP provided with just fastq files direct
   conda env create --file /path/to/mothulity.yaml -p /your/path/to/env/
   ```
 
-  This environment includes mothur, headnode_notifier
+  This environment includes mothur, headnode_notifier, KronaTools
 
   * non-conda users: install dependencies listed in mothulity.yaml by any other means.
 
