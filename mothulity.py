@@ -465,7 +465,7 @@ def main():
     if all([args.analysis_only, args.render_html]) is False:
         loaded_template = load_template_file(preproc_template_path_abs)
         label = args.label
-        junk_grps = None
+        junk_grps = 0
         sampl_num = None
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
@@ -480,7 +480,7 @@ def main():
             print "{} can distort the analysis due to size too small".format(junk_grps)
             if args.keep_all is True:
                 print "All groups will be kept due to --keep-all argument"
-                junk_grps = None
+                junk_grps = 0
             else:
                 print "{} will be removed".format(junk_grps)
         with open(logfile_name, "a") as fin:
