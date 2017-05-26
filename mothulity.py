@@ -414,22 +414,28 @@ def main():
                                                          "tax_sum")))
     if len(shared_files_list) > 1:
         print "More than 1 shared files found. Quitting..."
+        time.sleep(5)
         exit()
     elif len(shared_files_list) == 1:
         if len(tax_sum_files_list) != 1:
             print "WARNING!!! No proper tax.summary file found. The analysis will be incomplete."
+            time.sleep(5)
         if any([args.analysis_only, args.render_html]) is True:
             shared_file_name = shared_files_list[0]
             shared_info = read_info_shared(shared_file_name)
         elif any([args.analysis_only, args.render_html]) is False:
-            print "Found shared file. Running this would overwrite it. Quitting..."
+            print "Found shared file but you do not want to run the analysis on it. Running preprocessing would overwrite it. Quitting..."
+            time.sleep(5)
             exit()
     elif len(shared_files_list) == 0:
         if any([args.analysis_only, args.render_html]) is True:
             print "No shared file found. Quitting..."
+            time.sleep(5)
             exit()
     else:
-        "I don't know what you what me to do!!! There are no file files I can recognize in here!"
+        "I don't know what you what me to do!!! There are no files I can recognize in here!"
+        time.sleep(5)
+        exit()
 
     logfile_name = "{}.{}.{}{}{}{}{}{}".format(files_directory_abs,
                                                args.job_name,
@@ -464,7 +470,7 @@ def main():
     if all([args.analysis_only, args.render_html]) is False:
         loaded_template = load_template_file(preproc_template_path_abs)
         label = args.label
-        junk_grps = None
+        junk_grps = 0
         sampl_num = None
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
@@ -479,7 +485,7 @@ def main():
             print "{} can distort the analysis due to size too small".format(junk_grps)
             if args.keep_all is True:
                 print "All groups will be kept due to --keep-all argument"
-                junk_grps = None
+                junk_grps = 0
             else:
                 print "{} will be removed".format(junk_grps)
         with open(logfile_name, "a") as fin:

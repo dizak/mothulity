@@ -15,7 +15,7 @@
 mkdir -p {{files_directory}}analysis/OTU/alpha {% if sampl_num > 1 %}{{files_directory}}analysis/OTU/beta{% else %}{% endif %}
 cp {{files_directory}}{{shared_glob}} {{files_directory}}analysis/OTU/{{job_name}}.shared
 cp {{files_directory}}{{tax_sum_glob}} {{files_directory}}analysis/OTU/alpha/{{job_name}}.tax.summary
-{% if junk_grps != None %}
+{% if junk_grps|length > 0 %}
 #Go to subdirectory, remove junk groups and subsample shared file
 
 cd {{files_directory}}analysis/OTU
