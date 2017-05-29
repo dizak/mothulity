@@ -36,15 +36,15 @@ def render_template(template_loaded,
     return template_rendered
 
 
-def save_template(out_file_name,
+def save_template(output_file_name,
                   template_rendered):
-    with open(out_file_name, "w") as fout:
+    with open(output_file_name, "w") as fout:
         fout.write(template_rendered)
 
 
-def draw_rarefaction(file_name):
-    output_file = "{}.mpld3.html".format(file_name)
-    df = read_csv(file_name,
+def draw_rarefaction(input_file_name,
+                     output_file_name):
+    df = read_csv(input_file_name,
                   sep="\t",
                   index_col="numsampled")
     cols = [i for i in df.columns if "lci" not in i]
@@ -62,46 +62,49 @@ def draw_rarefaction(file_name):
     plt.title("Rarefaction curve")
     plt.ylabel("OTU count")
     plt.xlabel("number of sequences")
-    with open(output_file, "w") as fout:
+    with open(output_file_name, "w") as fout:
         fout.write(mpld3.fig_to_html(fig))
 
 
-def draw_heatmap(file_name):
-    df = read_csv(file_name,
+def draw_heatmap(input_file_name,
+                 output_file_name):
+    df = read_csv(input_file_name,
                   sep="\t",
                   skiprows=1,
                   header=None,
                   index_col=0)
     df.columns = df.index
     fig = heatmap(df, square=True, cmap="plasma").get_figure()
-    fig.savefig("{}.svg".format(file_name))
+    fig.savefig(output_file_name)
 
 
-def draw_tree(file_name):
+def draw_tree(input_file_name,
+              output_file_name):
     pylab.ion()
-    tree = ph.read(file_name, "newick")
+    tree = ph.read(input_file_name, "newick")
     ph.draw(tree)
-    pylab.savefig("{}.svg".format(file_name))
+    pylab.savefig(output_file_name)
 
 
-def draw_scatter(file_name):
-    df = read_csv(file_name,
+def draw_scatter(input_file_name,
+                 output_file_name):
+    df = read_csv(input_file_name,
                   sep="\t")
     fig = lmplot(x="axis1",
                  y="axis2",
                  data=df,
                  hue="group",
                  fit_reg=False)
-    fig.savefig("{}.svg".format(file_name))
+    fig.savefig(output_file_name)
 
 
-def summary2html(file_name,
+def summary2html(input_file_name,
+                 output_file_name,
                  css_link,
-                 js_file_name):
-    with open(js_file_name) as fin:
+                 js_input_file_name):
+    with open(js_input_file_name) as fin:
         js_str = fin.read()
-    output_file = "{}.html".format(file_name)
-    df = read_csv(file_name, sep="\t")
+    df = read_csv(input_file_name, sep="\t")
     html_str = df.to_html(classes=["compact",
                                    "hover",
                                    "order-column"],
@@ -109,7 +112,7 @@ def summary2html(file_name,
     html_str = "{0}{1}{2}".format(css_link,
                                   html_str,
                                   js_str)
-    with open(output_file, "w") as fout:
+    with open(output_file_name, "w") as fout:
         fout.write(html_str)
 
 
@@ -126,30 +129,29 @@ def main():
                         help="input file name. Default CWD.")
     parser.add_argument("--output",
                         dest="output_file_name",
-                        metavar="",
                         default=None,
                         help="output file name")
     parser.add_argument("--rarefaction",
-                        action="store",
+                        action="store_true",
                         dest="rarefaction",
-                        metavar="",
+                        default=False,
                         help="path/to/rarefaction-file. Use to draw rarefaction\
                         curves plot.")
     parser.add_argument("--phylip",
-                        action="store",
+                        action="store_true",
                         dest="phylip",
-                        metavar="",
+                        default=False,
                         help="path/to/phylip-file. Use to draw heatmap and\
                         tree.")
     parser.add_argument("--tree",
-                        action="store",
+                        action="store_true",
                         dest="tree",
-                        metavar="",
+                        default=False,
                         help="path/to/tree-file. Use to draw dendrogram.")
     parser.add_argument("--axes",
-                        action="store",
+                        action="store_true",
                         dest="axes",
-                        metavar="",
+                        default=False,
                         help="path/to/axes-file. Use to draw scatter plots.")
     parser.add_argument("--summary-table",
                         action="store",
@@ -169,26 +171,16 @@ def main():
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 
-    if args.rarefaction is not None:
-        draw_rarefaction(args.input_file_name)
-    else:
-        pass
-    if args.phylip is not None:
-        draw_heatmap(args.input_file_name)
-    else:
-        pass
-    if args.tree is not None:
-        draw_tree(args.input_file_name)
-    else:
-        pass
-    if args.axes is not None:
-        draw_scatter(args.input_file_name)
-    else:
-        pass
+    if args.rarefaction is True:
+        draw_rarefaction(args.input_file_name, args.output_file_name)
+    if args.phylip is True:
+        draw_heatmap(args.input_file_name, args.output_file_name)
+    if args.tree is True:
+        draw_tree(args.input_file_name, args.output_file_name)
+    if args.axes is True:
+        draw_scatter(args.input_file_name, args.output_file_name)
     if args.summary_table is not None:
-        summary2html(args.input_file_name)
-    else:
-        pass
+        summary2html(args.input_file_name, args.output_file_name)
 
 
 if __name__ == '__main__':
