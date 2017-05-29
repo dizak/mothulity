@@ -117,7 +117,7 @@ def venn2slides(input_file_names,
                 input_files_dir="beta",
                 css_link,
                 js_file_name,
-                img_class
+                img_class,
                 img_alt_text="Venn diagram"):
     img_tags = []
     for i in input_file_names:
@@ -173,9 +173,6 @@ def main():
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 
-    datatables_css_link = config.get("css", "datatables")
-    datatables_js_file_name = get_dir_path(config.get("js", "datatables"))
-
     if args.rarefaction is not None:
         draw_rarefaction(args.rarefaction)
     else:
@@ -193,9 +190,7 @@ def main():
     else:
         pass
     if args.summary_table is not None:
-        summary2html(args.summary_table,
-                     datatables_css_link,
-                     datatables_js_file_name)
+        summary2html(args.summary_table)
     else:
         pass
 
