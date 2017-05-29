@@ -113,26 +113,22 @@ def summary2html(file_name,
         fout.write(html_str)
 
 
-def venn2slides(input_file_names,
-                input_files_dir="beta",
-                css_link,
-                js_file_name,
-                img_class,
-                img_alt_text="Venn diagram"):
-    img_tags = []
-    for i in input_file_names:
-        img_tags.append("<img class="{2}", src="{1}/{0}" alt="{3}">".format(i,
-                                                                            input_files_dir,
-                                                                            img_class,
-                                                                            img_alt_text))
-
-
 def main():
     parser = argparse.ArgumentParser(prog="mothulity_draw",
                                      usage="mothulity_draw [OPTION]",
                                      description="draws plots from\
                                      mothur-generated files.",
                                      version="0.9.4")
+    parser.add_argument(action="store",
+                        dest="input_file_name",
+                        metavar="path/to/input_file",
+                        default=".",
+                        help="input file name. Default CWD.")
+    parser.add_argument("--output",
+                        dest="output_file_name",
+                        metavar="",
+                        default=None,
+                        help="output file name")
     parser.add_argument("--rarefaction",
                         action="store",
                         dest="rarefaction",
@@ -174,23 +170,23 @@ def main():
     config.read(config_path_abs)
 
     if args.rarefaction is not None:
-        draw_rarefaction(args.rarefaction)
+        draw_rarefaction(args.input_file_name)
     else:
         pass
     if args.phylip is not None:
-        draw_heatmap(args.phylip)
+        draw_heatmap(args.input_file_name)
     else:
         pass
     if args.tree is not None:
-        draw_tree(args.tree)
+        draw_tree(args.input_file_name)
     else:
         pass
     if args.axes is not None:
-        draw_scatter(args.axes)
+        draw_scatter(args.input_file_name)
     else:
         pass
     if args.summary_table is not None:
-        summary2html(args.summary_table)
+        summary2html(args.input_file_name)
     else:
         pass
 
