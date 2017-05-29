@@ -56,8 +56,8 @@ def render_template(template_loaded,
                     junk_grps=None,
                     notify_email=None,
                     sampl_num=None,
-                    shared_glob=None,
-                    tax_sum_glob=None,
+                    shared_file=None,
+                    tax_sum_file=None,
                     datatables_css=None,
                     w3_css=None,
                     datatables_js=None,
@@ -92,8 +92,8 @@ def render_template(template_loaded,
                      "junk_grps": junk_grps,
                      "notify_email": notify_email,
                      "sampl_num": sampl_num,
-                     "shared_glob": shared_glob,
-                     "tax_sum_glob": tax_sum_glob,
+                     "shared_file": shared_file,
+                     "tax_sum_file": tax_sum_file,
                      "datatables_css": datatables_css,
                      "w3_css": w3_css,
                      "datatables_js": datatables_js,
@@ -384,21 +384,15 @@ def main():
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 
-    preproc_template_name = config.get("templates", "preproc")
-    analysis_template_name = config.get("templates", "analysis")
-    output_template_name = config.get("templates", "output")
+    preproc_template = get_dir_path(config.get("templates", "preproc"))
+    analysis_template = get_dir_path(config.get("templates", "analysis"))
+    output_template = get_dir_path(config.get("templates", "output"))
 
-    datatables_css = config.get("css", "datatables")
-    w3_css = config.get("css", "w3")
+    datatables_css = get_dir_path(config.get("css", "datatables"))
+    w3_css = get_dir_path(config.get("css", "w3"))
 
-    datatables_js_name = get_dir_path(config.get("js", "datatables"))
-    slideshow_js_name = get_dir_path(config.get("js", "slideshow.js"))
-
-    preproc_template_path_abs = get_dir_path(preproc_template_name)
-    analysis_template_path_abs = get_dir_path(analysis_template_name)
-    output_template_path_abs = get_dir_path(output_template_name)
-    datatables_js_path_abs = get_dir_path(datatables_js_name)
-    slideshow_js_path_abs = get_dir_path(slideshow_js_name)
+    datatables_js = get_dir_path(config.get("js", "datatables"))
+    slideshow_js = get_dir_path(config.get("js", "slideshow"))
 
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
@@ -420,9 +414,11 @@ def main():
         if len(tax_sum_files_list) != 1:
             print "WARNING!!! No proper tax.summary file found. The analysis will be incomplete."
             time.sleep(5)
+        else:
+            tax_sum_file = tax_sum_files_list[0]
         if any([args.analysis_only, args.render_html]) is True:
-            shared_file_name = shared_files_list[0]
-            shared_info = read_info_shared(shared_file_name)
+            shared_file = shared_files_list[0]
+            shared_info = read_info_shared(shared_file)
         elif any([args.analysis_only, args.render_html]) is False:
             print "Found shared file but you do not want to run the analysis on it. Running preprocessing would overwrite it. Quitting..."
             time.sleep(5)
@@ -468,7 +464,7 @@ def main():
         partition = args.partition
 
     if all([args.analysis_only, args.render_html]) is False:
-        loaded_template = load_template_file(preproc_template_path_abs)
+        loaded_template = load_template_file(preproc_template)
         label = args.label
         junk_grps = 0
         sampl_num = None
@@ -476,7 +472,7 @@ def main():
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     if args.analysis_only is True:
-        loaded_template = load_template_file(analysis_template_path_abs)
+        loaded_template = load_template_file(analysis_template)
         sampl_num = shared_info["samples_number"]
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
@@ -492,7 +488,7 @@ def main():
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     if args.render_html is True:
-        loaded_template = load_template_file(output_template_path_abs)
+        loaded_template = load_template_file(output_template)
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
         sampl_num = shared_info["samples_number"]
@@ -529,10 +525,8 @@ def main():
                                         junk_grps=junk_grps,
                                         notify_email=args.notify_email,
                                         sampl_num=sampl_num,
-                                        shared_glob=config.get("file_globs",
-                                                               "shared"),
-                                        tax_sum_glob=config.get("file_globs",
-                                                                "tax_sum"),
+                                        shared_file=shared_file,
+                                        tax_sum_file=tax_sum_file,
                                         w3_css=w3_css,
                                         datatables_css=datatables_css)
     if args.render_html is True:
