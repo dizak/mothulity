@@ -408,12 +408,12 @@ def main():
                                                          "tax_sum")))
     if len(shared_files_list) > 1:
         print "More than 1 shared files found. Quitting..."
-        time.sleep(5)
+        time.sleep(2)
         exit()
     elif len(shared_files_list) == 1:
         if len(tax_sum_files_list) != 1:
             print "WARNING!!! No proper tax.summary file found. The analysis will be incomplete."
-            time.sleep(5)
+            time.sleep(2)
         else:
             tax_sum_file = tax_sum_files_list[0]
         if any([args.analysis_only, args.render_html]) is True:
@@ -421,16 +421,16 @@ def main():
             shared_info = read_info_shared(shared_file)
         elif any([args.analysis_only, args.render_html]) is False:
             print "Found shared file but you do not want to run the analysis on it. Running preprocessing would overwrite it. Quitting..."
-            time.sleep(5)
+            time.sleep(2)
             exit()
     elif len(shared_files_list) == 0:
         if any([args.analysis_only, args.render_html]) is True:
             print "No shared file found. Quitting..."
-            time.sleep(5)
+            time.sleep(2)
             exit()
     else:
         "I don't know what you what me to do!!! There are no files I can recognize in here!"
-        time.sleep(5)
+        time.sleep(2)
         exit()
 
     logfile_name = "{}.{}.{}{}{}{}{}{}".format(files_directory_abs,
