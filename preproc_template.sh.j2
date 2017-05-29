@@ -6,7 +6,7 @@
 #SBATCH --ntasks-per-node={{ntasks_per_node}}
 #SBATCH --mem-per-cpu={{mem_per_cpu}}
 #SBATCH --exclude=gpu[1-8]
-  {% if node_list != None %}
+  {% if node_list %}
 #SBATCH --nodelist={{node_list}}
   {% endif %}
 {% endif %}
@@ -28,22 +28,22 @@ set.current(processors={{processors}});
 {% endif %}
 make.contigs(file={{job_name}}.files);
 summary.seqs(fasta=current);
-{% if  min_length != None and max_length != None %}
+{% if  min_length and max_length %}
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}});
-{% elif min_length != None and max_length == None %}
+{% elif min_length and max_length %}
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, minoverlap={{min_overlap}}, optimize=end, criteria={{screen_criteria}});
-{% elif min_length == None and max_length != None %}
+{% elif min_length and max_length %}
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, maxlength={{max_length}}, minoverlap={{min_overlap}}, optimize=start, criteria={{screen_criteria}});
 {% else %}
 screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minoverlap={{min_overlap}}, optimize=start-end, criteria={{screen_criteria}});
 {% endif %}
 summary.seqs(fasta=current);
-{% if classify_ITS == True %}
+{% if classify_ITS %}
 chop.seqs(fasta=current, group=current, numbases={{chop_length}});
 {% endif %}
 unique.seqs(fasta=current);
 count.seqs(name=current, group=current);
-{% if classify_ITS == True %}
+{% if classify_ITS %}
 {% else %}
 align.seqs(fasta=current, reference={{align_database}});
 summary.seqs(fasta=current, count=current);
@@ -59,19 +59,19 @@ remove.seqs(fasta=current, accnos=current);
 summary.seqs(fasta=current, count=current);
 classify.seqs(fasta=current, count=current, reference={{align_database}},
 taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}});
-{% if classify_ITS == True %}
+{% if classify_ITS %}
 remove.lineage(fasta=current, count=current, taxonomy=current,
 taxon=Chloroplast-Mitochondria-unknown-Unknown);
 pairwise.seqs(fasta=current, cutoff={{cluster_cutoff}}, output=lt);
-  {% if full_ram_load == True %}
+  {% if full_ram_load %}
 cluster(phylip=current, cutoff={{cluster_cutoff}});
   {% else %}
 cluster.split(phylip=current, cutoff={{cluster_cutoff}}, large=T);
   {% endif %}
 {% else %}
 remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);
-  {% if full_ram_load == True %}
-dis.seqs(fasta=current, cutoff={{cluster_cutoff}});
+  {% if full_ram_load %}
+dist.seqs(fasta=current, cutoff={{cluster_cutoff}});
 cluster(column=current, count=current);
   {% else%}
 cluster.split(fasta=current, count=current, taxonomy=current, cutoff={{cluster_cutoff}}, large=T);
@@ -81,10 +81,10 @@ make.shared(list=current, count=current, label={{label}});
 classify.otu(list=current, count=current, taxonomy=current, label={{label}});
 count.groups(shared=current)'
 
-{% if notify_email != None %}
+{% if notify_email %}
 ###Send mail###
 headnode_notifier.py {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body 'Please login and inspect the results of {{job_name}}.'
 {% else %}
 {% endif %}
 ###Call mothulity for the analysis part###
-mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only {% if run != None %}-r {{run}}{% endif %} {% if notify_email != None %}--notify-email {{notify_email}}{% endif %}
+mothulity.py {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only {% if run %}-r {{run}}{% endif %} {% if notify_email %}--notify-email {{notify_email}}{% endif %}
