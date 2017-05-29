@@ -528,7 +528,9 @@ def main():
                                         shared_file=shared_file,
                                         tax_sum_file=tax_sum_file,
                                         w3_css=w3_css,
-                                        datatables_css=datatables_css)
+                                        datatables_css=datatables_css,
+                                        datatables_js=datatables_js,
+                                        slideshow_js=slideshow_js)
     if args.render_html is True:
         save_template("{}.html".format(args.job_name), rendered_template)
     else:
