@@ -406,6 +406,7 @@ def main():
     fastq_file_list = glob.glob("{}{}".format(files_directory_abs,
                                               config.get("file_globs",
                                                          "tax_sum")))
+
     if len(shared_files_list) > 1:
         print "More than 1 shared files found. Quitting..."
         time.sleep(2)
@@ -416,9 +417,12 @@ def main():
             time.sleep(2)
         else:
             tax_sum_file = tax_sum_files_list[0]
+            print "Found {} tax.summary file".format(tax_sum_file)
         if any([args.analysis_only, args.render_html]) is True:
             shared_file = shared_files_list[0]
             shared_info = read_info_shared(shared_file)
+            print "Found {} shared file".format(shared_file)
+            time.sleep(2)
         elif any([args.analysis_only, args.render_html]) is False:
             print "Found shared file but you do not want to run the analysis on it. Running preprocessing would overwrite it. Quitting..."
             time.sleep(2)
@@ -428,6 +432,9 @@ def main():
             print "No shared file found. Quitting..."
             time.sleep(2)
             exit()
+        else:
+            shared_file = None
+            tax_sum_file = None
     else:
         "I don't know what you what me to do!!! There are no files I can recognize in here!"
         time.sleep(2)
@@ -477,13 +484,17 @@ def main():
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
         print "Detected {} groups with {} label".format(sampl_num, label)
+        time.sleep(2)
         if len(junk_grps) > 0:
             print "{} can distort the analysis due to size too small".format(junk_grps)
+            time.sleep(2)
             if args.keep_all is True:
                 print "All groups will be kept due to --keep-all argument"
+                time.sleep(2)
                 junk_grps = 0
             else:
                 print "{} will be removed".format(junk_grps)
+                time.sleep(2)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
