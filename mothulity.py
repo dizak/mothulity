@@ -388,8 +388,8 @@ def main():
     analysis_template = get_dir_path(config.get("templates", "analysis"))
     output_template = get_dir_path(config.get("templates", "output"))
 
-    datatables_css = get_dir_path(config.get("css", "datatables"))
-    w3_css = get_dir_path(config.get("css", "w3"))
+    datatables_css = config.get("css", "datatables")
+    w3_css = config.get("css", "w3")
 
     datatables_js = get_dir_path(config.get("js", "datatables"))
     slideshow_js = get_dir_path(config.get("js", "slideshow"))
