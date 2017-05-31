@@ -19,8 +19,9 @@ __author__ = "Dariusz Izak IBB PAS"
 __version = "0.9.7"
 
 
-def load_template_file(template_file):
-    template_Loader = jj2.FileSystemLoader(searchpath="/")
+def load_template_file(template_file,
+                       searchpath="/"):
+    template_Loader = jj2.FileSystemLoader(searchpath=searchpath)
     template_Env = jj2.Environment(loader=template_Loader)
     template = template_Env.get_template(template_file)
     return template
@@ -384,9 +385,9 @@ def main():
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 
-    preproc_template = get_dir_path(config.get("templates", "preproc"))
-    analysis_template = get_dir_path(config.get("templates", "analysis"))
-    output_template = get_dir_path(config.get("templates", "output"))
+    preproc_template = config.get("templates", "preproc")
+    analysis_template = config.get("templates", "analysis")
+    output_template = config.get("templates", "output")
 
     datatables_css = config.get("css", "datatables")
     w3_css = config.get("css", "w3")
@@ -408,9 +409,12 @@ def main():
                                                          "tax_sum")))
 
     if len(shared_files_list) > 1:
-        print "More than 1 shared files found. Quitting..."
-        time.sleep(2)
-        exit()
+        if args.render_html is True:
+            pass
+        else:
+            print "More than 1 shared files found. Quitting..."
+            time.sleep(2)
+            exit()
     elif len(shared_files_list) == 1:
         if len(tax_sum_files_list) != 1:
             print "WARNING!!! No proper tax.summary file found. The analysis will be incomplete."
@@ -471,7 +475,8 @@ def main():
         partition = args.partition
 
     if all([args.analysis_only, args.render_html]) is False:
-        loaded_template = load_template_file(preproc_template)
+        loaded_template = load_template_file(preproc_template,
+                                             searchpath=get_dir_path())
         label = args.label
         junk_grps = 0
         sampl_num = None
@@ -479,7 +484,8 @@ def main():
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     if args.analysis_only is True:
-        loaded_template = load_template_file(analysis_template)
+        loaded_template = load_template_file(analysis_template,
+                                             searchpath=get_dir_path())
         sampl_num = shared_info["samples_number"]
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
@@ -499,7 +505,8 @@ def main():
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
     if args.render_html is True:
-        loaded_template = load_template_file(output_template)
+        loaded_template = load_template_file(output_template,
+                                             searchpath=get_dir_path())
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
         sampl_num = shared_info["samples_number"]
