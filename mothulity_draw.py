@@ -105,12 +105,12 @@ def summary2html(input_file_name,
     with open(js_input_file_name) as fin:
         js_str = fin.read()
     df = read_csv(input_file_name, sep="\t")
-    html_str = df.to_html(classes=["compact",
+    html_df = df.to_html(classes=["compact",
                                    "hover",
                                    "order-column"],
                           index=False)
     html_str = "{0}{1}{2}".format(css_link,
-                                  html_str,
+                                  html_df,
                                   js_str)
     with open(output_file_name, "w") as fout:
         fout.write(html_str)
@@ -169,6 +169,8 @@ def main():
     config_path_abs = get_dir_path("mothulity.config")
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
+    datatables_css = config.get("css", "datatables")
+    datatables_js = get_dir_path(config.get("js", "datatables"))
 
     if args.rarefaction is True:
         draw_rarefaction(args.input_file_name, args.output_file_name)
@@ -179,7 +181,10 @@ def main():
     if args.axes is True:
         draw_scatter(args.input_file_name, args.output_file_name)
     if args.summary_table is True:
-        summary2html(args.input_file_name, args.output_file_name)
+        summary2html(args.input_file_name,
+                     args.output_file_name,
+                     datatables_css,
+                     datatables_js)
 
 
 if __name__ == '__main__':
