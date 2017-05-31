@@ -154,9 +154,8 @@ def main():
                         default=False,
                         help="path/to/axes-file. Use to draw scatter plots.")
     parser.add_argument("--summary-table",
-                        action="store",
+                        action="store_true",
                         dest="summary_table",
-                        metavar="",
                         help="/path/to/summary-table. Use to convert summary\
                         table into fancy DataTable.")
     parser.add_argument("--render-html",
@@ -179,7 +178,7 @@ def main():
         draw_tree(args.input_file_name, args.output_file_name)
     if args.axes is True:
         draw_scatter(args.input_file_name, args.output_file_name)
-    if args.summary_table is not None:
+    if args.summary_table is True:
         summary2html(args.input_file_name, args.output_file_name)
 
 
