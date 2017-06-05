@@ -16,6 +16,7 @@ from pandas import read_csv
 from seaborn import heatmap
 from seaborn import pairplot
 from seaborn import lmplot
+from lxml import etree as et
 
 
 __author__ = "Dariusz Izak IBB PAS"
@@ -114,6 +115,26 @@ def summary2html(input_file_name,
                                   js_str)
     with open(output_file_name, "w") as fout:
         fout.write(html_str)
+
+
+def get_daughter_df(df,
+                    mother_taxon):
+    assert isinstance(df, pd.DataFrame), "{} not a pandas.DataFrame".format(df)
+    assert isinstance(mother_taxon, str), "{} not a string".format(taxon)
+    daughter_levels = int(df[df.taxon == mother_taxon].daughterlevels)
+    if daughter_levels > 0:
+        mother_rank = df[df.taxon == mother_taxon].rankID.to_string(index=False)
+        daughter_df = df[df.rankID.str.contains(mother_rank)][df.rankID.str.len() == len(mother_rank) + 2]
+        assert len(daughter_df) == daughter_levels, "daughter pandas.DataFrame longer than expected by daughterlevels"
+        return daughter_df
+
+
+def get_node_count(df,
+                   node_taxon):
+    groups = df.columns[5:]
+    count_df = df[df.taxon == node_taxon][groups]
+    count_vals = [int(count[i]) for i in count]
+    return count_vals
 
 
 def main():
