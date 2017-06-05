@@ -1,6 +1,6 @@
 name: mothulity
 dependencies:
-- dizak::headnode_notifier=1.1
+- dizak::headnode_notifier=1.2
 - bioconda::blast-legacy=2.2.22=0
 - bioconda::mothur=1.38.1.1=boost1.60_0
 - bioconda::krona=2.7
