@@ -107,9 +107,9 @@ def summary2html(input_file_name,
         js_str = fin.read()
     df = read_csv(input_file_name, sep="\t")
     html_df = df.to_html(classes=["compact",
-                                   "hover",
-                                   "order-column"],
-                          index=False)
+                                  "hover",
+                                  "order-column"],
+                         index=False)
     html_str = "{0}{1}{2}".format(css_link,
                                   html_df,
                                   js_str)
