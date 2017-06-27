@@ -137,6 +137,15 @@ def get_node_count(df,
     return count_vals
 
 
+def populate_node(in_node,
+                  node_tag,
+                  node_attrib="name"):
+    in_node_tax_name = in_node.attrib[node_attrib]
+    children = list(get_daughter_df(tax_df, in_node_tax_name).taxon)
+    for child in children:
+        et.SubElement(in_node, node_tag, name=child)
+
+
 def main():
     parser = argparse.ArgumentParser(prog="mothulity_draw",
                                      usage="mothulity_draw [OPTION]",
