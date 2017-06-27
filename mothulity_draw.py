@@ -146,9 +146,10 @@ def populate_node(in_node,
         et.SubElement(in_node, node_tag, name=child)
 
 
-def populate_tree(root_node):
+def populate_tree(root_node,
+                  taxonomical_levels):
     check_list = []
-    for tl in tax_lev_list:
+    for tl in taxonomical_levels:
         for i in root_node.iter():
             if i not in check_list:
                 populate_node(i)
