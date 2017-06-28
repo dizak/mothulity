@@ -120,7 +120,7 @@ def summary2html(input_file_name,
 def get_daughter_df(df,
                     mother_taxon,
                     mother_rank,
-                    tax_levelel):
+                    tax_level):
     """
     Get pandas.DataFrame containing daughter taxa of passed mother taxon info.
     Based upon mothur's tax.summary file.
@@ -158,23 +158,41 @@ def get_node_count(df,
     return count_vals
 
 
-def populate_node(in_node,
-                  node_tag,
-                  node_attrib="name"):
-    in_node_tax_name = in_node.attrib[node_attrib]
-    children = list(get_daughter_df(tax_df, in_node_tax_name).taxon)
-    for child in children:
-        et.SubElement(in_node, node_tag, name=child)
+def populate_node(node,
+                  tax_level,
+                  taxon_col="taxon",
+                  rankID_col="rankID",
+                  taxlevel_col="taxlevel"):
+    """
+    Populate input node with daughter taxa nodes.
 
-
-def populate_tree(root_node,
-                  taxonomical_levels):
-    check_list = []
-    for tl in taxonomical_levels:
-        for i in root_node.iter():
-            if i not in check_list:
-                populate_node(i)
-                check_list.append(i)
+    Parameters
+    -------
+    node: lxml.etree._Element
+        Input node which will be populated with data selected with
+        mothulity_draw.get_daughter_df.
+    tax_level: int
+        Taxon taxonomical level value of which daughter taxa will populate the input node.
+    taxon_col: str
+        Taxon column name in node's daughter pandas.DataFrame.
+    rankID_col: str
+        rank ID column name in node's daughter pandas.DataFrame.
+    taxlevel_col: str
+        Taxonomical level column name in node's daughter pandas.DataFrame.
+    """
+    node_tax_name = node.attrib["name"]
+    node_rank = node.attrib["rankID"]
+    children = get_daughter_df_2(tax_df,
+                                 node_tax_name,
+                                 node_rank,
+                                 tax_level)
+    if children is not None:
+        for child in children.itertuples():
+            et.SubElement(node,
+                          "node",
+                          name=getattr(child, taxon_col),
+                          rankID=getattr(child, rankID_col),
+                          taxlevel=getattr(child, taxlevel_col))
 
 
 def main():
