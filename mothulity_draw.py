@@ -133,7 +133,7 @@ def get_daughter_df(df,
         Taxon of which daughter taxa will be in returned pandas.DataFrame.
     mother_rank: str
         Taxon rankID value of which daughter taxa will be in returned pandas.DataFrame.
-    tax_levelel: int
+    tax_level: int
         Taxon taxonomical level value of which daughter taxa will be in returned pandas.DataFrame.
     Returns
     -------
