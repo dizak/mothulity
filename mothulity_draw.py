@@ -118,14 +118,35 @@ def summary2html(input_file_name,
 
 
 def get_daughter_df(df,
-                    mother_taxon):
-    assert isinstance(df, pd.DataFrame), "{} not a pandas.DataFrame".format(df)
-    assert isinstance(mother_taxon, str), "{} not a string".format(taxon)
-    daughter_levels = int(df[df.taxon == mother_taxon].daughterlevels)
+                    mother_taxon,
+                    mother_rank,
+                    tax_levelel):
+    """
+    Get pandas.DataFrame containing daughter taxa of passed mother taxon info.
+    Based upon mothur's tax.summary file.
+
+    Parameters:
+    --------
+    df: pandas.DataFrame
+        pandas.DataFrame read from mothur's tax.summary file.
+    mother_taxon: str
+        Taxon of which daughter taxa will be in returned pandas.DataFrame.
+    mother_rank: str
+        Taxon rankID value of which daughter taxa will be in returned pandas.DataFrame.
+    tax_levelel: int
+        Taxon taxonomical level value of which daughter taxa will be in returned pandas.DataFrame.
+    Returns
+    -------
+    pandas.DataFrame
+        pandas.DataFrame containing daughter taxa.
+    """
+    sel_df = df[(df.taxon == mother_taxon) &
+                (df.rankID == mother_rank) &
+                (df.taxlevel == tax_level)]
+    daughter_levels = int(sel_df.daughterlevels)
     if daughter_levels > 0:
-        mother_rank = df[df.taxon == mother_taxon].rankID.to_string(index=False)
+        mother_rank = sel_df.rankID.to_string(index=False)
         daughter_df = df[df.rankID.str.contains(mother_rank)][df.rankID.str.len() == len(mother_rank) + 2]
-        assert len(daughter_df) == daughter_levels, "daughter pandas.DataFrame longer than expected by daughterlevels"
         return daughter_df
 
 
