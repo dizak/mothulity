@@ -269,6 +269,18 @@ def constr_krona_xml(input_file_name,
                      attribute_dict={"display": "Count"},
                      root_node_dict={"name": "Root",
                                      "rankID": "0"}):
+    """
+    Convert mothur's tax.summary file to ktImportXML compatible xml file.
+
+    Parameters
+    -------
+    input_file_name: str
+        Input file name.
+    output_file_name: str
+        Output file name.
+    sep: str, default <\t>
+        Separator in input file.
+    """
     df = pd.read_csv(input_file_name, sep=sep)
     groups_list = list(tax_df.columns[5:])
     tax_lev_list = list(tax_df.taxlevel.drop_duplicates())
@@ -289,7 +301,6 @@ def constr_krona_xml(input_file_name,
                         pretty_print=True,
                         xml_declaration=True,
                         encoding="utf-8")
-
 
 
 def main():
