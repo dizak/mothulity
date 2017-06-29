@@ -150,7 +150,8 @@ def get_daughter_df(df,
         return daughter_df
 
 
-def populate_node(node,
+def populate_node(df,
+                  node,
                   tax_level,
                   taxon_col="taxon",
                   rankID_col="rankID",
@@ -160,6 +161,8 @@ def populate_node(node,
 
     Parameters
     -------
+    df: pandas.DataFrame
+        pandas.DataFrame read from mothur's tax.summary file.
     node: lxml.etree._Element
         Input node which will be populated with data selected with
         mothulity_draw.get_daughter_df.
@@ -174,10 +177,10 @@ def populate_node(node,
     """
     node_tax_name = node.attrib["name"]
     node_rank = node.attrib["rankID"]
-    children = get_daughter_df_2(tax_df,
-                                 node_tax_name,
-                                 node_rank,
-                                 tax_level)
+    children = get_daughter_df(df,
+                               node_tax_name,
+                               node_rank,
+                               tax_level)
     if children is not None:
         for i in children.itertuples():
             et.SubElement(node,
@@ -187,7 +190,8 @@ def populate_node(node,
                           taxlevel=str(getattr(i, taxlevel_col)))
 
 
-def populate_tree(nodes_root,
+def populate_tree(df,
+                  nodes_root,
                   tax_levels):
     """
     Populate whole xml structure with daughter nodes using
@@ -195,6 +199,8 @@ def populate_tree(nodes_root,
 
     Parameters
     -------
+    df: pandas.DataFrame
+        pandas.DataFrame read from mothur's tax.summary file.
     nodes_root: lxml.etree._Element
         Node from which populating will start.
     tax_levels: list
@@ -204,7 +210,7 @@ def populate_tree(nodes_root,
     for tax_level in tax_levels:
         for i in nodes_root.iter():
             if i not in check_list:
-                populate_node(i, tax_level)
+                populate_node(df, i, tax_level)
             check_list.append(i)
 
 
@@ -248,6 +254,42 @@ def populate_count(df,
             count_elem = et.SubElement(i, "count")
             for ii in values:
                 et.SubElement(count_elem, "val").text = str(ii)
+
+
+def constr_krona_xml(input_file_name,
+                     output_file_name,
+                     sep="\t",
+                     root_tag="krona",
+                     attributes_tag="attributes",
+                     attribute_tag="attribute",
+                     attribute_text="count",
+                     datasets_tag="datasets",
+                     root_node_tag="node",
+                     attributes_dict={"magnitude": "count"},
+                     attribute_dict={"display": "Count"},
+                     root_node_dict={"name": "Root",
+                                     "rankID": "0"}):
+    df = pd.read_csv(input_file_name, sep=sep)
+    groups_list = list(tax_df.columns[5:])
+    tax_lev_list = list(tax_df.taxlevel.drop_duplicates())
+    root = et.Element(root_tag)
+    attributes = et.SubElement(root, attributes_tag, attributes_dict)
+    attribute = et.SubElement(attributes, attribute_tag, attribute_dict)
+    attribute.text = attribute_text
+    datasets = et.SubElement(root, datasets_tag)
+    root_node = et.SubElement(root, root_node_tag, root_node_dict)
+    populate_tree(df,
+                  root_node,
+                  tax_lev_list)
+    populate_count(df,
+                   root_node,
+                   groups_list)
+    elements_tree = et.ElementTree(root)
+    elements_tree.write(output_file_name,
+                        pretty_print=True,
+                        xml_declaration=True,
+                        encoding="utf-8")
+
 
 
 def main():
