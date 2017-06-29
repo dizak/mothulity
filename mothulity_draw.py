@@ -190,9 +190,9 @@ def populate_node(node,
         for i in children.itertuples():
             et.SubElement(node,
                           "node",
-                          name=getattr(i, taxon_col),
-                          rankID=getattr(i, rankID_col),
-                          taxlevel=getattr(i, taxlevel_col))
+                          name=str(getattr(i, taxon_col)),
+                          rankID=str(getattr(i, rankID_col)),
+                          taxlevel=str(getattr(i, taxlevel_col)))
 
 
 def populate_tree(nodes_root,
