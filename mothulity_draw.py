@@ -150,14 +150,6 @@ def get_daughter_df(df,
         return daughter_df
 
 
-def get_node_count(df,
-                   node_taxon):
-    groups = df.columns[5:]
-    count_df = df[df.taxon == node_taxon][groups]
-    count_vals = [int(count[i]) for i in count]
-    return count_vals
-
-
 def populate_node(node,
                   tax_level,
                   taxon_col="taxon",
@@ -214,6 +206,48 @@ def populate_tree(nodes_root,
             if i not in check_list:
                 populate_node(i, tax_level)
             check_list.append(i)
+
+
+def populate_count(df,
+                   nodes_root,
+                   groups,
+                   taxon_col="taxon",
+                   rankID_col="rankID",
+                   taxlevel_col="taxlevel",
+                   taxon_attrib="name",
+                   rankID_attrib="rankID",
+                   taxlevel_attrib="taxlevel"):
+    """
+    Populate each taxonomical node with count values.
+
+    Parameters
+    -------
+    df: pandas.DataFrame
+        pandas.DataFrame read from mothur's tax.summary file.
+    nodes_root: lxml.etree._Element
+        Node from which populating will start.
+    taxon_col: str
+        Taxon column name in corresponding pandas.DataFrame.
+    rankID_col: str
+        rank ID column name in corresponding pandas.DataFrame.
+    taxlevel_col: str
+        Taxonomical level column name in corresponding pandas.DataFrame.
+    taxon_attrib: str
+        Taxon attribute name in node.
+    rankID: str
+        rankID attribute name in node.
+    taxlevel_attrib: str
+        taxlevel attribute name in node.
+    """
+    for i in nodes_root.iter():
+        if len(i.attrib) >= 3:
+            sel_df = df[(df[taxon_col] == i.attrib[taxon_attrib]) &
+                        (df[taxlevel_col] == int(i.attrib[taxlevel_attrib])) &
+                        (df[rankID_col] == i.attrib[rankID_attrib])]
+            values = sel_df[groups].values.tolist()[0]
+            count_elem = et.SubElement(i, "count")
+            for ii in values:
+                et.SubElement(count_elem, "val").text = str(ii)
 
 
 def main():
