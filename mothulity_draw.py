@@ -187,12 +187,33 @@ def populate_node(node,
                                  node_rank,
                                  tax_level)
     if children is not None:
-        for child in children.itertuples():
+        for i in children.itertuples():
             et.SubElement(node,
                           "node",
-                          name=getattr(child, taxon_col),
-                          rankID=getattr(child, rankID_col),
-                          taxlevel=getattr(child, taxlevel_col))
+                          name=getattr(i, taxon_col),
+                          rankID=getattr(i, rankID_col),
+                          taxlevel=getattr(i, taxlevel_col))
+
+
+def populate_tree(nodes_root,
+                  tax_levels):
+    """
+    Populate whole xml structure with daughter nodes using
+    mothulity_draw.populate_node.
+
+    Parameters
+    -------
+    nodes_root: lxml.etree._Element
+        Node from which populating will start.
+    tax_levels: list
+        Taxon taxonomical level values list.
+    """
+    check_list = []
+    for tax_level in tax_levels:
+        for i in nodes_root.iter():
+            if i not in check_list:
+                populate_node(i, tax_level)
+            check_list.append(i)
 
 
 def main():
