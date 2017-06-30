@@ -264,11 +264,13 @@ def constr_krona_xml(input_file_name,
                      attribute_tag="attribute",
                      attribute_text="count",
                      datasets_tag="datasets",
+                     dataset_tag="dataset",
                      root_node_tag="node",
                      attributes_dict={"magnitude": "count"},
                      attribute_dict={"display": "Count"},
                      root_node_dict={"name": "Root",
-                                     "rankID": "0"}):
+                                     "rankID": "0",
+                                     "taxlevel": "0"}):
     """
     Convert mothur's tax.summary file to ktImportXML compatible xml file.
 
@@ -289,6 +291,8 @@ def constr_krona_xml(input_file_name,
     attribute = et.SubElement(attributes, attribute_tag, attribute_dict)
     attribute.text = attribute_text
     datasets = et.SubElement(root, datasets_tag)
+    for i in groups_list:
+        et.SubElement(datasets, dataset_tag).text = i
     root_node = et.SubElement(root, root_node_tag, root_node_dict)
     populate_tree(df,
                   root_node,
