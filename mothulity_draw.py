@@ -319,7 +319,8 @@ def main():
                         metavar="path/to/input_file",
                         default=".",
                         help="input file name. Default CWD.")
-    parser.add_argument("--output",
+    parser.add_argument("-o",
+                        "--output",
                         dest="output_file_name",
                         default=None,
                         help="output file name")
