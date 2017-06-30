@@ -42,7 +42,7 @@ cp {{job_name}}.{{label}}.subsample.shared ./beta/
 #Go to alpha directory and create krona chart, rarefaction, summary table
 
 cd ./alpha
-mothur_krona_XML.py {{job_name}}.tax.summary > {{job_name}}.krona.xml
+mothulity_draw.py {{job_name}}.tax.summary --output {{job_name}}.krona.xml  --krona-xml
 ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-ace-chao-jack-simpson-invsimpson-shannon-npshannon)'
 mothulity_draw.py {{job_name}}.groups.rarefaction --output {{job_name}}.raref.html --rarefaction
