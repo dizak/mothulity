@@ -327,29 +327,26 @@ def main():
                         action="store_true",
                         dest="rarefaction",
                         default=False,
-                        help="path/to/rarefaction-file. Use to draw rarefaction\
-                        curves plot.")
+                        help="Draw rarefaction curves plot.")
     parser.add_argument("--phylip",
                         action="store_true",
                         dest="phylip",
                         default=False,
-                        help="path/to/phylip-file. Use to draw heatmap and\
-                        tree.")
+                        help="Draw heatmap")
     parser.add_argument("--tree",
                         action="store_true",
                         dest="tree",
                         default=False,
-                        help="path/to/tree-file. Use to draw dendrogram.")
+                        help="Draw dendrogram.")
     parser.add_argument("--axes",
                         action="store_true",
                         dest="axes",
                         default=False,
-                        help="path/to/axes-file. Use to draw scatter plots.")
+                        help="Draw scatter plots.")
     parser.add_argument("--summary-table",
                         action="store_true",
                         dest="summary_table",
-                        help="/path/to/summary-table. Use to convert summary\
-                        table into fancy DataTable.")
+                        help="Convert summary table into fancy DataTable.")
     parser.add_argument("--krona-xml",
                         action="store_true",
                         dest="krona_xml",
@@ -360,8 +357,7 @@ def main():
                         action="store_true",
                         dest="render_html",
                         default=False,
-                        help="path/to/html-template-file. Use to pass args into\
-                        fancy html.")
+                        help="Pass args into fancy html.")
     args = parser.parse_args()
 
     config_path_abs = get_dir_path("mothulity.config")
