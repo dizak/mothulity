@@ -17,6 +17,7 @@ from seaborn import heatmap
 from seaborn import pairplot
 from seaborn import lmplot
 from lxml import etree as et
+import pandas as pd
 
 
 __author__ = "Dariusz Izak IBB PAS"
@@ -284,8 +285,8 @@ def constr_krona_xml(input_file_name,
         Separator in input file.
     """
     df = pd.read_csv(input_file_name, sep=sep)
-    groups_list = list(tax_df.columns[5:])
-    tax_lev_list = list(tax_df.taxlevel.drop_duplicates())
+    groups_list = list(df.columns[5:])
+    tax_lev_list = list(df.taxlevel.drop_duplicates())
     root = et.Element(root_tag)
     attributes = et.SubElement(root, attributes_tag, attributes_dict)
     attribute = et.SubElement(attributes, attribute_tag, attribute_dict)
@@ -349,6 +350,12 @@ def main():
                         dest="summary_table",
                         help="/path/to/summary-table. Use to convert summary\
                         table into fancy DataTable.")
+    parser.add_argument("--krona-xml",
+                        action="store_true",
+                        dest="krona_xml",
+                        default=False,
+                        help="Convert mothur's tax.summary file to\
+                        krona-compatible xml.")
     parser.add_argument("--render-html",
                         action="store_true",
                         dest="render_html",
@@ -376,6 +383,8 @@ def main():
                      args.output_file_name,
                      datatables_css,
                      datatables_js)
+    if args.krona_xml is True:
+        constr_krona_xml(args.input_file_name, args.output_file_name)
 
 
 if __name__ == '__main__':
