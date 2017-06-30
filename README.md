@@ -22,12 +22,7 @@ It can download a proper database, run SOP provided with just fastq files direct
 
   * non-conda users: install dependencies listed in mothulity.yaml by any other means.
 
-2. External scripts/programs.
-  * [mothur](https://github.com/mothur/mothur/releases)
-  * [headnode_notifier](https://github.com/dizak/headnode_notifier/releases)
-  * [mothur_krona](https://github.com/accaldwell/mothur_krona.git)
-
-3. How to install.
+2. How to install.
   1. Use python package manager to download and install dependencies.
   2. Add python scripts to system path.
 
@@ -50,3 +45,7 @@ mothulity.py /path/to/fastq/files -r sh --notify-email your.email@your.domain
 ```
 
 As ```--notify-email``` depends on headnode_notifier.py, please check its repo for configuration instructions.
+
+### Example data
+
+Presumably, it is a good idea to test mothulity with [MiSeq SOP](https://mothur.org/w/images/d/d6/MiSeqSOPData.zip) delivered by creators of  [mothur](https://www.mothur.org/).
