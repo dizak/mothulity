@@ -6,8 +6,11 @@ It can download a proper database, run SOP provided with just fastq files direct
 
 ### Installation
 
-1. Requirements.
-  * conda users: install dependencies with
+Add /path/to/mothulity to you system path.
+
+### Requirements
+
+* [Anaconda](https://anaconda.org) users: install dependencies with
 
   ```
   conda env create --file /path/to/mothulity.yaml
@@ -18,15 +21,21 @@ It can download a proper database, run SOP provided with just fastq files direct
   conda env create --file /path/to/mothulity.yaml -p /your/path/to/env/
   ```
 
-  This environment includes mothur, headnode_notifier, KronaTools
+  and that's all.
 
-  * non-conda users: install dependencies listed in mothulity.yaml by any other means.
+* non-conda users: beside installing packages listed in mothulity.yaml, you need:
+  * [mothur](https://mothur.org/)
+  * [headnode_notifier](https://github.com/dizak/headnode_notifier/)
+  * [KronaTools](https://github.com/marbl/Krona)
 
-2. How to install.
-  1. Use python package manager to download and install dependencies.
-  2. Add python scripts to system path.
 
 ### Usage
+
+[Anaconda](https://anaconda.org) users: remmember to **activate you environment!**
+
+```
+source activate mothulity
+```
 
 The simplest example is:
 
@@ -44,7 +53,18 @@ You can send results in the email notification with:
 mothulity.py /path/to/fastq/files -r sh --notify-email your.email@your.domain
 ```
 
-As ```--notify-email``` depends on headnode_notifier.py, please check its repo for configuration instructions.
+As ```--notify-email``` depends on [headnode_notifier](https://github.com/dizak/headnode_notifier/), please check its repo for configuration instructions.
+
+
+### Databases
+
+
+You can easily download Silva and Unite databases with mothulity_db.py.
+Please type ```mothulity_db.py --help``` for details.
+
+Databases downloaded with mothulity_db to ```~/db/``` should be found by mothulity by default.
+If using something else, specify ```/path/to/database``` with ```--align-database``` and ```--taxonomy-database``` when running mothulity main script.
+
 
 ### Example data
 
