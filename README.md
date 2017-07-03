@@ -6,7 +6,7 @@ It can download a proper database, run SOP provided with just fastq files direct
 
 ### Installation
 
-Add /path/to/mothulity to you system path.
+Add /path/to/mothulity to your system path.
 
 ### Requirements
 
@@ -31,7 +31,7 @@ Add /path/to/mothulity to you system path.
 
 ### Usage
 
-[Anaconda](https://anaconda.org) users: remmember to **activate you environment!**
+[Anaconda](https://anaconda.org) users: remember to **activate you environment!**
 
 ```
 source activate mothulity
@@ -59,13 +59,25 @@ As ```--notify-email``` depends on [headnode_notifier](https://github.com/dizak/
 ### Databases
 
 
-You can easily download Silva and Unite databases with mothulity_db.py.
-Please type ```mothulity_db.py --help``` for details.
+You can easily download Silva and Unite databases with mothulity_dbaser.py.
+Please type ```mothulity_dbaser.py --help``` for details.
 
-Databases downloaded with mothulity_db to ```~/db/``` should be found by mothulity by default.
+Databases downloaded with mothulity_dbaser to ```~/db/``` should be found by mothulity by default.
 If using something else, specify ```/path/to/database``` with ```--align-database``` and ```--taxonomy-database``` when running mothulity main script.
 
 
 ### Example data
 
 Presumably, it is a good idea to test mothulity with [MiSeq SOP](https://mothur.org/w/images/d/d6/MiSeqSOPData.zip) delivered by creators of  [mothur](https://www.mothur.org/).
+
+
+#### tl;dr
+
+1. Install [Anaconda](https://anaconda.org).
+2. ```git clone https://github.com/dizak/mothulity```.
+3. Add this line to your ```.bashrc``` file: ```export PATH="/path/to/mothulity:$PATH"```.
+4. ```conda env create --file /path/to/mothulity.yaml```
+5. ```source activate mothulity```
+6. ```mkdir ~/db```
+7. ```mothulity_dbaser.py --silva-119 ~/db``` for 16S or ```mothulity_dbaser.py --unite-ITS-02 ~/db``` for ITS.
+8. ```mothulity.py /path/to/fastq/files -r sh``` for 16S or ```mothulity.py /path/to/fastq/files -r sh --align-database /path/to/align-database --taxonomy-database /path/to/taxonomy-database``` for ITS.
