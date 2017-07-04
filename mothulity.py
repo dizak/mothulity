@@ -114,6 +114,20 @@ def render_template(template_loaded,
                      "w3_css": w3_css,
                      "datatables_js": datatables_js,
                      "slideshow_js": slideshow_js}
+    """
+    Render jinja2.Template to unicode.
+
+    Parameters
+    -------
+    loaded_template: jinj2.Template
+        Template to render.
+
+    Returns
+    -------
+    unicode
+        Template content with passed variables.
+
+    """
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
 
