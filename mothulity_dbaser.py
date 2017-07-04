@@ -13,6 +13,20 @@ __author__ = "Dariusz Izak IBB PAS"
 def get_db(url,
            save_path,
            chunk=8192):
+    """
+    Download from url to file. Handles different chunk sizes saving RAM. Shows
+    progress with tqdm progress bar.
+
+    Parameters
+    -------
+    url: str
+        URL to download from.
+    save_path: str
+        Local URL to save to.
+    chunk: int, default 8192
+        Size of chunk the stream is divided to. Smaller it is less memory it
+        uses.
+    """
     res = rq.get(url, stream=True)
     total_len = int(res.headers.get("content-length"))
     if res.status_code == 200:
