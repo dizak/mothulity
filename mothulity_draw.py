@@ -193,14 +193,39 @@ def draw_tree(input_file_name,
 
 
 def draw_scatter(input_file_name,
-                 output_file_name):
-    df = read_csv(input_file_name,
-                  sep="\t")
-    fig = lmplot(x="axis1",
-                 y="axis2",
-                 data=df,
+                 output_file_name,
+                 xlabel="axis1",
+                 ylabel="axis2",
                  hue="group",
-                 fit_reg=False)
+                 fit_reg=False,
+                 sep="\t"):
+    """
+    Draw scatter plot from mothur's axes file and save figure to file.
+
+    Parameters
+    -------
+    input_file_name: str
+        Input file name.
+    output_file_name: str
+        Output file name.
+    xlabel: str, default <axis1>
+        Displayed label for x axis.
+    ylabel: str, default <axis2>
+        Displayed label for y axis.
+    hue: str, default <group>
+        Column name in axes file defining subset of data.
+    fit_reg: bool, default <False>
+        Draw regression line if <True>.
+    sep: str, default <\t>
+        Delimiter to use for reading-in axes file.
+    """
+    df = read_csv(input_file_name,
+                  sep=sep)
+    fig = lmplot(x=xlabel,
+                 y=ylabel,
+                 data=df,
+                 hue=hue,
+                 fit_reg=fit_reg)
     fig.savefig(output_file_name)
 
 
