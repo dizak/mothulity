@@ -24,6 +24,21 @@ __author__ = "Dariusz Izak IBB PAS"
 
 
 def load_template_file(template_file):
+    """
+    Load jinja2 template file. Search path starts from root directory so no
+    chroot.
+
+    Parameters
+    -------
+    template_file: str
+        Template file name.
+    searchpath: str, default </>
+        Root directory for template lookup.
+
+    Returns
+    -------
+    jinja2.Template
+    """
     template_Loader = jj2.FileSystemLoader(searchpath="/")
     template_Env = jj2.Environment(loader=template_Loader)
     template = template_Env.get_template(template_file)
@@ -33,6 +48,19 @@ def load_template_file(template_file):
 def render_template(template_loaded,
                     venn_diagrams,
                     javascript):
+    """
+    Render jinja2.Template to unicode.
+
+    Parameters
+    -------
+    loaded_template: jinj2.Template
+        Template to render.
+
+    Returns
+    -------
+    unicode
+        Template content with passed variables.
+    """
     template_vars = {"venn_diagrams": venn_diagrams}
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
@@ -40,30 +68,68 @@ def render_template(template_loaded,
 
 def save_template(output_file_name,
                   template_rendered):
+    """
+    Save rendered template to file.
+
+    Parameters
+    -------
+    out_file_name: str
+        Output file name.
+    template_rendered: unicode
+        Temlplate rendered to unicode object.
+    """
     with open(output_file_name, "w") as fout:
         fout.write(template_rendered)
 
 
 def draw_rarefaction(input_file_name,
-                     output_file_name):
+                     output_file_name,
+                     title="Rarefaction curve",
+                     ylabel="OTU count",
+                     xlabel="number of sequences",
+                     index_col="numsampled",
+                     figsize=(15, 8),
+                     sep="\t"):
+    """
+    Draw rarefaction plot from mothur's rarefaction file and save it to file.
+
+    Parameters
+     -------
+    input_file_name: str
+        Input file name.
+    output_file_name: str
+        Output file name.
+    title: str, default <Rarefaction curve>
+        Displayed plot title.
+    ylabel: str, default <OTU count>
+        Displayed label for y axis.
+    xlabel: str, default <number of sequences>
+        Displayed label for x axis.
+    index_col: str, default <numsampleds>
+        Index column name in shared file.
+    figsize: tuple of int, default <(15, 8)>
+        Size of figure to be saved.
+    sep: str, default <\t>
+        Delimiter to use for reading-in rarefaction file.
+    """
     df = read_csv(input_file_name,
-                  sep="\t",
-                  index_col="numsampled")
+                  sep=sep,
+                  index_col=index_col)
     cols = [i for i in df.columns if "lci" not in i]
     cols = [i for i in cols if "hci" not in i]
     df = df[cols]
     fig, ax = plt.subplots()
     df[cols].plot(ax=ax,
-                  figsize=(15, 8))
+                  figsize=figsize)
     labels = list(df.columns.values)
     for i in range(len(labels)):
         tooltip = mpld3.plugins.LineLabelTooltip(ax.get_lines()[i],
                                                  labels[i])
         mpld3.plugins.connect(plt.gcf(), tooltip)
     plt.grid(True)
-    plt.title("Rarefaction curve")
-    plt.ylabel("OTU count")
-    plt.xlabel("number of sequences")
+    plt.title(title)
+    plt.ylabel(ylabel)
+    plt.xlabel(xlabel)
     with open(output_file_name, "w") as fout:
         fout.write(mpld3.fig_to_html(fig))
 
