@@ -91,7 +91,7 @@ def draw_rarefaction(input_file_name,
                      figsize=(15, 8),
                      sep="\t"):
     """
-    Draw rarefaction plot from mothur's rarefaction file and save it to file.
+    Draw rarefaction plot from mothur's rarefaction file and save figure to file.
 
     Parameters
      -------
@@ -142,7 +142,7 @@ def draw_heatmap(input_file_name,
                  index_col=0,
                  color_map="plasma"):
     """
-    Draw heatmap from mothur's phylip file and save it to file.
+    Draw heatmap from mothur's phylip file and save figure to file.
 
     Parameters
     -------
@@ -172,9 +172,22 @@ def draw_heatmap(input_file_name,
 
 
 def draw_tree(input_file_name,
-              output_file_name):
+              output_file_name,
+              tree_format="newick"):
+    """
+    Draw dendrogram from mothur's tre file and save figure to file.
+
+    Parameters
+    -------
+    input_file_name: str
+        Input file name.
+    output_file_name: str
+        Output file name.
+    tree_format: str, default <newick>
+        File format of dendrogram.
+    """
     pylab.ion()
-    tree = ph.read(input_file_name, "newick")
+    tree = ph.read(input_file_name, tree_format)
     ph.draw(tree)
     pylab.savefig(output_file_name)
 
