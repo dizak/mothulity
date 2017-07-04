@@ -58,6 +58,14 @@ def dict2cache(cache_name,
 
 
 def cache2dict(cache_name):
+    """
+    Read from cache to dict.
+
+    Parameters
+    -------
+    cache_name: str
+        Cache to create dict from.
+    """
     try:
         cache = shelve.open(cache_name)
         return dict(cache)
