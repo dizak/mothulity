@@ -126,7 +126,6 @@ def render_template(template_loaded,
     -------
     unicode
         Template content with passed variables.
-
     """
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
