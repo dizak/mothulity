@@ -156,6 +156,34 @@ def read_info_shared(input_file_name,
                      num_col="numOtus",
                      sep="\t",
                      format_junk_grps=True):
+    """
+    Extracts information from mothur's shared file.
+
+    Parameters
+    -------
+    input_file_name: str
+        Input file name.
+    min_fold: int
+        Fraction of mean group size below which groups will be removed before
+        analysis.
+    label_col: str
+        Label column name in shared file.
+    group_col: str
+        Group column name in shared file.
+    otu_col: str
+        OTU column name prefix in shared file.
+    num_col: str
+        Number of OTUs column name in shared file.
+    sep: str, default <\t>
+        Delimiter to use for reading-in shared file.
+    format_junk_grps: bool, default <True>
+        Join names of groups to remove by <-> before passing to mothur.
+
+    Returns
+    -------
+    dict
+        Information about label, number of samples and groups to remove.
+    """
     shared_df = pd.read_csv(input_file_name, sep=sep)
     otus_cols = [i for i in shared_df.columns if otu_col in i and i != num_col]
     grps_sizes = shared_df[[group_col] + otus_cols].sum(axis=1)
