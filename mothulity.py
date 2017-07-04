@@ -21,6 +21,21 @@ __version = "0.9.7"
 
 def load_template_file(template_file,
                        searchpath="/"):
+    """
+    Load jinja2 template file. Search path starts from root directory so no
+    chroot.
+
+    Parameters
+    -------
+    template_file: str
+        Template file name.
+    searchpath: str, default </>
+        Root directory for template lookup.
+
+    Returns
+    -------
+    jinja2.Template
+    """
     template_Loader = jj2.FileSystemLoader(searchpath=searchpath)
     template_Env = jj2.Environment(loader=template_Loader)
     template = template_Env.get_template(template_file)
