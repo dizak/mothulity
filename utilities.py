@@ -39,6 +39,16 @@ def get_dir_path(file_name=""):
 
 def dict2cache(cache_name,
                input_dict):
+    """
+    Save dict to cache.
+
+    Parameters
+    -------
+    cache_name: str
+        Name of cache to be saved.
+    input_dict: dict
+        Dict to create cache from.
+    """
     try:
         cache = shelve.open(cache_name)
         for i in input_dict:
