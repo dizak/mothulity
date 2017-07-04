@@ -88,16 +88,11 @@ def main():
                download_path)
         print "Downloading done!"
         print "Unpacking..."
-        try:
-            os.system("unzip {0} -d {1}".format(download_path,
-                                                args.unite_ITS_02))
-            os.system("rm {0}".format(download_path))
-            print "Unpacking done!"
-        except:
-            print "Failed to extract file... skipping"
-        quit()
-    else:
-        pass
+        os.system("unzip {0} -d {1}".format(download_path,
+                                            args.unite_ITS_02))
+        os.system("rm {0}".format(download_path))
+        print "Unpacking done!"
+
     if args.unite_ITS_s_02 is not None:
         download_path = "{0}/Unite_ITS_s_02.zip".format(args.unite_ITS_s_02)
         print "Downloading to {0}/Unite_ITS_s_02.zip".format(args.unite_ITS_s_02)
@@ -105,16 +100,10 @@ def main():
                download_path)
         print "Downloading done!"
         print "Unpacking..."
-        try:
-            os.system("unzip {0} -d {1}".format(download_path,
-                                                args.unite_ITS_s_02))
-            os.system("rm {0}".format(download_path))
-            print "Failed to extract file... skipping"
-        except:
-            print "Unpacking done!"
-        quit()
-    else:
-        pass
+        os.system("unzip {0} -d {1}".format(download_path,
+                                            args.unite_ITS_s_02))
+        os.system("rm {0}".format(download_path))
+
     if args.silva_102 is not None:
         download_path = "{0}/Silva.bacteria.zip".format(args.silva_102)
         print "Downloading to {0}/Silva.bacteria.zip".format(args.silva_102)
@@ -122,42 +111,31 @@ def main():
                download_path)
         print "Downloading done!"
         print "Unpacking..."
-        try:
-            os.system("unzip {0} -d {1}".format(download_path,
-                                                args.silva_102))
-            os.system("rm {0}".format(download_path))
-            print "Unpacking done!"
-        except:
-            print "Failed to extract file... skipping"
+        os.system("unzip {0} -d {1}".format(download_path,
+                                            args.silva_102))
+        os.system("rm {0}".format(download_path))
+        print "Unpacking done!"
         download_path = "{0}/Silva.archaea.zip".format(args.silva_102)
         print "Downloading to {0}/Silva.archaea.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
                download_path)
         print "Downloading done!"
         print "Unpacking..."
-        try:
-            os.system("unzip {0} -d {1}".format(download_path,
-                                                args.silva_102))
-            os.system("rm {0}".format(download_path))
-            print "Unpacking done!"
-        except:
-            print "Failed to extract file... skipping"
+        os.system("unzip {0} -d {1}".format(download_path,
+                                            args.silva_102))
+        os.system("rm {0}".format(download_path))
+        print "Unpacking done!"
         download_path = "{0}/Silva.eukarya.zip".format(args.silva_102)
         print "Downloading to {0}/Silva.eukarya.zip".format(args.silva_102)
         get_db("https://www.mothur.org/w/images/1/1a/Silva.eukarya.zip",
                download_path)
         print "Downloading done!"
         print "Unpacking..."
-        try:
-            os.system("unzip {0} -d {1}".format(download_path,
-                                                args.silva_102))
-            os.system("rm {0}".format(download_path))
-            print "Unpacking done!"
-        except:
-            print "Failed to extract file... skipping"
-        quit()
-    else:
-        pass
+        os.system("unzip {0} -d {1}".format(download_path,
+                                            args.silva_102))
+        os.system("rm {0}".format(download_path))
+        print "Unpacking done!"
+
     if args.silva_119 is not None:
         download_path = "{0}/Silva.nr_v119.tgz".format(args.silva_119)
         print "Downloading to {0}/Silva.nr_v119.tgz".format(args.silva_119)
@@ -165,17 +143,12 @@ def main():
                download_path)
         print "Downloading done!"
         print "Unpacking..."
-        try:
-            os.mkdir("{0}/Silva.nr_v119".format(args.silva_119))
-            os.system("tar -xf {0} --directory {1}".format(download_path,
-                                                           "{0}/Silva.nr_v119".format(args.silva_119)))
-            os.system("rm {0}".format(download_path))
-            print "Unpacking done!"
-        except:
-            print "Failed to extract file... skipping"
-        quit()
-    else:
-        pass
+        os.mkdir("{0}/Silva.nr_v119".format(args.silva_119))
+        os.system("tar -xf {0} --directory {1}".format(download_path,
+                                                       "{0}/Silva.nr_v119".format(args.silva_119)))
+        os.system("rm {0}".format(download_path))
+        print "Unpacking done!"
+
     if args.silva_123 is not None:
         download_path = "{0}/Silva.nr_v123.tgz".format(args.silva_123)
         print "Downloading to {0}/Silva.nr_v123.tgz".format(args.silva_123)
@@ -183,17 +156,11 @@ def main():
                download_path)
         print "Downloading done!"
         print "Unpacking..."
-        try:
-            os.mkdir("{0}/Silva.nr_v119".format(args.silva_119))
-            os.system("tar -xf {0} --directory {1}".format(download_path,
-                                                           "{0}/Silva.nr_v119".format(args.silva_119)))
-            os.system("rm {0}".format(download_path))
-            print "Unpacking done!"
-        except:
-            print "Failed to extract file... skipping"
-        quit()
-    else:
-        pass
+        os.mkdir("{0}/Silva.nr_v123".format(args.silva_123))
+        os.system("tar -xf {0} --directory {1}".format(download_path,
+                                                       "{0}/Silva.nr_v123".format(args.silva_123)))
+        os.system("rm {0}".format(download_path))
+        print "Unpacking done!"
 
 
 if __name__ == '__main__':
