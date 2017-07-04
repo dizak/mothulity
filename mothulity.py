@@ -134,6 +134,16 @@ def render_template(template_loaded,
 
 def save_template(out_file_name,
                   template_rendered):
+    """
+    Save rendered template to file.
+
+    Parameters
+    -------
+    out_file_name: str
+        Output file name.
+    template_rendered: unicode
+        Temlplate rendered to unicode object.
+    """
     with open(out_file_name, "w") as fout:
         fout.write(template_rendered)
 
