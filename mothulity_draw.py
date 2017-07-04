@@ -105,7 +105,7 @@ def draw_rarefaction(input_file_name,
         Displayed label for y axis.
     xlabel: str, default <number of sequences>
         Displayed label for x axis.
-    index_col: str, default <numsampleds>
+    index_col: str or int, default <numsampleds>
         Index column name in shared file.
     figsize: tuple of int, default <(15, 8)>
         Size of figure to be saved.
@@ -135,14 +135,39 @@ def draw_rarefaction(input_file_name,
 
 
 def draw_heatmap(input_file_name,
-                 output_file_name):
+                 output_file_name,
+                 sep="\t",
+                 skiprows=1,
+                 header=None,
+                 index_col=0,
+                 color_map="plasma"):
+    """
+    Draw heatmap from mothur's phylip file and save it to file.
+
+    Parameters
+    -------
+    input_file_name: str
+        Input file name.
+    output_file_name: str
+        Output file name.
+    sep: str, default <\t>
+        Delimiter to use for reading-in rarefaction file.
+    skiprows: int, default <1>
+        Rows to skip when reading-in phylip file for proper parsing.
+    header: int or None, default: <None>
+        Row number to use as column names. None if there is not any.
+    index_col: str or int, default <0>
+        Index column name in shared file.
+    color_map: str, default <plasma>
+        Color map to use in the figure.
+    """
     df = read_csv(input_file_name,
-                  sep="\t",
-                  skiprows=1,
-                  header=None,
-                  index_col=0)
+                  sep=sep,
+                  skiprows=skiprows,
+                  header=header,
+                  index_col=index_col)
     df.columns = df.index
-    fig = heatmap(df, square=True, cmap="plasma").get_figure()
+    fig = heatmap(df, square=True, cmap=color_map).get_figure()
     fig.savefig(output_file_name)
 
 
