@@ -232,13 +232,33 @@ def draw_scatter(input_file_name,
 def summary2html(input_file_name,
                  output_file_name,
                  css_link,
-                 js_input_file_name):
+                 js_input_file_name,
+                 css_classes=["compact",
+                              "hover",
+                              "order-column"],
+                 sep="\t"):
+    """
+    Convert raw mothur's summary table file into fancy HTML.
+
+    Parameters
+    -------
+    input_file_name: str
+        Input file name.
+    output_file_name: str
+        Output file name.
+    css_link: str,
+        HTML link tag with content, used for displaying summary table.
+    js_input_file_name: str
+        JavaScript file name for displaying summary table.
+    css_classes: list of str, default: ["compact", "hover", "order-column"]
+        CSS classes for displaying summary table.
+    sep: str, default <\t>
+        Delimiter to use for reading-in axes file.
+    """
     with open(js_input_file_name) as fin:
         js_str = fin.read()
-    df = read_csv(input_file_name, sep="\t")
-    html_df = df.to_html(classes=["compact",
-                                  "hover",
-                                  "order-column"],
+    df = read_csv(input_file_name, sep=sep)
+    html_df = df.to_html(classes=css_classes,
                          index=False)
     html_str = "{0}{1}{2}".format(css_link,
                                   html_df,
