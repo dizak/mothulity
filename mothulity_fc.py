@@ -135,8 +135,8 @@ def main():
     args = parser.parse_args()
 
     if args.original_names is False:
-        names_sanitizer("-",
-                        args.files_directory)
+        names_sanitizer(args.files_directory,
+                        "-")
     else:
         pass
     left_n_right = left_n_right_generator(args.files_directory,
