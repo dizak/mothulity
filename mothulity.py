@@ -15,8 +15,8 @@ import shelve
 import pandas as pd
 
 
-__author__ = "Dariusz Izak IBB PAS"
-__version = "0.9.7"
+__author__ = "Dariusz Izak"
+__version = "1.0"
 
 
 def load_template_file(template_file,
