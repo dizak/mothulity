@@ -9,8 +9,18 @@ import pandas as pd
 __author__ = "Dariusz Izak IBB PAS"
 
 
-def names_sanitizer(unwanted_sign,
-                    files_directory):
+def names_sanitizer(files_directory,
+                    unwanted_sign):
+    """
+    Remove desired sign from file names from all files in given directory.
+
+    Parameters
+    -------
+    files_directory: str
+        Input directory.
+    unwanted_sign: str,
+        Sign to be removed from file names.
+    """
     for i in os.listdir(files_directory):
         if unwanted_sign in i:
             os.rename("{0}/{1}".format(files_directory,
@@ -24,6 +34,29 @@ def left_n_right_generator(files_directory,
                            files_extension="fastq",
                            left_reads_sign="R1",
                            right_reads_sign="R2"):
+    """
+    Returns dict containing two lists of file names. Names are divided into
+    sections by split sign. Then, names are recognized as left or right by
+    given set of characters.
+
+    Parameters
+    -------
+    files_directory: str
+        Input directory.
+    split_sign: str, default <_>
+        Character by which file names are split into sections.
+    files_extension: str, default <fastq>
+        Only file names with this extensions are taken as input.
+    left_reads_sign: str, default <R1>
+        Set of characters by which file names are recognized as left.
+    right_reads_sign: str, default <R2>
+        Set of characters by which file names are recognized as right.
+
+    Returns
+    -------
+    dict of lists
+        Dict with <left> and <right> keywords and two lists of str as values.
+    """
     left_name_reads_list = []
     right_name_reads_list = []
     files_list = os.listdir(files_directory)
