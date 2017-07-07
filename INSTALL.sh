@@ -26,5 +26,5 @@ source activate mothulity
 ENV_PYTHON=$(which python)
 # Replace shebangs in *py files in mothulity directory
 for i in "${MOTHULITY_PATH}/*.py"; do
-  sed -i 's@/usr/bin/env python@$ENV_PYTHON@g' ${i};
+  sed -i "s@/usr/bin/env python@${ENV_PYTHON}@g" $i;
 done
