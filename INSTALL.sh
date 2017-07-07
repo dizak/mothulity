@@ -22,7 +22,7 @@ echo "export PATH=\"${MOTHULITY_PATH}:\$PATH\"" >> $BASH_RC
 # Create mothulity env from mothulity.yaml
 conda env create --file "${MOTHULITY_PATH}/mothulity.yaml"
 # Get python interpreter's location from the env
-. activate mothulity
+source activate mothulity
 ENV_PYTHON=$(which python)
 # Replace shebangs in *py files in mothulity directory
 for i in "${MOTHULITY_PATH}/*.py"; do
