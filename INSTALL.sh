@@ -18,11 +18,11 @@ fi
 cp $BASH_RC "${BASH_RC}.bak"
 # Add mothulity to PATH and source it
 echo "export PATH=\"${MOTHULITY_PATH}:\$PATH\"" >> $BASH_RC
-source ${BASH_RC}
+. ${BASH_RC}
 # Create mothulity env from mothulity.yaml
 conda env create --file "${MOTHULITY_PATH}/mothulity.yaml"
 # Get python interpreter's location from the env
-source activate mothulity
+. activate mothulity
 ENV_PYTHON=$(which python)
 # Replace shebangs in *py files in mothulity directory
 for i in "${MOTHULITY_PATH}/*.py"; do
