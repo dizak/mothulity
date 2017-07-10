@@ -5,9 +5,9 @@
 BASH_RC=${HOME}/.bashrc
 ## Where is conda
 CONDA_PATH=$(which conda)
-## Where is mothulity
-MOTHULITY_PATH=$(which mothulity.py)
-echo $MOTHULITY_PATH
+## Go to mothulity directory and get its absolute path
+cd $(dirname $0)
+MOTHULITY_PATH=$(pwd)
 # Check for Anaconda
 if [ ${#CONDA_PATH} -eq 0 ]; then
   echo 'Please install Anaconda first.';
@@ -22,12 +22,11 @@ else echo "Found mothulity in: ${MOTHULITY_PATH}";
 fi
 # Go to mothulity directory and pull from git
 cd $MOTHULITY_PATH
-git pull master
+git pull --all
 # Remove old env and create new
-conda env remove -n mothulity
-conda env create --file "${MOTHULITY_PATH}/mothulity.yaml"
+conda env create --file "${MOTHULITY_PATH}/mothulity.yaml" --force
 # Get python interpreter's location from the env
-source activate mothulity
+. activate mothulity
 ENV_PYTHON=$(which python)
 # Replace shebangs in *py files in mothulity directory
 for i in "${MOTHULITY_PATH}/*.py"; do
