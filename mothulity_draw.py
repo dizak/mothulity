@@ -471,6 +471,7 @@ def main():
     parser.add_argument("-o",
                         "--output",
                         dest="output_file_name",
+                        metavar="",
                         default=None,
                         help="output file name")
     parser.add_argument("--rarefaction",
