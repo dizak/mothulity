@@ -81,3 +81,16 @@ Presumably, it is a good idea to test mothulity with [MiSeq SOP](https://mothur.
 6. ```mkdir ~/db```
 7. ```mothulity_dbaser.py --silva-119 ~/db``` for 16S or ```mothulity_dbaser.py --unite-ITS-02 ~/db``` for ITS.
 8. ```mothulity.py /path/to/fastq/files -r sh``` for 16S or ```mothulity.py /path/to/fastq/files -r sh --align-database /path/to/align-database --taxonomy-database /path/to/taxonomy-database``` for ITS.
+
+
+#### Experimental installation
+**automatic installation and *no need for activating the environment***
+
+1. Install [Anaconda](https://anaconda.org).
+2. ```git clone https://github.com/dizak/mothulity```.
+3. ```bash INSTALL.sh```
+
+
+#### Experimental update
+
+```bash UPDATE.sh```
