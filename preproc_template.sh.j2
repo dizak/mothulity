@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #Activate the env
-source activate mothulity
+. activate mothulity
 
 {% if run == "sbatch" or nodes > 1 %}
 #SBATCH --job-name="{{job_name}}"
