@@ -20,7 +20,7 @@ cp $BASH_RC "${BASH_RC}.bak"
 echo "export PATH=\"${MOTHULITY_PATH}:\$PATH\"" >> $BASH_RC
 . ${BASH_RC}
 # Create mothulity env from mothulity.yaml
-conda env create --file "${MOTHULITY_PATH}/mothulity.yaml"
+conda env create --file "${MOTHULITY_PATH}/mothulity.yaml" --force
 # Get python interpreter's location from the env
 . activate mothulity
 ENV_PYTHON=$(which python)
