@@ -529,9 +529,9 @@ def main():
         resources = args.resources.upper()
         partition = config.get(resources, "partition")
         nodes = int(config.get(resources, "nodes"))
-        ntasks_per_node = config.get(resources, "ntasks_per_node")
+        ntasks_per_node = int(config.get(resources, "ntasks_per_node"))
         mem_per_cpu = config.get(resources, "mem_per_cpu")
-        processors = config.get(resources, "processors")
+        processors = int(config.get(resources, "processors"))
     else:
         nodes = args.nodes
         node_list = args.node_list
