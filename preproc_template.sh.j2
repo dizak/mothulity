@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-#Activate the env
-. activate mothulity
-
 {% if run == "sbatch" or nodes %}
 #SBATCH --job-name="{{job_name}}"
 #SBATCH --partition={{partition}}
@@ -14,6 +11,9 @@
 #SBATCH --nodelist={{node_list}}
   {% endif %}
 {% endif %}
+#Activate the env
+. activate mothulity
+
 ###Create *files file###
 mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
 {% if nodes > 1 %}

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-#Activate the env
-. activate mothulity
-
 {% if run == "sbatch" or nodes %}
 #SBATCH --job-name="{{job_name}}"
 #SBATCH --partition={{partition}}
@@ -11,6 +8,8 @@
 #SBATCH --mem-per-cpu={{mem_per_cpu}}
 #SBATCH --exclude=gpu[1-8]
 {% endif %}
+#Activate the env
+. activate mothulity
 
 ###OTU approach analysis###
 
