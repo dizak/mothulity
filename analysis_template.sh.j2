@@ -5,7 +5,6 @@
 #SBATCH --partition={{partition}}
 #SBATCH --nodes={{nodes}}
 #SBATCH --ntasks-per-node={{ntasks_per_node}}
-#SBATCH --mem-per-cpu={{mem_per_cpu}}
 #SBATCH --exclude=gpu[1-8]
 {% endif %}
 #Activate the env

@@ -50,7 +50,6 @@ def render_template(template_loaded,
                     partition="long",
                     nodes=1,
                     ntasks_per_node=6,
-                    mem_per_cpu=24,
                     node_list=None,
                     processors=1,
                     max_ambig=0,
@@ -78,7 +77,6 @@ def render_template(template_loaded,
                     w3_css=None,
                     datatables_js=None,
                     slideshow_js=None):
-    mem_per_cpu = "{0}G".format(mem_per_cpu)
     template_vars = {"files_directory": files_directory,
                      "output_dir": output_dir,
                      "job_name": job_name,
@@ -86,7 +84,6 @@ def render_template(template_loaded,
                      "partition": partition,
                      "nodes": nodes,
                      "ntasks_per_node": ntasks_per_node,
-                     "mem_per_cpu": mem_per_cpu,
                      "node_list": node_list,
                      "processors": processors,
                      "max_ambig": max_ambig,
@@ -288,13 +285,6 @@ def main():
                           default=6,
                           help="number of tasks to invoke on each node.\
                           Default <6>")
-    headnode.add_argument("--mem-per-cpu",
-                          action="store",
-                          dest="mem_per_cpu",
-                          metavar="",
-                          default=24,
-                          help="maximum amount of real memory per node in\
-                          gigabytes. Default <24>.")
     headnode.add_argument("--node-list",
                           action="store",
                           dest="node_list",
@@ -530,13 +520,11 @@ def main():
         partition = config.get(resources, "partition")
         nodes = int(config.get(resources, "nodes"))
         ntasks_per_node = int(config.get(resources, "ntasks_per_node"))
-        mem_per_cpu = config.get(resources, "mem_per_cpu")
         processors = int(config.get(resources, "processors"))
     else:
         nodes = args.nodes
         node_list = args.node_list
         ntasks_per_node = args.ntasks_per_node
-        mem_per_cpu = args.mem_per_cpu
         processors = args.processors
         partition = args.partition
 
@@ -587,7 +575,6 @@ def main():
                                         partition=partition,
                                         nodes=nodes,
                                         ntasks_per_node=ntasks_per_node,
-                                        mem_per_cpu=mem_per_cpu,
                                         node_list=node_list,
                                         processors=processors,
                                         max_ambig=args.max_ambig,
