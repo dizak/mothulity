@@ -388,6 +388,8 @@ def main():
 
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+    align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
+    taxonomy_database_abs = os.path.abspath(os.path.expanduser(args.taxonomy_database))
 
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
@@ -428,6 +430,14 @@ def main():
             time.sleep(2)
             exit()
         else:
+            if os.path.isfile(align_database_abs) is False:
+                print "No align database found in {}. Quitting...".format(args.align_database)
+                time.sleep(2)
+                exit()
+            if os.path.isfile(taxonomy_database_abs) is False:
+                print "No align database found in {}. Quitting...".format(args.taxonomy_database)
+                time.sleep(2)
+                exit()
             shared_file = None
             tax_sum_file = None
     else:
@@ -522,8 +532,8 @@ def main():
                      "chimera_dereplicate": args.chimera_dereplicate,
                      "classify_seqs_cutoff": args.classify_seqs_cutoff,
                      "classify_ITS": args.classify_ITS,
-                     "align_database": args.align_database,
-                     "taxonomy_database": args.taxonomy_database,
+                     "align_database": align_database_abs,
+                     "taxonomy_database": taxonomy_database_abs,
                      "cluster_cutoff": args.cluster_cutoff,
                      "full_ram_load": args.full_ram_load,
                      "label": label,
