@@ -8,7 +8,7 @@
     <button class="w3-button w3-light-grey" onclick="plusDivs(-1)" type="button" name="button">&#10094; Prev</button>
     <button class="w3-button w3-light-grey" onclick=plusDivs(1) type="button" name="button">&#10095; Prev</button>
   </div>
-  {% for number, diagrams in venn_diagrams %}
+  {% for number, diagram in venn_diagrams %}
     <button class="w3-button demo" onclick="currentDiv({{number}})" type="button" name="button">{{number}}</button>
   {% endfor %}
 </div>
