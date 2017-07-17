@@ -51,6 +51,8 @@ def render_template(template_loaded,
     -------
     loaded_template: jinj2.Template
         Template to render.
+    template_vars: dict
+        Variables to be rendered with the template.
 
     Returns
     -------
