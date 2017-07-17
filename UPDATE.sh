@@ -20,15 +20,19 @@ if [ ${#MOTHULITY_PATH} -eq 0 ]; then
   exit;
 else echo "Found mothulity in: ${MOTHULITY_PATH}";
 fi
+# Get python interpreter's location from the env
+. activate mothulity
+ENV_PYTHON=$(which python)
+# Replace shebangs from env interpreter to default in *py files
+for i in "${MOTHULITY_PATH}/*.py"; do
+  sed -i "s@${ENV_PYTHON}@/usr/bin/env python@g" $i;
+done
 # Go to mothulity directory and pull from git
 cd $MOTHULITY_PATH
 git pull --all
 # Remove old env and create new
 conda env create --file "${MOTHULITY_PATH}/mothulity.yaml" --force
-# Get python interpreter's location from the env
-. activate mothulity
-ENV_PYTHON=$(which python)
-# Replace shebangs in *py files in mothulity directory
+# Replace shebangs in *py files in mothulity directory to these from env inerpreter
 for i in "${MOTHULITY_PATH}/*.py"; do
   sed -i "s@/usr/bin/env python@${ENV_PYTHON}@g" $i;
 done
