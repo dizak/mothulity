@@ -16,7 +16,9 @@
 
 mkdir -p {{files_directory}}analysis/OTU/alpha {% if sampl_num > 1 %}{{files_directory}}analysis/OTU/beta{% else %}{% endif %}
 cp {{shared_file}} {{files_directory}}analysis/OTU/{{job_name}}.shared
+{% if tax_sum_file %}
 cp {{tax_sum_file}} {{files_directory}}analysis/OTU/alpha/{{job_name}}.tax.summary
+{% endif %}
 {% if junk_grps|length > 0 %}
 #Go to subdirectory, remove junk groups and subsample shared file
 
@@ -38,7 +40,6 @@ mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub
 cp {{job_name}}.shared ./alpha
 {% if sampl_num > 1 %}
 cp {{job_name}}.{{label}}.subsample.shared ./beta/
-{% else %}
 {% endif %}
 {% endif %}
 #Go to alpha directory and create krona chart, rarefaction, summary table
@@ -64,6 +65,12 @@ mothur '#tree.shared(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.sq
 
 mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
 
+{% if design_file %}
+#Test parsimony
+mothur '#parsimony(tree={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre, group={{design_file}}.design, groups=all)'
+mothur '#parsimony(tree={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre, group={{design_file}}.design, groups=all)'
+{% endif %}
+
 #Draw beta directory pictures for Jaccard and YC measures
 
 mothulity_draw.py {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --output {{job_name}}.jclass.dist.svg --phylip
@@ -72,7 +79,6 @@ mothulity_draw.py {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.
 mothulity_draw.py {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --output {{job_name}}.thetayc.dist.svg --phylip
 mothulity_draw.py {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --output {{job_name}}.{{label}}.thetayc.tre.svg --tree
 mothulity_draw.py {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes --output {{job_name}}.thetayc.nmds.svg --axes
-{% else %}
 {% endif %}
 #Go to OTU directory
 
@@ -91,5 +97,4 @@ zip -r {{job_name}}.zip analysis/
 {% if notify_email %}
 #Send mail
 headnode_notifier.py {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please download the attachment and inspect the results of {{job_name}}.{% if sampl_num == 1 %} Please note, that there was only one sample, therefore no beta analysis was carried out.{% endif%}' --attach {{job_name}}.zip
-{% else %}
 {% endif %}
