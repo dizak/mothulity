@@ -141,7 +141,6 @@ def main():
                                      version="0.9.4")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
-    manual = parser.add_argument_group("manual settings")
     parser.add_argument(action="store",
                         dest="files_directory",
                         metavar="path/to/files",
@@ -344,6 +343,14 @@ def main():
                         help="path/to/taxonomy-database. Used by\
                         classify.seqs as <taxonomy> argument.\
                         Default <~/db/Silva.nr_v119/silva.nr_v119.tax>")
+    mothur.add_argument("--design-file",
+                        action="store",
+                        dest="design_file",
+                        metavar="",
+                        default=None,
+                        help="/path/to/design_file. Mothulity tries to find\
+                        *design file in the input directory if not specified.\
+                        Does not conduct this part if fails.")
     mothur.add_argument("--cluster-cutoff",
                         action="store",
                         dest="cluster_cutoff",
@@ -397,9 +404,9 @@ def main():
     tax_sum_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                  config.get("file_globs",
                                                             "tax_sum")))
-    fastq_file_list = glob.glob("{}{}".format(files_directory_abs,
-                                              config.get("file_globs",
-                                                         "tax_sum")))
+    design_files_list = glob.glob("{}{}".format(files_directory_abs,
+                                                config.get("file_globs",
+                                                           "design")))
 
     if len(shared_files_list) > 1:
         if args.render_html is True:
@@ -412,9 +419,19 @@ def main():
         if len(tax_sum_files_list) != 1:
             print "WARNING!!! No proper tax.summary file found. The analysis will be incomplete."
             time.sleep(2)
+            tax_sum_file = None
         else:
             tax_sum_file = tax_sum_files_list[0]
             print "Found {} tax.summary file".format(tax_sum_file)
+        if args.design_file is None and len(design_files_list) != 0:
+            if len(design_files_list) > 1:
+                print "More than 1 design files found. Will skip this part of analysis."
+                time.sleep(2)
+                design_file = None
+            else:
+                design_file = design_files_list[0]
+        else:
+            design_file = args.design_file
         if any([args.analysis_only, args.render_html]) is True:
             shared_file = shared_files_list[0]
             shared_info = read_info_shared(shared_file)
@@ -534,6 +551,7 @@ def main():
                      "classify_ITS": args.classify_ITS,
                      "align_database": align_database_abs,
                      "taxonomy_database": taxonomy_database_abs,
+                     "design_file": design_file,
                      "cluster_cutoff": args.cluster_cutoff,
                      "full_ram_load": args.full_ram_load,
                      "label": label,
