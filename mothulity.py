@@ -16,7 +16,7 @@ import pandas as pd
 
 
 __author__ = "Dariusz Izak"
-__version = "1.0"
+__version__ = "1.0"
 
 
 def load_template_file(template_file,
@@ -138,7 +138,7 @@ def main():
                                      usage="mothulity [OPTION]",
                                      description="creates headnode-suitable\
                                      mothur script",
-                                     version="0.9.4")
+                                     version=__version__)
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
     parser.add_argument(action="store",
