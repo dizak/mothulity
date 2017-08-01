@@ -343,14 +343,6 @@ def main():
                         help="path/to/taxonomy-database. Used by\
                         classify.seqs as <taxonomy> argument.\
                         Default <~/db/Silva.nr_v119/silva.nr_v119.tax>")
-    mothur.add_argument("--design-file",
-                        action="store",
-                        dest="design_file",
-                        metavar="",
-                        default=None,
-                        help="/path/to/design_file. Mothulity tries to find\
-                        *design file in the input directory if not specified.\
-                        Does not conduct this part if fails.")
     mothur.add_argument("--cluster-cutoff",
                         action="store",
                         dest="cluster_cutoff",
@@ -423,7 +415,7 @@ def main():
         else:
             tax_sum_file = tax_sum_files_list[0]
             print "Found {} tax.summary file".format(tax_sum_file)
-        if args.design_file is None and len(design_files_list) != 0:
+        if len(design_files_list) != 0:
             if len(design_files_list) > 1:
                 print "More than 1 design files found. Will skip this part of analysis."
                 time.sleep(2)
@@ -431,7 +423,7 @@ def main():
             else:
                 design_file = design_files_list[0]
         else:
-            design_file = args.design_file
+            design_file = None
         if any([args.analysis_only, args.render_html]) is True:
             shared_file = shared_files_list[0]
             shared_info = read_info_shared(shared_file)
@@ -457,6 +449,7 @@ def main():
                 exit()
             shared_file = None
             tax_sum_file = None
+            design_file = None
     else:
         "I don't know what you what me to do!!! There are no files I can recognize in here!"
         time.sleep(2)
