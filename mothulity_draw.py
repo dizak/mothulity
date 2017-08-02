@@ -21,65 +21,6 @@ from lxml import etree as et
 import pandas as pd
 
 
-def load_template_file(template_file):
-    """
-    Load jinja2 template file. Search path starts from root directory so no
-    chroot.
-
-    Parameters
-    -------
-    template_file: str
-        Template file name.
-    searchpath: str, default </>
-        Root directory for template lookup.
-
-    Returns
-    -------
-    jinja2.Template
-    """
-    template_Loader = jj2.FileSystemLoader(searchpath="/")
-    template_Env = jj2.Environment(loader=template_Loader)
-    template = template_Env.get_template(template_file)
-    return template
-
-
-def render_template(template_loaded,
-                    venn_diagrams,
-                    javascript):
-    """
-    Render jinja2.Template to unicode.
-
-    Parameters
-    -------
-    loaded_template: jinj2.Template
-        Template to render.
-
-    Returns
-    -------
-    unicode
-        Template content with passed variables.
-    """
-    template_vars = {"venn_diagrams": venn_diagrams}
-    template_rendered = template_loaded.render(template_vars)
-    return template_rendered
-
-
-def save_template(output_file_name,
-                  template_rendered):
-    """
-    Save rendered template to file.
-
-    Parameters
-    -------
-    out_file_name: str
-        Output file name.
-    template_rendered: unicode
-        Temlplate rendered to unicode object.
-    """
-    with open(output_file_name, "w") as fout:
-        fout.write(template_rendered)
-
-
 def draw_rarefaction(input_file_name,
                      output_file_name,
                      title="Rarefaction curve",
