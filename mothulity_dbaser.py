@@ -24,6 +24,13 @@ def get_db(url,
     chunk: int, default 8192
         Size of chunk the stream is divided to. Smaller it is less memory it
         uses.
+
+    Examples
+    -------
+    >>> import os
+    >>> get_db("http://google.com", "./tests/google.html")
+    >>> os.path.getsize("./tests/google.html") > 0
+    True
     """
     res = rq.get(url, stream=True)
     total_len = int(res.headers.get("content-length"))
