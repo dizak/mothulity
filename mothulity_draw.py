@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 
+from __init__ import __author__, __version__
 from utilities import get_dir_path
 import os
 import ConfigParser
@@ -18,9 +19,6 @@ from seaborn import pairplot
 from seaborn import lmplot
 from lxml import etree as et
 import pandas as pd
-
-
-__author__ = "Dariusz Izak IBB PAS"
 
 
 def load_template_file(template_file):

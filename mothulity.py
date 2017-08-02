@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 
+from __init__ import __author__, __version__
 from utilities import get_dir_path, dict2cache, cache2dict
 import time
 import jinja2 as jj2
@@ -13,10 +14,6 @@ import glob
 import ConfigParser
 import shelve
 import pandas as pd
-
-
-__author__ = "Dariusz Izak"
-__version__ = "1.0"
 
 
 def load_template_file(template_file,
@@ -400,6 +397,8 @@ def main():
                                                 config.get("file_globs",
                                                            "design")))
 
+    cache_files_list = glob.glob("{}{}").format(files_directory_abs, "*dir")
+
     if len(shared_files_list) > 1:
         if args.render_html is True:
             pass
@@ -455,14 +454,19 @@ def main():
         time.sleep(2)
         exit()
 
-    logfile_name = "{}.{}.{}{}{}{}{}{}".format(files_directory_abs,
-                                               args.job_name,
-                                               time.localtime().tm_year,
-                                               time.localtime().tm_mon,
-                                               time.localtime().tm_mday,
-                                               time.localtime().tm_hour,
-                                               time.localtime().tm_min,
-                                               time.localtime().tm_sec)
+    run_time_sig = "{}{}{}{}{}{}".format(time.localtime().tm_year,
+                                         time.localtime().tm_mon,
+                                         time.localtime().tm_mday,
+                                         time.localtime().tm_hour,
+                                         time.localtime().tm_min,
+                                         time.localtime().tm_sec)
+    logfile_name = "{}.{}.{}".format(files_directory_abs,
+                                     args.job_name,
+                                     run_time_sig)
+
+    args_dict = vars(args)
+    dict2cache(logfile_name, args_dict)
+
     with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
         for k, v in vars(args).iteritems():

@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
 
+from __init__ import __author__, __version__
 import os
 import argparse
 import requests as rq
 from tqdm import tqdm
-
-
-__author__ = "Dariusz Izak IBB PAS"
 
 
 def get_db(url,
