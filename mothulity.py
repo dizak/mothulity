@@ -32,6 +32,13 @@ def load_template_file(template_file,
     Returns
     -------
     jinja2.Template
+
+    Examples
+    -------
+    >>> import jinja2
+    >>> lt = load_template_file("./tests/test_template.jj2", searchpath=".")
+    >>> isinstance(lt, jinja2.environment.Template)
+    True
     """
     template_Loader = jj2.FileSystemLoader(searchpath=searchpath)
     template_Env = jj2.Environment(loader=template_Loader)
@@ -55,6 +62,16 @@ def render_template(template_loaded,
     -------
     unicode
         Template content with passed variables.
+
+    Examples
+    -------
+    >>> lt = load_template_file("./tests/test_template.jj2", searchpath=".")
+    >>> vars = {"word1": "ipsum", "word2": "adipisicing", "word3": "tempor"}
+    >>> rt = render_template(lt, vars)
+    >>> isinstance(rt, unicode)
+    True
+    >>> str(rt)
+    'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.'
     """
     template_rendered = template_loaded.render(template_vars)
     return template_rendered
