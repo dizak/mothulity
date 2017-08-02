@@ -1,13 +1,11 @@
 #! /usr/bin/env python
 
 
+from __init__ import __author__, __version__
 import sys
 import os
 import shelve
-
-
-__author__ = "Dariusz Izak IBB PAS"
-__version = "0.9.7"
+from glob import glob
 
 
 def get_dir_path(file_name=""):
@@ -16,25 +14,62 @@ def get_dir_path(file_name=""):
     put desired file name at the end of the path. Facilitates access to files
     stored in the same directory as executed script. Requires the executed
     script being added to the system path
+
     Parameters
     --------
     file_name: str, default <"">
         File name to put at the end of the path. Use empty string if want just
         the directory.
+
     Returns
     --------
     str
         System path of the executable.
+
     Examples
     -------
-    >>> get_dir_path()
+    >>> get_dir_path() # doctest: +SKIP
     '/home/user/program/bin/'
-    >>> get_dir_path("foo")
+    >>> get_dir_path("foo") # doctest: +SKIP
     '/home/user/program/bin/foo'
     """
     prog_path = sys.argv[0].replace(sys.argv[0].split("/")[-1],
                                     file_name)
     return os.path.abspath(prog_path)
+
+
+def path2name(path,
+              slash="/",
+              extension=False):
+    """
+    Returns just filename with or without extension from the full path.
+
+    Parameters
+    -------
+    path: str
+        Input path.
+    slash: str
+        Slash to use. Backslash does NOT work properly yet. Default: </>.
+    extension: bool
+        Return filename with extension if <True>. Remove extension\
+        otherwise. Default: <False>.
+
+    Returns
+    -------
+    str
+        Filename from the path.
+
+    Examples
+    -------
+    >>> path2name("/home/user/foo.bar")
+    'foo'
+    >>> path2name("/home/user/foo.bar", extension=True)
+    'foo.bar'
+    """
+    if extension is True:
+        return str(path.split(slash)[-1])
+    else:
+        return str(path.split(slash)[-1].split(".")[0])
 
 
 def dict2cache(cache_name,
@@ -48,6 +83,11 @@ def dict2cache(cache_name,
         Name of cache to be saved.
     input_dict: dict
         Dict to create cache from.
+
+    Examples
+    -------
+    >>> my_dict = {"foo": "bar"}
+    >>> dict2cache("./tests/foobar", my_dict)
     """
     try:
         cache = shelve.open(cache_name)
@@ -65,12 +105,48 @@ def cache2dict(cache_name):
     -------
     cache_name: str
         Cache to create dict from.
+
+    Examples
+    -------
+    >>> my_dict = cache2dict("./tests/foobar")
+    >>> my_dict
+    {'foo': 'bar'}
     """
     try:
         cache = shelve.open(cache_name)
         return dict(cache)
     finally:
         cache.close()
+
+
+def find_cache(directory,
+               hidden=True):
+    """
+    Finds proper cache for shelve by files extensions and compare whether the\
+    first part of the name matches with all three extensions.
+
+    Parameters
+    -------
+    directory: str
+        Input directory
+    hidden: bool
+        Searches for files starting with the dot if <True>. Default: <True>.
+
+    Examples
+    -------
+    >>> find_cache("./tests/", hidden=False)
+    ['foobar']
+    """
+    if hidden is True:
+        hid_char = "."
+    else:
+        hid_char = ""
+    dir_list = glob("{}{}*dir".format(directory, hid_char))
+    dat_list = glob("{}{}*dat".format(directory, hid_char))
+    dir_lognames = [path2name(i) for i in dir_list]
+    dat_lognames = [path2name(i) for i in dat_list]
+    commong_lognames = [i for i in dat_lognames if i in dir_lognames]
+    return commong_lognames
 
 
 def main():
