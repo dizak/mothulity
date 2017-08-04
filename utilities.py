@@ -95,7 +95,7 @@ def dict2cache(cache_name,
     Examples
     -------
     >>> my_dict = {"foo": "bar"}
-    >>> dict2cache("./tests/foobar", my_dict)
+    >>> dict2cache("./tests/test", my_dict)
     """
     try:
         cache = shelve.open(cache_name)
@@ -116,7 +116,7 @@ def cache2dict(cache_name):
 
     Examples
     -------
-    >>> my_dict = cache2dict("./tests/foobar")
+    >>> my_dict = cache2dict("./tests/test")
     >>> my_dict
     {'foo': 'bar'}
     """
@@ -143,9 +143,9 @@ def find_cache(directory,
     Examples
     -------
     >>> find_cache(directory="./tests/", hidden=True)
-    ['foobar']
+    ['test']
     >>> find_cache(directory="./tests/", hidden=False)
-    ['foobar']
+    ['test']
     """
     if hidden is True:
         hid_char = "."
