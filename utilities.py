@@ -41,6 +41,7 @@ def get_dir_path(file_name=""):
 
 def path2name(path,
               slash="/",
+              hid_char=".",
               extension=False):
     """
     Returns just filename with or without extension from the full path.
@@ -51,6 +52,8 @@ def path2name(path,
         Input path.
     slash: str
         Slash to use. Backslash does NOT work properly yet. Default: </>.
+    hid_char: str
+        Character indicating that file is hidden. Default: <.>
     extension: bool
         Return filename with extension if <True>. Remove extension\
         otherwise. Default: <False>.
@@ -64,13 +67,17 @@ def path2name(path,
     -------
     >>> path2name("/home/user/foo.bar")
     'foo'
+    >>> path2name("/home/user/.foo.bar")
+    'foo'
     >>> path2name("/home/user/foo.bar", extension=True)
+    'foo.bar'
+    >>> path2name("/home/user/.foo.bar", extension=True)
     'foo.bar'
     """
     if extension is True:
-        return str(path.split(slash)[-1])
+        return str(path.split(slash)[-1].strip(hid_char))
     else:
-        return str(path.split(slash)[-1].split(".")[0])
+        return str(path.split(slash)[-1].strip(hid_char).split(".")[0])
 
 
 def dict2cache(cache_name,
@@ -135,15 +142,17 @@ def find_cache(directory,
 
     Examples
     -------
-    >>> find_cache("./tests/", hidden=False)
+    >>> find_cache(directory="./tests/", hidden=True)
+    ['foobar']
+    >>> find_cache(directory="./tests/", hidden=False)
     ['foobar']
     """
     if hidden is True:
         hid_char = "."
     else:
         hid_char = ""
-    dir_list = glob("{}{}*dir".format(directory, hid_char))
-    dat_list = glob("{}{}*dat".format(directory, hid_char))
+    dir_list = glob("{}/{}*dir".format(directory, hid_char))
+    dat_list = glob("{}/{}*dat".format(directory, hid_char))
     dir_lognames = [path2name(i) for i in dir_list]
     dat_lognames = [path2name(i) for i in dat_list]
     commong_lognames = [i for i in dat_lognames if i in dir_lognames]
