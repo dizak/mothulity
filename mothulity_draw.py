@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 
 
-from __init__ import __author__, __version__
+from __author import __author__
+from __version import __version__
 from utilities import get_dir_path
 import os
 import ConfigParser
