@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 
 
-from __init__ import __author__, __version__
+from __author import __author__
+from __version import __version__
 from utilities import get_dir_path, dict2cache, cache2dict
 import time
 import jinja2 as jj2
@@ -36,7 +37,7 @@ def load_template_file(template_file,
     Examples
     -------
     >>> import jinja2
-    >>> lt = load_template_file("./tests/test_template.jj2", searchpath=".")
+    >>> lt = load_template_file("./tests/test.jj2", searchpath=".")
     >>> isinstance(lt, jinja2.environment.Template)
     True
     """
@@ -65,7 +66,8 @@ def render_template(template_loaded,
 
     Examples
     -------
-    >>> lt = load_template_file("./tests/test_template.jj2", searchpath=".")
+    >>> lt = load_template_file("./tests/test.jj2",\
+    searchpath=".")
     >>> vars = {"word1": "ipsum", "word2": "adipisicing", "word3": "tempor"}
     >>> rt = render_template(lt, vars)
     >>> isinstance(rt, unicode)
@@ -128,6 +130,16 @@ def read_info_shared(input_file_name,
     -------
     dict
         Information about label, number of samples and groups to remove.
+
+    Examples
+    -------
+    >>> shared_info = read_info_shared(input_file_name="./tests/test.shared")
+    >>> shared_info["samples_number"]
+    9
+    >>> float(shared_info["label"])
+    0.03
+    >>> shared_info["junk_grps"]
+    'F3D141-F3D143-F3D144'
     """
     shared_df = pd.read_csv(input_file_name, sep=sep)
     otus_cols = [i for i in shared_df.columns if otu_col in i and i != num_col]
