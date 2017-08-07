@@ -19,6 +19,14 @@ def names_sanitizer(files_directory,
         Input directory.
     unwanted_sign: str,
         Sign to be removed from file names.
+
+    Examples
+    -------
+    >>> import os
+    >>> open("./tests/test-test-test.test", "w").close()
+    >>> names_sanitizer("./tests", "-")
+    >>> "testtesttest.test" in os.listdir("./tests/")
+    True
     """
     for i in os.listdir(files_directory):
         if unwanted_sign in i:
@@ -55,6 +63,14 @@ def left_n_right_generator(files_directory,
     -------
     dict of lists
         Dict with <left> and <right> keywords and two lists of str as values.
+
+    Examples
+    -------
+    >>> filenames = left_n_right_generator("./tests")
+    >>> filenames["left"][0]["name"]
+    'test1'
+    >>> filenames["left"][1]["name"]
+    'test2'
     """
     left_name_reads_list = []
     right_name_reads_list = []
