@@ -69,8 +69,16 @@ def left_n_right_generator(files_directory,
     >>> filenames = left_n_right_generator("./tests")
     >>> filenames["left"][0]["name"]
     'test1'
+    >>> filenames["left"][0]["left_reads"]
+    './tests/test1_S001_R1.fastq'
+    >>> filenames["right"][0]["right_reads"]
+    './tests/test1_S001_R2.fastq'
     >>> filenames["left"][1]["name"]
     'test2'
+    >>> filenames["left"][1]["left_reads"]
+    './tests/test2_S001_R1.fastq'
+    >>> filenames["right"][1]["right_reads"]
+    './tests/test2_S001_R2.fastq'
     """
     left_name_reads_list = []
     right_name_reads_list = []
