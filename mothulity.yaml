@@ -41,7 +41,7 @@ dependencies:
 - conda-forge::python=2.7.13=0
 - conda-forge::python-dateutil=2.6.0=py27_0
 - conda-forge::pytz=2017.2=py27_0
-- conda-forge::qt=5.6.2=1
+- conda-forge::qt=5.6.2=3
 - conda-forge::readline=6.2=0
 - conda-forge::requests=2.13.0=py27_0
 - conda-forge::seaborn=0.7.1=py27_0
