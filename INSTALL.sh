@@ -28,3 +28,7 @@ ENV_PYTHON=$(which python)
 for i in "${MOTHULITY_PATH}/*.py"; do
   sed -i "s@/usr/bin/env python@${ENV_PYTHON}@g" $i;
 done
+# Run doc tests in all the python files
+for i in "${MOTHULITY_PATH}/*.py"; do
+  python -m doctest $i -v;
+done
