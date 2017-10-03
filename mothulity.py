@@ -426,7 +426,7 @@ def main():
                                                 config.get("file_globs",
                                                            "design")))
 
-    cache_files_list = glob.glob("{}{}").format(files_directory_abs, "*dir")
+    cache_files_list = glob.glob("{}{}".format(files_directory_abs, "*dir"))
 
     if len(shared_files_list) > 1:
         if args.render_html is True:
