@@ -155,6 +155,26 @@ def draw_scatter(input_file_name,
         Input file name.
     output_file_name: str
         Output file name.
+    axis1_col: str, default <axis1>
+        Axis 1 column name in axis file.
+    axis2_col: str, default <axis2>
+        Axis 2 column name in axis file.
+    group_col: str, default <group>
+        Group column name in axis file.
+    title_text: str, default <Scatter plot>
+        Text displayed as plot title.
+    title_size: int, default <20>
+        Plot title size.
+    point_size: int, default <100>
+        Point size.
+    point_alpha: float, default <0.3>
+        Point transparency.
+    grid_color: str, default <white>
+        Color of the plot grid.
+    grid_style: str, default <solid>
+        Style of the plot grid.
+    backgroud_color: str, default <#EEEEEE>
+        Color of the plot backgroud.
     sep: str, default <\t>
         Delimiter to use for reading-in axes file.
     """
