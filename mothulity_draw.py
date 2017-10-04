@@ -14,6 +14,7 @@ import pylab
 import matplotlib.pyplot as plt
 import matplotlib.style as style
 import mpld3
+import numpy as np
 from pandas import read_csv
 from seaborn import heatmap
 from seaborn import pairplot
@@ -134,10 +135,16 @@ def draw_tree(input_file_name,
 
 def draw_scatter(input_file_name,
                  output_file_name,
-                 xlabel="axis1",
-                 ylabel="axis2",
-                 hue="group",
-                 fit_reg=False,
+                 axis1_col="axis1",
+                 axis2_col="axis2",
+                 group_col="group",
+                 title_text="Scatter plot",
+                 title_size=20,
+                 point_size=100,
+                 point_alpha=0.3,
+                 grid_color="white",
+                 grid_style="solid",
+                 backgroud_color="#EEEEEE",
                  sep="\t"):
     """
     Draw scatter plot from mothur's axes file and save figure to file.
@@ -148,25 +155,24 @@ def draw_scatter(input_file_name,
         Input file name.
     output_file_name: str
         Output file name.
-    xlabel: str, default <axis1>
-        Displayed label for x axis.
-    ylabel: str, default <axis2>
-        Displayed label for y axis.
-    hue: str, default <group>
-        Column name in axes file defining subset of data.
-    fit_reg: bool, default <False>
-        Draw regression line if <True>.
     sep: str, default <\t>
         Delimiter to use for reading-in axes file.
     """
     df = read_csv(input_file_name,
                   sep=sep)
-    fig = lmplot(x=xlabel,
-                 y=ylabel,
-                 data=df,
-                 hue=hue,
-                 fit_reg=fit_reg)
-    fig.savefig(output_file_name)
+    fig, ax = plt.subplots(subplot_kw=dict(axisbg=backgroud_color))
+    scatter = ax.scatter(np.array(df[axis1_col]),
+                         np.array(df[axis2_col]),
+                         c=np.random.random(size=len(df)),
+                         s=100,
+                         alpha=0.3,
+                         cmap=plt.cm.jet)
+    ax.grid(color=grid_color, linestyle=grid_style)
+    ax.set_title(title_text, size=title_size)
+    labels = list(df[group_col])
+    tooltip = mpld3.plugins.PointLabelTooltip(scatter, labels=labels)
+    mpld3.plugins.connect(fig, tooltip)
+    mpld3.save_html(fig, output_file_name)
 
 
 def summary2html(input_file_name,
