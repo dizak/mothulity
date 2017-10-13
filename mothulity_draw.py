@@ -107,6 +107,7 @@ def draw_heatmap(input_file_name,
                   skiprows=skiprows,
                   header=header,
                   index_col=index_col)
+    df.index.name = None
     df.columns = df.index
     fig = heatmap(df, square=True, cmap=color_map).get_figure()
     fig.savefig(output_file_name)
