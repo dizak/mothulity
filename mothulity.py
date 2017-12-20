@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-
+# -*- coding: utf-8 -*-
 
 from __author import __author__
 from __version import __version__
@@ -16,6 +16,8 @@ import ConfigParser
 import shelve
 import pandas as pd
 
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 def load_template_file(template_file,
                        searchpath="/"):
@@ -92,7 +94,7 @@ def save_template(out_file_name,
         Temlplate rendered to unicode object.
     """
     with open(out_file_name, "w") as fout:
-        fout.write(template_rendered)
+        fout.write(template_rendered.encode("utf-8"))
 
 
 def read_info_shared(input_file_name,
@@ -522,6 +524,8 @@ def main():
         label = args.label
         junk_grps = 0
         sampl_num = None
+        krona_html = None
+        sum_html = None
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
@@ -552,6 +556,10 @@ def main():
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
         sampl_num = shared_info["samples_number"]
+        with open("alpha/{}.krona.html".format(args.job_name)) as fin:
+            krona_html = fin.read()
+        with open("alpha/{}.sum.html".format(args.job_name)) as fin:
+            sum_html = fin.read()
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
@@ -589,7 +597,9 @@ def main():
                      "w3_css": w3_css,
                      "datatables_css": datatables_css,
                      "datatables_js": datatables_js,
-                     "slideshow_js": slideshow_js}
+                     "slideshow_js": slideshow_js,
+                     "krona_html": krona_html,
+                     "sum_html": sum_html}
 
     rendered_template = render_template(loaded_template,
                                         template_vars)
