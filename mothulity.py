@@ -19,6 +19,7 @@ import pandas as pd
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+
 def load_template_file(template_file,
                        searchpath="/"):
     """
