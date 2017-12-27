@@ -15,6 +15,7 @@ import glob
 import ConfigParser
 import shelve
 import pandas as pd
+from bs4 import BeautifulSoup as bs
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -160,6 +161,46 @@ def read_info_shared(input_file_name,
                 "samples_number": grps_num,
                 "junk_grps": junk_grps}
     return out_dict
+
+
+def parse_html(input_file_name,
+               html_type,
+               parser="html.parser",
+               newline="\n"):
+    """
+    Extract particular tags from html so that they can be placed in
+    another html without iframe.
+
+    Parameters
+    -------
+    input_file_name: str
+        Input file name.
+
+    """
+    with open(input_file_name) as fin:
+        html = fin.read()
+    soup = bs(html, parser)
+    if html_type == "krona":
+        head = [str(i) for i in soup.head if i != newline]
+        body = [str(i) for i in soup.body if i != newline]
+        return {"head": {"link": head[1],
+                         "script_not_found": head[2],
+                         "script_functional": head[3]},
+                "body": {"img_hidden": body[0],
+                         "img_loading": body[1],
+                         "img_logo": body[2],
+                         "noscript": body[3],
+                         "div_krona": body[4]}}
+    elif html_type == "summary":
+        tags = [str(i) for i in list(soup.children) if i != "\n"]
+        return {"link": tags[0],
+                "table": tags[1],
+                "googleapis_script": tags[3],
+                "datatables_script": tags[4],
+                "script": tags[5]}
+    elif html_type == "rarefaction" or html_type == "nmds":
+        return {"div": str(soup.div),
+                "script": str(soup.script)}
 
 
 def main():
@@ -527,6 +568,9 @@ def main():
         sampl_num = None
         krona_html = None
         sum_html = None
+        raref_html = None
+        nmds_jc_html = None
+        nmds_th_html = None
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
@@ -557,10 +601,16 @@ def main():
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
         sampl_num = shared_info["samples_number"]
-        with open("alpha/{}.krona.html".format(args.job_name)) as fin:
-            krona_html = fin.read()
-        with open("alpha/{}.sum.html".format(args.job_name)) as fin:
-            sum_html = fin.read()
+        krona_html = parse_html("alpha/{}.krona.html".format(args.job_name),
+                                html_type="krona")
+        sum_html = parse_html("alpha/{}.sum.html".format(args.job_name),
+                              html_type="summary")
+        raref_html = parse_html("alpha/{}.raref.html".format(args.job_name),
+                                html_type="rarefaction")
+        nmds_jc_html = parse_html("beta/{}.jclass.nmds.html".format(args.job_name),
+                                  html_type="nmds")
+        nmds_th_html = parse_html("beta/{}.thetayc.nmds.html".format(args.job_name),
+                                  html_type="nmds")
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 
@@ -600,7 +650,10 @@ def main():
                      "datatables_js": datatables_js,
                      "slideshow_js": slideshow_js,
                      "krona_html": krona_html,
-                     "sum_html": sum_html}
+                     "sum_html": sum_html,
+                     "raref_html": raref_html,
+                     "nmds_jc_html": nmds_jc_html,
+                     "nmds_th_html": nmds_th_html}
 
     rendered_template = render_template(loaded_template,
                                         template_vars)

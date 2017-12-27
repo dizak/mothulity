@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     {{w3_css}}
-    {{datatables_css}}
+    {{sum_html.link}}
     <title>16S/ITS amplicon report</title>
     <style>
       iframe {
@@ -24,7 +24,7 @@
         <h1>Alpha Biodiversity</h1>
         <h2>Biodiversity within a sample</h2>
         <h3>Rarefaction</h3>
-        <iframe src="alpha/{{job_name}}.raref.html" width="90%;" height="700px;"></iframe>
+        {{ raref_html.div}}
         <p>
           Rarefaction curves for the observed OTUs at a genetic distance of {{label}}.
         </p>
@@ -41,13 +41,12 @@
         </div>
         <h3>OTU classification</h3>
         <div id="krona">
-          {{ krona_html }}
         </div>
         <p>
           Taxonomical representation of the observed OTUs.
         </p>
         <h3>Summary</h3>
-        {{ sum_html }}
+        {{ sum_html.table }}
         <div class="w3-row">
           <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
             <h4>Citations:</h4>
@@ -103,14 +102,14 @@
         <h3>NMDS</h3>
         <div class="w3-row">
           <div class="w3-col l6 m12 s12">
-            <iframe src="beta/{{job_name}}.jclass.nmds.html" width="90%;" height="600px;"></iframe>
+            {{ nmds_jc_html.div }}
             <p>
               Non-metric multidimensional scaling (NMDS) analysis upon Jaccard measure of dissimilarity between all the samples.
               Proximity of the points on the plot reflects similarities of bacterial communities structure.
             </p>
           </div>
           <div class="w3-col l6 m12 s12">
-            <iframe src="beta/{{job_name}}.thetayc.nmds.html" width="90%;" height="600px;"></iframe>
+            {{ nmds_th_html.div }}
             <p>
               Non-metric multidimensional scaling (NMDS) analysis upon Yue and Clayton measure of dissimilarity between all the samples.
               Proximity of the points on the plot reflects similarities of bacterial communities structure.
@@ -132,5 +131,11 @@
       {% else %}
       {% endif %}
     </section>
+    {{ raref_html.script }}
+    {{ sum_html.googleapis_script }}
+    {{ sum_html.datatables_script }}
+    {{ sum_html.script }}
+    {{ nmds_jc_html.script }}
+    {{ nmds_th_html.script }}
   </body>
 </html>
