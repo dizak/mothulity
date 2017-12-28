@@ -40,8 +40,12 @@
           </div>
         </div>
         <h3>OTU classification</h3>
-        <div id="krona">
-        </div>
+        {% if exclude_krona == True %}
+          <div id="krona">
+          </div>
+        {% else %}
+          <iframe src="alpha/{{job_name}}.krona.html" width="90%;" height="700px;"></iframe>
+        {% endif %}
         <p>
           Taxonomical representation of the observed OTUs.
         </p>

@@ -211,6 +211,7 @@ def main():
                                      version=__version__)
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
+    advanced = parser.add_argument_group("advanced options")
     parser.add_argument(action="store",
                         dest="files_directory",
                         metavar="path/to/files",
@@ -439,6 +440,12 @@ def main():
                         default=False,
                         help="Keep all groups, even if they can distort\
                         analysis due to small size during subsampling.")
+    advanced.add_argument("--exclude-krona",
+                          action="store_true",
+                          dest="exclude_krona",
+                          default=False,
+                          help="Do not include krona pie chart into final html.\
+                          Krona can be included only as an iframe.")
     args = parser.parse_args()
 
     config_path_abs = get_dir_path("mothulity.config")
@@ -653,7 +660,8 @@ def main():
                      "sum_html": sum_html,
                      "raref_html": raref_html,
                      "nmds_jc_html": nmds_jc_html,
-                     "nmds_th_html": nmds_th_html}
+                     "nmds_th_html": nmds_th_html,
+                     "exclude_krona": args.exclude_krona}
 
     rendered_template = render_template(loaded_template,
                                         template_vars)

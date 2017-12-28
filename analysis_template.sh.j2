@@ -85,7 +85,7 @@ mothulity_draw.py {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds
 cd ../
 
 #Render html output
-mothulity.py {{files_directory}} --render-html --job-name {{job_name}}
+mothulity.py {{files_directory}} --render-html --job-name {{job_name}} {% if exclude_krona %}--exclude-krona{% endif %}
 
 #Go to project's root directory
 
