@@ -7,6 +7,7 @@ dependencies:
 - biopython=1.68=np112py27_0
 - boost=1.60.0=py27_0
 - conda-forge::backports_abc=0.5=py27_0
+- conda-forge::beautifulsoup4=4.6.0=py27_0
 - conda-forge::ca-certificates=2017.1.23=1
 - conda-forge::certifi=2017.4.17=py27_0
 - conda-forge::cycler=0.10.0=py27_0
