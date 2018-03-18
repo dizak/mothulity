@@ -308,11 +308,11 @@ def main():
                           metavar="",
                           default=None,
                           help="shortcut for headnode's resources reservation.\
-                          Accepted values are: <S>mall, <M>edium, <L>arge,\
-                          <XL>arge for regular nodes with mpi. <PHI> for\
-                          single phi node, <JUMBO> for two phi nodes.\
-                          Overrides all the other headnode arguments. Use if\
-                          you are lazy.")
+                          Accepted values are: si<N>gle for single n node.\
+                          <S>mall, <M>edium, <L>arge, <XL>arge for regular\
+                          nodes with mpi. <PHI> for single phi node, <JUMBO>\
+                          for two phi nodes. Overrides all the other headnode\
+                          arguments. Use if you are lazy.")
     mothur.add_argument("--max-ambig",
                         action="store",
                         dest="max_ambig",
