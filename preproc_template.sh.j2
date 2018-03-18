@@ -4,7 +4,6 @@
 #SBATCH --job-name="{{job_name}}"
 #SBATCH --partition={{partition}}
 #SBATCH --nodes={{nodes}}
-#SBATCH --ntasks-per-node={{ntasks_per_node}}
 #SBATCH --exclude=gpu[1-8]
   {% if node_list %}
 #SBATCH --nodelist={{node_list}}
