@@ -4,6 +4,7 @@
 #SBATCH --job-name="{{job_name}}"
 #SBATCH --partition={{partition}}
 #SBATCH --nodes={{nodes}}
+#SBATCH --exclusive
 #SBATCH --exclude=gpu[1-8]
   {% if node_list %}
 #SBATCH --nodelist={{node_list}}
