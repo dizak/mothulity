@@ -310,9 +310,12 @@ def main():
                           help="shortcut for headnode's resources reservation.\
                           Accepted values are: si<N>gle for single n node.\
                           <S>mall, <M>edium, <L>arge, <XL>arge for regular\
-                          nodes with mpi. <PHI> for single phi node, <JUMBO>\
+                          nodes with MPI. <PHI> for single phi node, <JUMBO>\
                           for two phi nodes. Overrides all the other headnode\
-                          arguments. Use if you are lazy.")
+                          arguments. WARNING! Options for MPI require\
+                          MPI-enabled version of mothur which is NOT included\
+                          with mothulity and must be compiled by the user and\
+                          callable system-wide.")
     mothur.add_argument("--max-ambig",
                         action="store",
                         dest="max_ambig",
