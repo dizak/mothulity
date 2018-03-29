@@ -25,7 +25,10 @@ cd $MOTHULITY_PATH
 git fetch --all
 git reset --hard origin/master
 # Remove old env and create new
+# Create regular mothulity env from mothulity.yaml
 conda env create --file "${MOTHULITY_PATH}/mothulity.yaml" --force
+# Create no-mothur mothulity env from mothulity_sm.yaml
+conda env create --file "${MOTHULITY_PATH}/mothulity_sm.yaml" --force
 # Get python interpreter's location from the env
 . activate mothulity
 ENV_PYTHON=$(which python)
