@@ -4,40 +4,21 @@ Simple tool to facilitate work with [mothur](https://www.mothur.org/).
 It can download a proper database, run SOP provided with just fastq files directory, draw few figures and wrap it all into fancy html. Handles slurm and sends e-mail notifications when the job is done (using [headnode_notifier](https://github.com/dizak/headnode_notifier/releases)).
 
 
-### Installation
+#### Installation
 
-Add /path/to/mothulity to your system path.
+1. Install [Anaconda](https://anaconda.org).
+2. ```git clone https://github.com/dizak/mothulity```.
+3. ```bash INSTALL.sh```
 
-### Requirements
 
-* [Anaconda](https://anaconda.org) users: install dependencies with
+#### Update
 
-  ```
-  conda env create --file /path/to/mothulity.yaml
-  ```
-  or if you have access restrictions (eg. anaconda is installed system-wide)
-
-  ```
-  conda env create --file /path/to/mothulity.yaml -p /your/path/to/env/
-  ```
-
-  and that's all.
-
-* non-conda users: beside installing packages listed in mothulity.yaml, you need:
-  * [mothur](https://mothur.org/)
-  * [headnode_notifier](https://github.com/dizak/headnode_notifier/)
-  * [KronaTools](https://github.com/marbl/Krona)
+```bash UPDATE.sh```
 
 
 ### Usage
 
-[Anaconda](https://anaconda.org) users: remember to **activate you environment!**
-
-```
-source activate mothulity
-```
-
-The simplest example is:
+The simplest example is (if your database already sits in ```~/db```):
 
 ```
 mothulity.py /path/to/fastq/files -r sh
@@ -71,26 +52,22 @@ If using something else, specify ```/path/to/database``` with ```--align-databas
 Presumably, it is a good idea to test mothulity with [MiSeq SOP](https://mothur.org/w/images/d/d6/MiSeqSOPData.zip) delivered by creators of  [mothur](https://www.mothur.org/).
 
 
-#### tl;dr
+### Requirements for manual installation
 
-1. Install [Anaconda](https://anaconda.org).
-2. ```git clone https://github.com/dizak/mothulity```.
-3. Add this line to your ```.bashrc``` file: ```export PATH="/path/to/mothulity:$PATH"```.
-4. ```conda env create --file /path/to/mothulity.yaml```
-5. ```source activate mothulity```
-6. ```mkdir ~/db```
-7. ```mothulity_dbaser.py --silva-119 ~/db``` for 16S or ```mothulity_dbaser.py --unite-ITS-02 ~/db``` for ITS.
-8. ```mothulity.py /path/to/fastq/files -r sh``` for 16S or ```mothulity.py /path/to/fastq/files -r sh --align-database /path/to/align-database --taxonomy-database /path/to/taxonomy-database``` for ITS.
+* [Anaconda](https://anaconda.org) users: install dependencies with
 
+  ```
+  conda env create --file /path/to/mothulity.yaml
+  ```
+  or if you have access restrictions (eg. anaconda is installed system-wide)
 
-#### Experimental installation
-**automatic installation and *no need for activating the environment***
+  ```
+  conda env create --file /path/to/mothulity.yaml -p /your/path/to/env/
+  ```
 
-1. Install [Anaconda](https://anaconda.org).
-2. ```git clone https://github.com/dizak/mothulity```.
-3. ```bash INSTALL.sh```
+  and that's all.
 
-
-#### Experimental update
-
-```bash UPDATE.sh```
+* non-conda users: beside installing packages listed in mothulity.yaml, you need:
+  * [mothur](https://mothur.org/)
+  * [KronaTools](https://github.com/marbl/Krona)
+  * [headnode_notifier](https://github.com/dizak/headnode_notifier/)
