@@ -3,7 +3,6 @@
 
 from __author import __author__
 from __version import __version__
-from utilities import get_dir_path, dict2cache, cache2dict
 import time
 import jinja2 as jj2
 import argparse
@@ -480,8 +479,6 @@ def main():
                                                 config.get("file_globs",
                                                            "design")))
 
-    cache_files_list = glob.glob("{}{}".format(files_directory_abs, "*dir"))
-
     if len(shared_files_list) > 1:
         if args.render_html is True:
             pass
@@ -546,9 +543,6 @@ def main():
     logfile_name = "{}.{}.{}".format(files_directory_abs,
                                      args.job_name,
                                      run_time_sig)
-
-    args_dict = vars(args)
-    dict2cache(logfile_name, args_dict)
 
     with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
