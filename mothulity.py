@@ -3,6 +3,7 @@
 
 from __author import __author__
 from __version import __version__
+from utilities import *
 import time
 import jinja2 as jj2
 import argparse
