@@ -11,8 +11,11 @@
   {% endif %}
 {% endif %}
 #Activate the env
+{% if nodes > 1 %}
+. activate mothulity_sm
+{% else %}
 . activate mothulity
-
+{% endif %}
 ###Create *files file###
 mothulity_fc.py {{files_directory}} -o {{files_directory}}{{job_name}}.files
 {% if nodes > 1 %}
