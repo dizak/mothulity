@@ -4,7 +4,7 @@
 import unittest
 import ConfigParser
 import subprocess as sp
-import mothulity
+from mothulity import *
 
 
 class PathTests(unittest.TestCase):
