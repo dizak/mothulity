@@ -1,0 +1,14 @@
+<div class="w3-content">
+  {% for number, diagram in {venn_diagrams}%}
+    <img class="mySlides" src="{{diagram}}" alt="Venn diagram">
+  {% endfor %}
+</div>
+<div class="w3-center">
+  <div class="w3-section">
+    <button class="w3-button w3-light-grey" onclick="plusDivs(-1)" type="button" name="button">&#10094; Prev</button>
+    <button class="w3-button w3-light-grey" onclick=plusDivs(1) type="button" name="button">&#10095; Prev</button>
+  </div>
+  {% for number, diagram in venn_diagrams %}
+    <button class="w3-button demo" onclick="currentDiv({{number}})" type="button" name="button">{{number}}</button>
+  {% endfor %}
+</div>
