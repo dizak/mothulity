@@ -3,6 +3,19 @@
 
 import unittest
 import ConfigParser
+import subprocess as sp
+
+
+class PathTests(unittest.TestCase):
+    """
+    Tests of the $PATH system variable.
+    """
+    def test_path(self):
+        """
+        Tests if mothulity is in the system $PATH variable.
+        """
+        self.assertEqual(sp.check_output(["which", "mothulity.py"]).strip().split("/")[-1],
+                         "mothulity.py")
 
 
 class ConfigTests(unittest.TestCase):
