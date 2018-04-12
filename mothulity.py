@@ -16,6 +16,7 @@ import ConfigParser
 import shelve
 import pandas as pd
 from bs4 import BeautifulSoup as bs
+import utilities
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -212,6 +213,7 @@ def main():
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
     advanced = parser.add_argument_group("advanced options")
+    settings = parser.add_argument_group("configuration settings")
     parser.add_argument(action="store",
                         dest="files_directory",
                         metavar="path/to/files",
@@ -449,11 +451,32 @@ def main():
                           default=False,
                           help="Do not include krona pie chart into final html.\
                           Krona can be included only as an iframe.")
+    settings.add_argument("--set-align-database-path",
+                          action="store",
+                          dest="set_align_database_path",
+                          default=None,
+                          help="Set persistent path to align database.")
+    settings.add_argument("--set-taxonomy-database-path",
+                          action="store",
+                          dest="set_taxonomy_database_path",
+                          default=None,
+                          help="Set persistent path to taxonomy database.")
     args = parser.parse_args()
 
     config_path_abs = get_dir_path("mothulity.config")
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
+
+    if args.set_align_database_path:
+        utilities.set_config(filename="mothulity.config",
+                             section="databases",
+                             options=["align"],
+                             values=[args.set_align_database_path])
+    if args.set_taxonomy_database_path:
+        utilities.set_config(filename="mothulity.config",
+                             section="databases",
+                             options=["taxonomy"],
+                             values=[args.set_taxonomy_database_path])
 
     preproc_template = config.get("templates", "preproc")
     analysis_template = config.get("templates", "analysis")
