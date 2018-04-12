@@ -91,7 +91,8 @@ class UtilitiesTests(unittest.TestCase):
         """
         Sets up class level attributes for the tests.
         """
-        self.cfg_file_name = "./tests/test.config"
+        self.cfg_file_name_1 = "./tests/test1.config"
+        self.cfg_file_name_2 = "./tests/test2.config"
         self.ref_values_1 = [('section1', 'option1', 'value1'),
                              ('section1', 'option2', 'value2'),
                              ('section2', 'option1', 'value1'),
@@ -120,7 +121,7 @@ class UtilitiesTests(unittest.TestCase):
         Test if configuration is properly set in the config file with complete
         section replacement.
         """
-        utilities.set_config(filename=self.cfg_file_name,
+        utilities.set_config(filename=self.cfg_file_name_1,
                              section=self.section,
                              options=self.options_1,
                              values=self.values_1,
@@ -131,17 +132,18 @@ class UtilitiesTests(unittest.TestCase):
                 self.test_values.append((s, o, self.config_1.get(s, o)))
         self.assertEqual(self.ref_values_1, self.test_values)
 
-    def test_set_config_append(self):
+    def test_set_config_append_and_overwrite(self):
         """
         Test if configuration is properly set in the config file with just
         appending existing section with new options.
         """
-        utilities.set_config(filename=self.cfg_file_name,
-                             section=self.section,
-                             options=self.options_2,
-                             values=self.values_2)
-        self.test_values = []
-        for s in self.config_2.sections():
-            for o in self.config_2.options(s):
-                self.test_values.append((s, o, self.config_2.get(s, o)))
-        self.assertEqual(self.ref_values_2, self.test_values)
+        for i in range(2):
+            utilities.set_config(filename=self.cfg_file_name_2,
+                                 section=self.section,
+                                 options=self.options_2,
+                                 values=self.values_2)
+            self.test_values = []
+            for s in self.config_2.sections():
+                for o in self.config_2.options(s):
+                    self.test_values.append((s, o, self.config_2.get(s, o)))
+            self.assertEqual(self.ref_values_2, self.test_values)
