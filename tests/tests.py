@@ -4,7 +4,7 @@
 import unittest
 import ConfigParser
 import subprocess as sp
-from mothulity import *
+import utilities
 
 
 class PathTests(unittest.TestCase):
@@ -80,3 +80,66 @@ class ConfigTests(unittest.TestCase):
             for o in self.config.options(s):
                 self.test_values.append((s, o, self.config.get(s, o)))
         self.assertEqual(self.ref_values, self.test_values)
+
+
+class UtilitiesTests(unittest.TestCase):
+    """
+    Tests of mothulity.utilities module.
+    """
+
+    def setUp(self):
+        """
+        Sets up class level attributes for the tests.
+        """
+        self.cfg_file_name = "./tests/test.config"
+        self.ref_values_1 = [('section1', 'option1', 'value1'),
+                             ('section1', 'option2', 'value2'),
+                             ('section2', 'option1', 'value1'),
+                             ('section2', 'option2', 'value2'),
+                             ('section3', 'option1', 'value1'),
+                             ('section3', 'option2', 'value2')]
+        self.ref_values_2 = [('section1', 'option1', 'value1'),
+                             ('section1', 'option2', 'value2'),
+                             ('section2', 'option1', 'value1'),
+                             ('section2', 'option2', 'value2'),
+                             ('section3', 'option1', 'value1'),
+                             ('section3', 'option2', 'value2'),
+                             ('section3', 'option3', 'value3')]
+        self.section = "section3"
+        self.options_1 = ["option1", "option2"]
+        self.values_1 = ["value1", "value2"]
+        self.options_2 = ["option3"]
+        self.values_2 = ["value3"]
+        self.config_1 = ConfigParser.SafeConfigParser()
+        self.config_1.read("tests/test1.config")
+        self.config_2 = ConfigParser.SafeConfigParser()
+        self.config_2.read("tests/test2.config")
+
+    def test_set_config_new(self):
+        """
+        Test if configuration is properly set in the config file.
+        """
+        utilities.set_config(filename=self.cfg_file_name,
+                             section=self.section,
+                             options=self.options_1,
+                             values=self.values_1,
+                             clean=True)
+        self.test_values = []
+        for s in self.config_1.sections():
+            for o in self.config_1.options(s):
+                self.test_values.append((s, o, self.config_1.get(s, o)))
+        self.assertEqual(self.ref_values_1, self.test_values)
+
+    def test_set_config_append(self):
+        """
+        Test if configuration is properly set in the config file.
+        """
+        utilities.set_config(filename=self.cfg_file_name,
+                             section=self.section,
+                             options=self.options_2,
+                             values=self.values_2)
+        self.test_values = []
+        for s in self.config_2.sections():
+            for o in self.config_2.options(s):
+                self.test_values.append((s, o, self.config_2.get(s, o)))
+        self.assertEqual(self.ref_values_2, self.test_values)
