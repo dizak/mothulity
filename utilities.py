@@ -89,10 +89,10 @@ def set_config(filename,
     if os.path.exists(filename):
         config = ConfigParser.SafeConfigParser()
         config.read(os.path.abspath(filename))
-        if clean:
-            if section in config.sections():
-                config.remove_section(section)
-                config.add_section(section)
+        if clean and section in config.sections():
+            config.remove_section(section)
+        if section not in config.sections():
+            config.add_section(section)
         for o, v in zip(options, values):
             config.set(section, o, v)
         with open(filename, "wb") as fout:
