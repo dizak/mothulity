@@ -27,60 +27,56 @@ class ConfigTests(unittest.TestCase):
         """
         Sets up class level attributes for the tests.
         """
+        self.ref_values = ["preproc_template.sh.j2",
+                           "analysis_template.sh.j2",
+                           "output_template.html.j2",
+                           "venn_diagrams_template.html.j2",
+                           "*shared",
+                           "*cons.tax.summary",
+                           "*design",
+                           '''<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">''',
+                           '''<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">''',
+                           "slideshow.js",
+                           "datatables.js",
+                           "long",
+                           "1",
+                           "1",
+                           "12",
+                           "long",
+                           "2",
+                           "1",
+                           "24",
+                           "long",
+                           "10",
+                           "1",
+                           "120",
+                           "long",
+                           "20",
+                           "1",
+                           "240",
+                           "long",
+                           "40",
+                           "1",
+                           "480",
+                           "accel",
+                           "1",
+                           "1",
+                           "32",
+                           "accel",
+                           "4",
+                           "1",
+                           "128",
+                           "null",
+                           "null"]
         self.config = ConfigParser.SafeConfigParser()
         self.config.read("mothulity.config")
 
-    def test_config_file(self):
+    def test_config_file_read(self):
         """
         Tests records from the config file.
         """
-        self.assertEqual(self.config.get("templates", "preproc"),
-                         "preproc_template.sh.j2")
-        self.assertEqual(self.config.get("templates", "analysis"),
-                         "analysis_template.sh.j2")
-        self.assertEqual(self.config.get("templates", "output"),
-                         "output_template.html.j2")
-        self.assertEqual(self.config.get("templates", "venn"),
-                         "venn_diagrams_template.html.j2")
-        self.assertEqual(self.config.get("file_globs", "shared"),
-                         "*shared")
-        self.assertEqual(self.config.get("file_globs", "tax_sum"),
-                         "*cons.tax.summary")
-        self.assertEqual(self.config.get("file_globs", "design"),
-                         "*design")
-        self.assertEqual(self.config.get("css", "w3"),
-                         '''<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">''')
-        self.assertEqual(self.config.get("css", "datatables"),
-                         '''<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">''')
-        self.assertEqual(self.config.get("js", "slideshow"), "slideshow.js")
-        self.assertEqual(self.config.get("js", "datatables"), "datatables.js")
-        self.assertEqual(self.config.get("N", "partition"), "long")
-        self.assertEqual(self.config.get("N", "nodes"), "1")
-        self.assertEqual(self.config.get("N", "ntasks_per_node"), "1")
-        self.assertEqual(self.config.get("N", "processors"), "12")
-        self.assertEqual(self.config.get("S", "partition"), "long")
-        self.assertEqual(self.config.get("S", "nodes"), "2")
-        self.assertEqual(self.config.get("S", "ntasks_per_node"), "1")
-        self.assertEqual(self.config.get("S", "processors"), "24")
-        self.assertEqual(self.config.get("M", "partition"), "long")
-        self.assertEqual(self.config.get("M", "nodes"), "10")
-        self.assertEqual(self.config.get("M", "ntasks_per_node"), "1")
-        self.assertEqual(self.config.get("M", "processors"), "120")
-        self.assertEqual(self.config.get("L", "partition"), "long")
-        self.assertEqual(self.config.get("L", "nodes"), "20")
-        self.assertEqual(self.config.get("L", "ntasks_per_node"), "1")
-        self.assertEqual(self.config.get("L", "processors"), "240")
-        self.assertEqual(self.config.get("XL", "partition"), "long")
-        self.assertEqual(self.config.get("XL", "nodes"), "40")
-        self.assertEqual(self.config.get("XL", "ntasks_per_node"), "1")
-        self.assertEqual(self.config.get("XL", "processors"), "480")
-        self.assertEqual(self.config.get("PHI", "partition"), "accel")
-        self.assertEqual(self.config.get("PHI", "nodes"), "1")
-        self.assertEqual(self.config.get("PHI", "ntasks_per_node"), "1")
-        self.assertEqual(self.config.get("PHI", "processors"), "32")
-        self.assertEqual(self.config.get("JUMBO", "partition"), "accel")
-        self.assertEqual(self.config.get("JUMBO", "nodes"), "4")
-        self.assertEqual(self.config.get("JUMBO", "ntasks_per_node"), "1")
-        self.assertEqual(self.config.get("JUMBO", "processors"), "128")
-        self.assertEqual(self.config.get("databases", "align"), "null")
-        self.assertEqual(self.config.get("databases", "taxonomy"), "null")
+        self.test_values = []
+        for s in self.config.sections():
+            for o in self.config.options(s):
+                self.test_values.append(self.config.get(s, o))
+        self.assertEqual(self.ref_values, self.test_values)
