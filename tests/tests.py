@@ -117,7 +117,8 @@ class UtilitiesTests(unittest.TestCase):
 
     def test_set_config_new(self):
         """
-        Test if configuration is properly set in the config file.
+        Test if configuration is properly set in the config file with complete
+        section replacement.
         """
         utilities.set_config(filename=self.cfg_file_name,
                              section=self.section,
@@ -132,7 +133,8 @@ class UtilitiesTests(unittest.TestCase):
 
     def test_set_config_append(self):
         """
-        Test if configuration is properly set in the config file.
+        Test if configuration is properly set in the config file with just
+        appending existing section with new options.
         """
         utilities.set_config(filename=self.cfg_file_name,
                              section=self.section,
