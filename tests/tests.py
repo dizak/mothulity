@@ -82,3 +82,5 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(self.config.get("JUMBO", "nodes"), "4")
         self.assertEqual(self.config.get("JUMBO", "ntasks_per_node"), "1")
         self.assertEqual(self.config.get("JUMBO", "processors"), "128")
+        self.assertEqual(self.config.get("databases", "align"), "null")
+        self.assertEqual(self.config.get("databases", "taxonomy"), "null")
