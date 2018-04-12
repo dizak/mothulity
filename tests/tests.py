@@ -65,9 +65,7 @@ class ConfigTests(unittest.TestCase):
                            ('JUMBO', 'partition', 'accel'),
                            ('JUMBO', 'nodes', '4'),
                            ('JUMBO', 'ntasks_per_node', '1'),
-                           ('JUMBO', 'processors', '128'),
-                           ('databases', 'align', 'null'),
-                           ('databases', 'taxonomy', 'null')]
+                           ('JUMBO', 'processors', '128')]
         self.config = ConfigParser.SafeConfigParser()
         self.config.read("mothulity.config")
 
