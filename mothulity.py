@@ -488,28 +488,34 @@ def main():
         output_template = config.get("templates", "output")
     except Exception as e:
         print "Templates not found in config file! Quitting..."
+        time.sleep(2)
         exit()
     try:
         align_database_abs = config.get("databases", "align")
     except Exception as e:
         print "Align database path not found in config file."
+        time.sleep(2)
     try:
         taxonomy_database_abs = config.get("databases", "taxonomy")
     except Exception as e:
         print "Taxonomy database path not found in config file."
+        time.sleep(2)
     try:
         datatables_css = config.get("css", "datatables")
         w3_css = config.get("css", "w3")
     except Exception as e:
         print "CSS links not found in config file! Output will not display properly!"
+        time.sleep(2)
     try:
         datatables_js = get_dir_path(config.get("js", "datatables"))
         slideshow_js = get_dir_path(config.get("js", "slideshow"))
     except Exception as e:
         print "Javascript links not found in config file. Output will not display properly!"
+        time.sleep(2)
 # Make input and output directories absolute paths.
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+# Override databases paths from config file with CLI args.
     if args.align_database:
         align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
     if args.taxonomy_database:
