@@ -407,7 +407,7 @@ def main():
                         action="store",
                         dest="align_database",
                         metavar="",
-                        default="~/db/Silva.nr_v119/silva.nr_v119.align",
+                        default=None,
                         help="path/to/align-database. Used by align.seqs\
                         command as <reference> argument. Default\
                         <~/db/Silva.nr_v119/silva.nr_v119.align>.")
@@ -415,7 +415,7 @@ def main():
                         action="store",
                         dest="taxonomy_database",
                         metavar="",
-                        default="~/db/Silva.nr_v119/silva.nr_v119.tax",
+                        default=None,
                         help="path/to/taxonomy-database. Used by\
                         classify.seqs as <taxonomy> argument.\
                         Default <~/db/Silva.nr_v119/silva.nr_v119.tax>")
