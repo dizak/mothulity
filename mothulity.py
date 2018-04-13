@@ -464,24 +464,28 @@ def main():
                           default=None,
                           help="Set persistent path to taxonomy database.")
     args = parser.parse_args()
+# Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
+    align_database_abs = None
+    taxonomy_database_abs = None
 # Read-in config file.
     config_path_abs = get_dir_path("mothulity.config")
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 # Set config file options.
     if args.set_align_database_path:
-        utilities.set_config(filename="mothulity.config",
+        utilities.set_config(filename=config_path_abs,
                              section="databases",
                              options=["align"],
                              values=[args.set_align_database_path])
         exit()
     if args.set_taxonomy_database_path:
-        utilities.set_config(filename="mothulity.config",
+        utilities.set_config(filename=config_path_abs,
                              section="databases",
                              options=["taxonomy"],
                              values=[args.set_taxonomy_database_path])
         exit()
 # Read options from config file.
+# If config file is the only source of the variable content and it is not found - quit from here.
     try:
         preproc_template = config.get("templates", "preproc")
         analysis_template = config.get("templates", "analysis")
@@ -512,14 +516,21 @@ def main():
     except Exception as e:
         print "Javascript links not found in config file. Output will not display properly!"
         time.sleep(2)
-# Make input and output directories absolute paths.
-    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
-    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
-# Override databases paths from config file with CLI args.
+# Override databases paths from config file with CLI args if specified.
     if args.align_database:
         align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
     if args.taxonomy_database:
         taxonomy_database_abs = os.path.abspath(os.path.expanduser(args.taxonomy_database))
+# Make sure essential variables that can be overriden by CLI are defined. If not - quit from here.
+    if not align_database_abs:
+        print "No align database path defined in config nor command-line. Quitting..."
+        exit()
+    if not taxonomy_database_abs:
+        print "No taxonomy database path defined in config nor command-line. Quitting..."
+        exit()
+# Make input and output directories absolute paths.
+    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
+    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
 # Read file globs from specified directories.
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
