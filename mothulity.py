@@ -479,17 +479,18 @@ def main():
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 # Set config file options.
-    if args.set_align_database_path:
-        utilities.set_config(filename=config_path_abs,
-                             section="databases",
-                             options=["align"],
-                             values=[args.set_align_database_path])
-        exit()
-    if args.set_taxonomy_database_path:
-        utilities.set_config(filename=config_path_abs,
-                             section="databases",
-                             options=["taxonomy"],
-                             values=[args.set_taxonomy_database_path])
+    if any([args.set_align_database_path,
+            args.set_taxonomy_database_path]):
+        if args.set_align_database_path:
+            utilities.set_config(filename=config_path_abs,
+                                 section="databases",
+                                 options=["align"],
+                                 values=[args.set_align_database_path])
+        if args.set_taxonomy_database_path:
+            utilities.set_config(filename=config_path_abs,
+                                 section="databases",
+                                 options=["taxonomy"],
+                                 values=[args.set_taxonomy_database_path])
         exit()
 # Read options from config file.
 # If config file is the only source of the variable content and it is not found - quit from here.
