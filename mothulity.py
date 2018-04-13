@@ -467,6 +467,13 @@ def main():
 # Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
     align_database_abs = None
     taxonomy_database_abs = None
+    junk_grps = 0
+    sampl_num = None
+    krona_html = None
+    sum_html = None
+    raref_html = None
+    nmds_jc_html = None
+    nmds_th_html = None
 # Read-in config file.
     config_path_abs = get_dir_path("mothulity.config")
     config = ConfigParser.SafeConfigParser()
@@ -633,13 +640,6 @@ def main():
         loaded_template = load_template_file(preproc_template,
                                              searchpath=get_dir_path())
         label = args.label
-        junk_grps = 0
-        sampl_num = None
-        krona_html = None
-        sum_html = None
-        raref_html = None
-        nmds_jc_html = None
-        nmds_th_html = None
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 # Load analysis_template if args.analysis_only is True.
