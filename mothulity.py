@@ -454,45 +454,67 @@ def main():
     settings.add_argument("--set-align-database-path",
                           action="store",
                           dest="set_align_database_path",
+                          metavar="",
                           default=None,
                           help="Set persistent path to align database.")
     settings.add_argument("--set-taxonomy-database-path",
                           action="store",
                           dest="set_taxonomy_database_path",
+                          metavar="",
                           default=None,
                           help="Set persistent path to taxonomy database.")
     args = parser.parse_args()
-
+# Read-in config file.
     config_path_abs = get_dir_path("mothulity.config")
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
-
+# Set config file options.
     if args.set_align_database_path:
         utilities.set_config(filename="mothulity.config",
                              section="databases",
                              options=["align"],
                              values=[args.set_align_database_path])
+        exit()
     if args.set_taxonomy_database_path:
         utilities.set_config(filename="mothulity.config",
                              section="databases",
                              options=["taxonomy"],
                              values=[args.set_taxonomy_database_path])
-
-    preproc_template = config.get("templates", "preproc")
-    analysis_template = config.get("templates", "analysis")
-    output_template = config.get("templates", "output")
-
-    datatables_css = config.get("css", "datatables")
-    w3_css = config.get("css", "w3")
-
-    datatables_js = get_dir_path(config.get("js", "datatables"))
-    slideshow_js = get_dir_path(config.get("js", "slideshow"))
-
+        exit()
+# Read options from config file.
+    try:
+        preproc_template = config.get("templates", "preproc")
+        analysis_template = config.get("templates", "analysis")
+        output_template = config.get("templates", "output")
+    except Exception as e:
+        print "Templates not found in config file! Quitting..."
+        exit()
+    try:
+        align_database_abs = config.get("databases", "align")
+    except Exception as e:
+        print "Align database path not found in config file."
+    try:
+        taxonomy_database_abs = config.get("databases", "taxonomy")
+    except Exception as e:
+        print "Taxonomy database path not found in config file."
+    try:
+        datatables_css = config.get("css", "datatables")
+        w3_css = config.get("css", "w3")
+    except Exception as e:
+        print "CSS links not found in config file! Output will not display properly!"
+    try:
+        datatables_js = get_dir_path(config.get("js", "datatables"))
+        slideshow_js = get_dir_path(config.get("js", "slideshow"))
+    except Exception as e:
+        print "Javascript links not found in config file. Output will not display properly!"
+# Make input and output directories absolute paths.
     files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
     output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
-    align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
-    taxonomy_database_abs = os.path.abspath(os.path.expanduser(args.taxonomy_database))
-
+    if args.align_database:
+        align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
+    if args.taxonomy_database:
+        taxonomy_database_abs = os.path.abspath(os.path.expanduser(args.taxonomy_database))
+# Read file globs from specified directories.
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
                                                            "shared")))
@@ -502,7 +524,7 @@ def main():
     design_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
                                                            "design")))
-
+# Make decision what to do based on file globs.
     if len(shared_files_list) > 1:
         if args.render_html is True:
             pass
@@ -557,7 +579,7 @@ def main():
         "I don't know what you what me to do!!! There are no files I can recognize in here!"
         time.sleep(2)
         exit()
-
+# Get current time and create logfile.
     run_time_sig = "{}{}{}{}{}{}".format(time.localtime().tm_year,
                                          time.localtime().tm_mon,
                                          time.localtime().tm_mday,
@@ -573,7 +595,7 @@ def main():
         for k, v in vars(args).iteritems():
             if v is not None:
                 fin.write("--{}: {}\n".format(k, v))
-
+# Override or not headnode options with args.resources.
     if args.resources is not None:
         node_list = None
         resources = args.resources.upper()
@@ -587,7 +609,9 @@ def main():
         ntasks_per_node = args.ntasks_per_node
         processors = args.processors
         partition = args.partition
-
+# Load preproc_template if args.analysis_only and args.render_html are False.
+# Label must be from args.label.
+# Rest of the variables must explicitly set to None or zero.
     if all([args.analysis_only, args.render_html]) is False:
         loaded_template = load_template_file(preproc_template,
                                              searchpath=get_dir_path())
@@ -601,7 +625,8 @@ def main():
         nmds_th_html = None
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-
+# Load analysis_template if args.analysis_only is True.
+# Label, number of samples and junk groups must be read from shared file.
     if args.analysis_only is True:
         loaded_template = load_template_file(analysis_template,
                                              searchpath=get_dir_path())
@@ -622,7 +647,9 @@ def main():
                 time.sleep(2)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-
+# Load output_template if args.render_html is True.
+# All non-output-html variables must be read from shared file.
+# Output-html varialbles must explicitly set.
     if args.render_html is True:
         loaded_template = load_template_file(output_template,
                                              searchpath=get_dir_path())
@@ -641,7 +668,7 @@ def main():
                                   html_type="nmds")
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
-
+# Pass all the variables to template and render to str.
     template_vars = {"files_directory": files_directory_abs,
                      "output_dir": output_dir_abs,
                      "job_name": args.job_name,
@@ -683,15 +710,15 @@ def main():
                      "nmds_jc_html": nmds_jc_html,
                      "nmds_th_html": nmds_th_html,
                      "exclude_krona": args.exclude_krona}
-
     rendered_template = render_template(loaded_template,
                                         template_vars)
+# Save template as bash script of HTML file depending on args.render_html value.
     if args.render_html is True:
         save_template("{}.html".format(args.job_name), rendered_template)
     else:
         save_template("{}{}.sh".format(output_dir_abs, args.job_name),
                       rendered_template)
-
+# Run outputted script or not depending on args.run and args.dry-run
     if args.run is not None and args.dry_run is not True:
         os.system("{} {}".format(args.run, "{}{}.sh".format(output_dir_abs,
                                                             args.job_name)))
