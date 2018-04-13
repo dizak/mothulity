@@ -529,6 +529,20 @@ def main():
         align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
     if args.taxonomy_database:
         taxonomy_database_abs = os.path.abspath(os.path.expanduser(args.taxonomy_database))
+# Override or not headnode options with args.resources.
+    if args.resources is not None:
+        node_list = None
+        resources = args.resources.upper()
+        partition = config.get(resources, "partition")
+        nodes = int(config.get(resources, "nodes"))
+        ntasks_per_node = int(config.get(resources, "ntasks_per_node"))
+        processors = int(config.get(resources, "processors"))
+    else:
+        nodes = args.nodes
+        node_list = args.node_list
+        ntasks_per_node = args.ntasks_per_node
+        processors = args.processors
+        partition = args.partition
 # Make sure essential variables that can be overriden by CLI are defined. If not - quit from here.
     if not align_database_abs:
         print "No align database path defined in config nor command-line. Quitting..."
@@ -536,9 +550,17 @@ def main():
     if not taxonomy_database_abs:
         print "No taxonomy database path defined in config nor command-line. Quitting..."
         exit()
-# Make input and output directories absolute paths.
-    files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
-    output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+# Validate if input and output directories exist and make them absolute paths.
+    if os.path.exists(args.files_directory):
+        files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
+    else:
+        print "Input directory not found. Quitting..."
+        exit()
+    if os.path.exists(args.output_dir):
+        output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+    else:
+        print "Output directory not found. Quitting..."
+        exit()
 # Read file globs from specified directories.
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
                                                 config.get("file_globs",
@@ -558,6 +580,8 @@ def main():
             time.sleep(2)
             exit()
     elif len(shared_files_list) == 1:
+        shared_file = shared_files_list[0]
+        print "Found {} shared file".format(shared_file)
         if len(tax_sum_files_list) != 1:
             print "WARNING!!! No proper tax.summary file found. The analysis will be incomplete."
             time.sleep(2)
@@ -575,7 +599,6 @@ def main():
         else:
             design_file = None
         if any([args.analysis_only, args.render_html]) is True:
-            shared_file = shared_files_list[0]
             shared_info = read_info_shared(shared_file)
             print "Found {} shared file".format(shared_file)
             time.sleep(2)
@@ -620,20 +643,6 @@ def main():
         for k, v in vars(args).iteritems():
             if v is not None:
                 fin.write("--{}: {}\n".format(k, v))
-# Override or not headnode options with args.resources.
-    if args.resources is not None:
-        node_list = None
-        resources = args.resources.upper()
-        partition = config.get(resources, "partition")
-        nodes = int(config.get(resources, "nodes"))
-        ntasks_per_node = int(config.get(resources, "ntasks_per_node"))
-        processors = int(config.get(resources, "processors"))
-    else:
-        nodes = args.nodes
-        node_list = args.node_list
-        ntasks_per_node = args.ntasks_per_node
-        processors = args.processors
-        partition = args.partition
 # Load preproc_template if args.analysis_only and args.render_html are False.
 # Label must be from args.label.
 # Rest of the variables must explicitly set to None or zero.
