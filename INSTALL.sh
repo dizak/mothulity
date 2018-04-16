@@ -34,3 +34,5 @@ done
 for i in "${MOTHULITY_PATH}/*.py"; do
   python -m doctest $i -v;
 done
+# Run unittests
+python -m unittests -v tests.tests;
