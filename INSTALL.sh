@@ -38,3 +38,22 @@ done
 cd $MOTHULITY_PATH
 # Run unittests
 python -m unittest -v tests.tests;
+# Prompt for databases download
+echo 'Mothulity needs databases to work its magic. Would you like to download them now? [yes|no].
+You can always download the databases later with mothulity_dbaser.py and set the default database path with
+mothulity.py --set-align-database-path and
+mothulity.py --set-taxonomy-database-path'
+read DB_GEN_ANSWER;
+if [ $DB_GEN_ANSWER -eq 'yes' ]; then
+  echo 'Which database would you like to download?
+[UNITE ITS 02|UNITE ITS s 02|Silva v102|Silva v119|Silva v123]'
+  read DB_TYPE_ANSWER;
+  echo 'Where would you like to download it? It will be set as default database mothulity path.'
+  read DB_PATH_ANSWER;
+  case $DB_TYPE_ANSWER in
+    "UNITE ITS 02") mothulity_dbaser.py /path/to/databases $DB_PATH_ANSWER --unite-ITS-02; mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/Unite_ITS_02/UNITEv6_sh_99.fasta" --set-taxonomy-database-path "${DB_PATH_ANSWER}/UNITEv6_sh_99.tax"
+    "UNITE ITS s 02") mothulity_dbaser.py /path/to/databases $DB_PATH_ANSWER --unite-ITS-s-02; mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/Unite_ITS_s_02/UNITEv6_sh_97_s.fasta" --set-taxonomy-database-path "${DB_PATH_ANSWER}/UNITEv6_sh_97_s.tax"
+    "Silva v102") mothulity_dbaser.py /path/to/databases $DB_PATH_ANSWER --silva-102; mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/" --set-taxonomy-database-path "${DB_PATH_ANSWER}/"
+    "Silva v119") mothulity_dbaser.py /path/to/databases $DB_PATH_ANSWER --silva-119; mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/silva.nr_v119.align" --set-taxonomy-database-path "${DB_PATH_ANSWER}/silva.nr_v119.tax"
+    "Silva v123") mothulity_dbaser.py /path/to/databases $DB_PATH_ANSWER --silva-123; mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/" --set-taxonomy-database-path "${DB_PATH_ANSWER}/"
+fi
