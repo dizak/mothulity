@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Define variables
 ## Good-bye message
-BYE="Thanks for installing mothulity. Hope it will save you as much work as possible!\nReport bugs and other issues at https://github.com/dizak/mothulity/issues"
+BYE="Thanks for installing mothulity. Hope it will save you as much work as possible! Report bugs and other issues at https://github.com/dizak/mothulity/issues"
 ## Where is ~/.bashrc
 BASH_RC=${HOME}/.bashrc
 ## Where is conda
@@ -41,7 +41,8 @@ cd $MOTHULITY_PATH
 # Run unittests
 python -m unittest -v tests.tests;
 # Prompt for databases download
-echo "Mothulity needs databases to work its magic. Would you like to download them now?\n[yes|no]\n"
+echo "Mothulity needs databases to work its magic. Would you like to download them now?
+[yes|no]"
 while read DB_GEN_ANSWER
 do
   if [ "$DB_GEN_ANSWER" = 'yes' ]; then
@@ -49,13 +50,18 @@ do
     while read DB_PATH_ANSWER;
     do
       if [ -e "$DB_PATH_ANSWER" ]; then
-        echo "\nIt will be set as default database path."
+        echo "It will be set as default database path."
         break
       else
         echo 'Cannot find path. Try again.'
       fi
     done
-    echo "Which database would you like to download?\n[1] UNITE ITS 02\n[2] UNITE ITS s 02\n[3] Silva v102\n[4] Silva v119\n[5] Silva v123";
+    echo "Which database would you like to download?
+    [1] UNITE ITS 02
+    [2] UNITE ITS s 02
+    [3] Silva v102
+    [4] Silva v119
+    [5] Silva v123";
     while read DB_TYPE_ANSWER;
     do
       case "$DB_TYPE_ANSWER" in
