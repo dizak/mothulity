@@ -76,7 +76,8 @@ do
         break
         ;;
         3)
-        mothulity_dbaser.py $DB_PATH_ANSWER --silva-102
+        mothulity_dbaser.py $DB_PATH_ANSWER --silva-102 &&
+        echo 'Silva-102 is not handled automatically yet. It was NOT set as default database.'
         break
         ;;
         4)
