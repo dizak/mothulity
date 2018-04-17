@@ -40,8 +40,44 @@ def get_db(url,
             for i in tqdm(res.iter_content(chunk_size=chunk),
                           total=total_len / chunk):
                 fout.write(i)
-    else:
-        print "Status code {0}".format(status_code)
+    return res.status_code
+
+
+def download(download_directory,
+             filename,
+             url,
+             command,
+             input_arg,
+             output_arg):
+    """
+    Download and unpack specified database into specified directory.
+
+    Parameters
+    -------
+    db_type: str
+        Database name which determines the download URL and archive type.
+    download_directory: str
+        Path where the database files would be downloaded.
+    """
+    download_path = "{}/{}".format(download_directory, filename)
+    print "Download path: {}".format(download_path)
+    print "Connecting..."
+    try:
+        res = get_db(url, download_path)
+        if res == 200:
+            print "Downloading done!"
+            print "Unpacking..."
+            os.system("{} {} {} {} {}".format(command,
+                                              input_arg,
+                                              download_path,
+                                              output_arg,
+                                              download_directory))
+            os.system("rm {}".format(download_path))
+            print "Unpacking done!"
+        else:
+            print "Failed to establish connection. Response code {}".format(res)
+    except Exception as e:
+        print "Failed to establish connection."
 
 
 def main():
@@ -78,85 +114,56 @@ def main():
     args = parser.parse_args()
 
     if args.unite_ITS_02:
-        download_path = "{0}/Unite_ITS_02.zip".format(args.download_directory)
-        print "Downloading to {0}".format(download_path)
-        get_db("https://www.mothur.org/w/images/4/49/Unite_ITS_02.zip",
-               download_path)
-        print "Downloading done!"
-        print "Unpacking..."
-        os.system("unzip {0} -d {1}".format(download_path,
-                                            args.download_directory))
-        os.system("rm {0}".format(download_path))
-        print "Unpacking done!"
+        download(download_directory=args.download_directory,
+                 filename="Unite_ITS_02.zip",
+                 url="https://www.mothur.org/w/images/4/49/Unite_ITS_0.zip",
+                 command="unzip",
+                 input_arg="",
+                 output_arg="-d")
 
     if args.unite_ITS_s_02:
-        download_path = "{0}/Unite_ITS_s_02.zip".format(args.download_directory)
-        print "Downloading to {0}/Unite_ITS_s_02.zip".format(args.download_directory)
-        get_db("https://www.mothur.org/w/images/2/27/Unite_ITS_s_02.zip",
-               download_path)
-        print "Downloading done!"
-        print "Unpacking..."
-        os.system("unzip {0} -d {1}".format(download_path,
-                                            args.download_directory))
-        os.system("rm {0}".format(download_path))
+        download(download_directory=args.download_directory,
+                 filename="Unite_ITS_s_02.zip",
+                 url="https://www.mothur.org/w/images/2/27/Unite_ITS_s_02.zip",
+                 command="unzip",
+                 input_arg="",
+                 output_arg="-d")
 
     if args.silva_102:
-        download_path = "{0}/Silva.bacteria.zip".format(args.download_directory)
-        print "Downloading to {0}/Silva.bacteria.zip".format(args.download_directory)
-        get_db("https://www.mothur.org/w/images/9/98/Silva.bacteria.zip",
-               download_path)
-        print "Downloading done!"
-        print "Unpacking..."
-        os.system("unzip {0} -d {1}".format(download_path,
-                                            args.download_directory))
-        os.system("rm {0}".format(download_path))
-        print "Unpacking done!"
-        download_path = "{0}/Silva.archaea.zip".format(args.download_directory)
-        print "Downloading to {0}/Silva.archaea.zip".format(args.download_directory)
-        get_db("https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
-               download_path)
-        print "Downloading done!"
-        print "Unpacking..."
-        os.system("unzip {0} -d {1}".format(download_path,
-                                            args.download_directory))
-        os.system("rm {0}".format(download_path))
-        print "Unpacking done!"
-        download_path = "{0}/Silva.eukarya.zip".format(args.download_directory)
-        print "Downloading to {0}/Silva.eukarya.zip".format(args.download_directory)
-        get_db("https://www.mothur.org/w/images/1/1a/Silva.eukarya.zip",
-               download_path)
-        print "Downloading done!"
-        print "Unpacking..."
-        os.system("unzip {0} -d {1}".format(download_path,
-                                            args.download_directory))
-        os.system("rm {0}".format(download_path))
-        print "Unpacking done!"
+        download(download_directory=args.download_directory,
+                 filename="Silva.bacteria.zip",
+                 url="https://www.mothur.org/w/images/9/98/Silva.bacteria.zip",
+                 command="unzip",
+                 input_arg="",
+                 output_arg="-d")
+        download(download_path=args.download_directory,
+                 filename="Silva.archaea.zip",
+                 url="https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
+                 command="unzip",
+                 input_arg="",
+                 output_arg="-d")
+        download(download_path=args.download_directory,
+                 filename="Silva.eukarya.zip",
+                 url="https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
+                 command="unzip",
+                 input_arg="",
+                 output_arg="-d")
 
     if args.silva_119:
-        download_path = "{0}/Silva.nr_v119.tgz".format(args.download_directory)
-        print "Downloading to {0}/Silva.nr_v119.tgz".format(args.download_directory)
-        get_db("http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz",
-               download_path)
-        print "Downloading done!"
-        print "Unpacking..."
-        os.mkdir("{0}/Silva.nr_v119".format(args.download_directory))
-        os.system("tar -xf {0} --directory {1}".format(download_path,
-                                                       "{0}/Silva.nr_v119".format(args.download_directory)))
-        os.system("rm {0}".format(download_path))
-        print "Unpacking done!"
+        download(download_directory=args.download_directory,
+                 filename="Silva.nr_v119.tgz",
+                 url="http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz",
+                 command="tar",
+                 input_arg="-xf",
+                 output_arg="--directory")
 
     if args.silva_123:
-        download_path = "{0}/Silva.nr_v123.tgz".format(args.download_directory)
-        print "Downloading to {0}/Silva.nr_v123.tgz".format(args.download_directory)
-        get_db("https://www.mothur.org/w/images/b/be/Silva.nr_v123.tgz",
-               download_path)
-        print "Downloading done!"
-        print "Unpacking..."
-        os.mkdir("{0}/Silva.nr_v123".format(args.download_directory))
-        os.system("tar -xf {0} --directory {1}".format(download_path,
-                                                       "{0}/Silva.nr_v123".format(args.download_directory)))
-        os.system("rm {0}".format(download_path))
-        print "Unpacking done!"
+        download(download_directory=args.download_directory,
+                 filename="Silva.nr_v123.tgz",
+                 url="https://www.mothur.org/w/images/b/be/Silva.nr_v123.tgz",
+                 command="tar",
+                 input_arg="-xf",
+                 output_arg="--directory")
 
 
 if __name__ == '__main__':
