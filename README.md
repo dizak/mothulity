@@ -4,21 +4,32 @@ Simple tool to facilitate work with [mothur](https://www.mothur.org/).
 It can download a proper database, run SOP provided with just fastq files directory, draw few figures and wrap it all into fancy html. Handles slurm and sends e-mail notifications when the job is done (using [headnode_notifier](https://github.com/dizak/headnode_notifier/releases)).
 
 
-#### Installation
+### Installation
 
 1. Install [Anaconda](https://anaconda.org).
 2. ```git clone https://github.com/dizak/mothulity```.
 3. ```bash INSTALL.sh```
 
 
-#### Update
+### Update
 
-```bash UPDATE.sh```
+```
+bash UPDATE.sh
+```
 
 
 ### Usage
 
-The simplest example is (if your database already sits in ```~/db```):
+##### Databases
+
+mothulity needs databases to operate. Databases can be placed anywhere. The paths should be
+specified by the CLI or in the config file. CLI overrides the config file settings.
+User is asked whether download and set default paths during installation.
+
+- Databases download is handled by ```mothulity_dbaser.py /path/where/database/should/be/downloaded --type-of-database```, eg ```mothulity_dbaser.py /home/user/mothulity/dbs --silva-119```
+
+- Databases default path set-up is handled by ```mothulity.py --set-align-database-path /path/to/database --set-taxonomy-database-path```.
+
 
 ```
 mothulity.py /path/to/fastq/files -r sh
