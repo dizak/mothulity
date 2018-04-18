@@ -26,10 +26,11 @@ mothulity needs databases to operate. Databases can be placed anywhere. The path
 specified by the CLI or in the config file. CLI overrides the config file settings.
 User is asked whether download and set default paths during installation.
 
-- Databases download is handled by ```mothulity_dbaser.py /path/where/database/should/be/downloaded --type-of-database```, eg ```mothulity_dbaser.py /home/user/mothulity/dbs --silva-119```
+- Databases download is handled by ```mothulity_dbaser.py /path/where/database/should/be/downloaded --type-of-database```, eg ```mothulity_dbaser.py /home/user/mothulity/dbs --silva-119```.
 
 - Databases default path set-up is handled by ```mothulity.py --set-align-database-path /path/to/database --set-taxonomy-database-path```.
 
+##### Basic usage
 
 ```
 mothulity.py /path/to/fastq/files -r sh
@@ -46,16 +47,6 @@ mothulity.py /path/to/fastq/files -r sh --notify-email your.email@your.domain
 ```
 
 As ```--notify-email``` depends on [headnode_notifier](https://github.com/dizak/headnode_notifier/), please check its repo for configuration instructions.
-
-
-### Databases
-
-
-You can easily download Silva and Unite databases with mothulity_dbaser.py.
-Please type ```mothulity_dbaser.py --help``` for details.
-
-Databases downloaded with mothulity_dbaser to ```~/db/``` should be found by mothulity by default.
-If using something else, specify ```/path/to/database``` with ```--align-database``` and ```--taxonomy-database``` when running mothulity main script.
 
 
 ### Example data
