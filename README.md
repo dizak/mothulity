@@ -20,7 +20,7 @@ bash UPDATE.sh
 
 ### Usage
 
-##### Databases
+#### Databases
 
 mothulity needs databases to operate. Databases can be placed anywhere. The paths should be
 specified by the CLI or in the config file. CLI overrides the config file settings.
@@ -30,7 +30,7 @@ User is asked whether download and set default paths during installation.
 
 - Databases default path set-up is handled by ```mothulity.py --set-align-database-path /path/to/database --set-taxonomy-database-path```.
 
-##### Basic usage
+#### Basic usage
 
 ```
 mothulity.py /path/to/fastq/files -r sh
