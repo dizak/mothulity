@@ -426,6 +426,20 @@ def main():
                         default=0.03,
                         help="cutoff value. Smaller == faster cluster param.\
                         Default <0.03>.")
+    mothur.add_argument("--cluster-method",
+                        action="store",
+                        dest="cluster_method",
+                        metavar="",
+                        default="agc",
+                        help="Clustering method. Available options are:\
+                        opticlust <opti>,\
+                        average neighbor <average>,\
+                        furthest neighbor <furthest>,\
+                        nearest neighbor <nearest>,\
+                        Vsearch agc <agc>,\
+                        Vsearch dgc <dgc>.\
+                        For detailed info visit\
+                        https://www.mothur.org/wiki/Cluster.split Default <agc>")
     mothur.add_argument("--full-ram-load",
                         action="store_true",
                         dest="full_ram_load",
@@ -720,6 +734,7 @@ def main():
                      "taxonomy_database": taxonomy_database_abs,
                      "design_file": design_file,
                      "cluster_cutoff": args.cluster_cutoff,
+                     "cluster_method": args.cluster_method,
                      "full_ram_load": args.full_ram_load,
                      "label": label,
                      "junk_grps": junk_grps,
