@@ -78,9 +78,9 @@ cluster.split(phylip=current, cutoff={{cluster_cutoff}}, large=T);
 remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);
   {% if full_ram_load %}
 dist.seqs(fasta=current, cutoff={{cluster_cutoff}});
-cluster(column=current, count=current);
+cluster(column=current, count=current, method={{cluster_method}});
   {% else%}
-cluster.split(fasta=current, count=current, taxonomy=current, cutoff={{cluster_cutoff}}, large=T);
+cluster.split(fasta=current, count=current, taxonomy=current, cutoff={{cluster_cutoff}}, large=T, method={{cluster_method}});
   {% endif %}
 {% endif %}
 make.shared(list=current, count=current, label={{label}});
