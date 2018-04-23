@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/dizak/mothulity.svg?branch=master)](https://travis-ci.org/dizak/mothulity)
+
+
 # mothulity
 
 Simple tool to facilitate work with [mothur](https://www.mothur.org/).

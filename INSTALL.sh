@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Read CLI arguments
+while getopts "p:t:" opt; do
+  case $opt in
+    p )
+    DB_GEN_ANSWER='yes'
+    DB_PATH_ANSWER=$OPTARG
+      ;;
+    t )
+    DB_TYPE_ANSWER=$OPTARG
+      ;;
+  esac
+  done
 # Define variables
 ## Good-bye message
 BYE="Thanks for installing mothulity. Hope it will save you as much work as possible! Report bugs and other issues at https://github.com/dizak/mothulity/issues"
@@ -18,8 +30,9 @@ else echo "Found Anaconda in: ${CONDA_PATH}";
 fi
 # Backup .bashrc before editing it
 cp $BASH_RC "${BASH_RC}.bak"
-# Add mothulity to PATH and source it
+# Add mothulity to PATH, source it and export PATH just for case
 echo "export PATH=\"${MOTHULITY_PATH}:\$PATH\"" >> $BASH_RC
+export PATH=$HOME/$MOTHULITY_PATH:$PATH
 . ${BASH_RC}
 # Create regular mothulity env from mothulity.yaml
 conda env create --file "${MOTHULITY_PATH}/mothulity.yaml" --force
@@ -40,6 +53,35 @@ done
 cd $MOTHULITY_PATH
 # Run unittests
 python -m unittest -v tests.tests;
+# Check if installer was called with CLI arguments
+if [ -n "$DB_PATH_ANSWER" ]; then
+  case "$DB_TYPE_ANSWER" in
+    1)
+    mothulity_dbaser.py $DB_PATH_ANSWER --unite-ITS-02 &&
+    mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/Unite_ITS_02/UNITEv6_sh_99.fasta" --set-taxonomy-database-path "${DB_PATH_ANSWER}/UNITEv6_sh_99.tax"
+    ;;
+    2)
+    mothulity_dbaser.py $DB_PATH_ANSWER --unite-ITS-s-02 &&
+    mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/Unite_ITS_s_02/UNITEv6_sh_97_s.fasta" --set-taxonomy-database-path "${DB_PATH_ANSWER}/UNITEv6_sh_97_s.tax"
+    ;;
+    3)
+    mothulity_dbaser.py $DB_PATH_ANSWER --silva-102 &&
+    echo 'Silva-102 is not handled automatically yet. It was NOT set as default database.'
+    ;;
+    4)
+    mothulity_dbaser.py $DB_PATH_ANSWER --silva-119 &&
+    mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/silva.nr_v119.align" --set-taxonomy-database-path "${DB_PATH_ANSWER}/silva.nr_v119.tax"
+    ;;
+    5)
+    mothulity_dbaser.py $DB_PATH_ANSWER --silva-123 &&
+    mothulity.py . --set-align-database-path "${DB_PATH_ANSWER}/" --set-taxonomy-database-path "${DB_PATH_ANSWER}/"
+    ;;
+    *)
+    echo 'No such database.'
+    ;;
+  esac
+  exit
+fi
 # Prompt for databases download
 echo "Mothulity needs databases to work its magic. Would you like to download them now?
 [yes|no]"

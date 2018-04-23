@@ -1,0 +1,21 @@
+language: python
+python: 2.7
+
+os: linux
+
+install:
+  - wget https://repo.continuum.io/archive/Anaconda2-5.1.0-Linux-x86_64.sh
+  - bash Anaconda2-5.1.0-Linux-x86_64.sh -b -p $HOME/anaconda2
+  - export PATH=$HOME/anaconda2/bin:$PATH
+  - conda config --set always_yes yes --set changeps1 no
+  - conda info -a
+
+before_script:
+  - MOTHULITY_PATH=$(pwd)
+  - export PATH=$MOTHULITY_PATH:$PATH
+  - conda env create --file mothulity.yaml
+  - source activate mothulity
+
+script:
+  - python -m doctest *py -v
+  - python -m unittest -v tests.tests

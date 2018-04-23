@@ -30,6 +30,7 @@ def get_db(url,
     -------
     >>> import os
     >>> get_db("http://google.com", "./tests/google.html")
+    200
     >>> os.path.getsize("./tests/google.html") > 0
     True
     """
