@@ -128,7 +128,7 @@ def main():
     if args.unite_ITS_02:
         download(download_directory=args.download_directory,
                  filename="Unite_ITS_02.zip",
-                 url="https://www.mothur.org/w/images/4/49/Unite_ITS_0.zip",
+                 url="https://www.mothur.org/w/images/4/49/Unite_ITS_02.zip",
                  command="unzip",
                  input_arg="",
                  output_arg="-d")
