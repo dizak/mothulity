@@ -557,13 +557,15 @@ def main():
         ntasks_per_node = args.ntasks_per_node
         processors = args.processors
         partition = args.partition
-# Make sure essential variables that can be overriden by CLI are defined. If not - quit from here.
-    if not align_database_abs:
-        print "No align database path defined in config nor command-line. Quitting..."
-        exit()
-    if not taxonomy_database_abs:
-        print "No taxonomy database path defined in config nor command-line. Quitting..."
-        exit()
+# Make sure essential variables that can be overriden by CLI are defined.
+# Unless args.analysis_only or args.render_html are True - quit from here.
+    if not args.analysis_only and not args.render_html:
+        if not align_database_abs:
+            print "No align database path defined in config nor command-line. Quitting..."
+            exit()
+        if not taxonomy_database_abs:
+            print "No taxonomy database path defined in config nor command-line. Quitting..."
+            exit()
 # Validate if input and output directories exist and make them absolute paths.
     if os.path.exists(args.files_directory):
         files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
