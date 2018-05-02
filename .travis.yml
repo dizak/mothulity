@@ -11,17 +11,14 @@ install:
   - conda info -a
 
 before_script:
-  - MOTHULITY_PATH=$(pwd)
-  - export PATH=$MOTHULITY_PATH:$PATH
-  - conda env create --file mothulity.yaml
-  - source activate mothulity
-  - mkdir $HOME/db
+  - mkdir $HOME/db/
+  - ./INSTALL.sh -p $HOME/db/ -t 1 -y
+  - source $HOME/.bashrc
 
 script:
+  - source activate mothulity
   - python -m doctest *py -v
   - python -m unittest -v tests.tests
-  - mothulity_dbaser.py $HOME/db/ --unite-ITS-s-02
-  - rm -r $HOME/db/*
 
 notifications:
   email:

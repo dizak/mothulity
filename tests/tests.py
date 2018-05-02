@@ -67,7 +67,7 @@ class ConfigTests(unittest.TestCase):
                            ('JUMBO', 'ntasks_per_node', '1'),
                            ('JUMBO', 'processors', '128')]
         self.config = ConfigParser.SafeConfigParser()
-        self.config.read("mothulity.config")
+        self.config.read("./tests/test.config")
 
     def test_config_file_read(self):
         """
