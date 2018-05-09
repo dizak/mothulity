@@ -25,6 +25,9 @@ while getopts ":p:t:y" opt; do
     To predefine installation parameters use following arguments:
     - p <database_output_path>
     - t <database_id>
+    - y <add PATH to .bashrc>
+    Example:
+    $ ./INSTALL.sh -p /home/databases/ -t 2 -y
 
     Available databases [ID]:
     [1] UNITE ITS 02
@@ -71,6 +74,8 @@ download_database() {
     *)
     printf "\nNo such database.\n"
     printf "${_db_choice_msg}"
+    read _db_type
+    download_database ${_db_type} $2
     ;;
   esac
 
@@ -185,6 +190,8 @@ if [ ! -z "$_db_type" ]; then
     download_database "${_db_type}" "${_db_path}"
 else
     printf "${_db_choice_msg}"
+    read _db_type
+    download_database "${_db_type}" "${_db_path}"
 fi
 
 printf "${_bye_msg}"
