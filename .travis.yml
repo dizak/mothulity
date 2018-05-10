@@ -12,13 +12,21 @@ install:
 
 before_script:
   - mkdir $HOME/db/
-  - ./INSTALL.sh -p $HOME/db/ -t 1 -y
-  - source $HOME/.bashrc
 
 script:
+  - ./INSTALL.sh -p $HOME/db/ -t 1 -y
+  - source $HOME/.bashrc
   - source activate mothulity
   - python -m doctest *py -v
   - python -m unittest -v tests.tests
+  - mothulity.py test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job
+  - diff test_data/new_run/mltp_smpl/script/travis_job.sh travis_job.sh --ignore-blank-lines --ignore-trailing-space
+  - mothulity.py test_data/analysis/mltp_smpl/shared_tax --dry-run -r bash -n analysis_travis_job --analysis-only
+  - diff test_data/analysis/mltp_smpl/script/analysis_travis_job.sh analysis_travis_job.sh --ignore-blank-lines --ignore-trailing-space
+  - mothulity.py test_data/new_run/single_smpl/fastq --dry-run -r bash -n travis_job
+  - diff test_data/new_run/single_smpl/script/travis_job.sh travis_job.sh --ignore-blank-lines --ignore-trailing-space
+  - mothulity.py test_data/analysis/single_smpl/shared_tax --dry-run -r bash -n analysis_travis_job --analysis-only
+  - diff test_data/analysis/single_smpl/script/analysis_travis_job.sh analysis_travis_job.sh --ignore-blank-lines --ignore-trailing-space
 
 notifications:
   email:

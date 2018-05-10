@@ -629,11 +629,11 @@ def main():
             exit()
         else:
             if os.path.isfile(align_database_abs) is False:
-                print "No align database found in {}. Quitting...".format(args.align_database)
+                print "No align database found in {}. Quitting...".format(align_database_abs)
                 time.sleep(2)
                 exit()
             if os.path.isfile(taxonomy_database_abs) is False:
-                print "No align database found in {}. Quitting...".format(args.taxonomy_database)
+                print "No taxonomy database found in {}. Quitting...".format(taxonomy_database_abs)
                 time.sleep(2)
                 exit()
             shared_file = None
@@ -705,10 +705,11 @@ def main():
                               html_type="summary")
         raref_html = parse_html("alpha/{}.raref.html".format(args.job_name),
                                 html_type="rarefaction")
-        nmds_jc_html = parse_html("beta/{}.jclass.nmds.html".format(args.job_name),
-                                  html_type="nmds")
-        nmds_th_html = parse_html("beta/{}.thetayc.nmds.html".format(args.job_name),
-                                  html_type="nmds")
+        if sampl_num > 1:
+            nmds_jc_html = parse_html("beta/{}.jclass.nmds.html".format(args.job_name),
+                                      html_type="nmds")
+            nmds_th_html = parse_html("beta/{}.thetayc.nmds.html".format(args.job_name),
+                                      html_type="nmds")
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 # Pass all the variables to template and render to str.

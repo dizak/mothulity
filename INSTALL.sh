@@ -49,11 +49,11 @@ download_database() {
   case $1 in
     1)
     ./mothulity_dbaser.py "${2}" --unite-ITS-02 &&
-    ./mothulity.py . --set-align-database-path "${2}/Unite_ITS_02/UNITEv6_sh_99.fasta" --set-taxonomy-database-path "${2}/UNITEv6_sh_99.tax"
+    ./mothulity.py . --set-align-database-path "${2}/Unite_ITS_02/UNITEv6_sh_99.fasta" --set-taxonomy-database-path "${2}/Unite_ITS_02/UNITEv6_sh_99.tax"
     ;;
     2)
     ./mothulity_dbaser.py "${2}" --unite-ITS-s-02 &&
-    ./mothulity.py . --set-align-database-path "${2}/Unite_ITS_s_02/UNITEv6_sh_97_s.fasta" --set-taxonomy-database-path "${2}/UNITEv6_sh_97_s.tax"
+    ./mothulity.py . --set-align-database-path "${2}/Unite_ITS_s_02/UNITEv6_sh_97_s.fasta" --set-taxonomy-database-path "${2}/Unite_ITS_s_02/UNITEv6_sh_97_s.tax"
     ;;
     3)
     ./mothulity_dbaser.py "${2}" --silva-102 &&
@@ -66,7 +66,7 @@ download_database() {
     ;;
     5)
     ./mothulity_dbaser.py "${2}" --silva-123 &&
-    ./mothulity.py . --set-align-database-path "${2}/" --set-taxonomy-database-path "${2}/"
+    ./mothulity.py . --set-align-database-path "${2}/silva.nr_v123.align" --set-taxonomy-database-path "${2}/silva.nr_v123.tax"
     ;;
     6)
     break
