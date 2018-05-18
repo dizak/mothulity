@@ -26,6 +26,6 @@
 2. Second.
 3. Third.
 
-# Expected behavior
+# Expected behaviour
 
-# Actual behavior
+# Actual behaviour

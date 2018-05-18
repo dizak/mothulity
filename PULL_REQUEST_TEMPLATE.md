@@ -11,11 +11,3 @@
 # Updates
 
 # Fixes
-
-# Tests
-put *X* in the tick boxes if passed.
-
-- [] doctests
-- [] unittests
-- [] MiSeqSOP single sample
-- [] MiSeqSOP multiple samples
