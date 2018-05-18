@@ -4,6 +4,7 @@
 from __author import __author__
 from __version import __version__
 from utilities import get_dir_path
+from mothulity import load_template_file, render_template, save_template
 import os
 import ConfigParser
 import argparse
@@ -21,6 +22,42 @@ from seaborn import pairplot
 from seaborn import lmplot
 from lxml import etree as et
 import pandas as pd
+
+
+def dist2json(input_file_name,
+              output_file_name,
+              sep="\t",
+              skiprows=1,
+              header=None,
+              index_col=0):
+    """
+    Convert mothur's dist file to JSON file suitable for the interactive D3.js
+    heatmap.
+
+    Parameters
+    -------
+    input_file_name: str
+        Input file name.
+    output_file_name: str
+        Output file name.
+    sep: str, default <\t>
+        Delimiter to use for reading-in rarefaction file.
+    skiprows: int, default <1>
+        Rows to skip when reading-in phylip file for proper parsing.
+    header: int or None, default: <None>
+        Row number to use as column names. None if there is not any.
+    index_col: str or int, default <0>
+        Index column name in shared file.
+    """
+    df = pd.read_csv(input_file_name,
+                     sep=sep,
+                     skiprows=skiprows,
+                     header=header,
+                     index_col=index_col)
+    df.index.name = None
+    df.columns = df.index
+    df.columns = pd.MultiIndex.from_product([["col"], df.columns])
+    df.to_json(output_file_name, orient="split")
 
 
 def draw_rarefaction(input_file_name,
@@ -111,6 +148,43 @@ def draw_heatmap(input_file_name,
     df.columns = df.index
     fig = heatmap(df, square=True, cmap=color_map).get_figure()
     fig.savefig(output_file_name)
+
+
+def draw_heatmap_js(json_filename,
+                    js_filename,
+                    css_filename,
+                    output_filename,
+                    template_file,
+                    searchpath="/"):
+    """
+    Draw interactive heatmap in D3.js from JSON file and save figure to html
+    file.
+
+    Parameters
+    -------
+    json_filename: str
+        Input file name in JSON format.
+    output_filename: str
+        Output file name in HTML format.
+    template_file: str
+        Template file name.
+    searchpath: str, default </>
+        Root directory for template lookup.
+    """
+    with open(json_filename) as fin:
+        json = fin.read()
+    with open(js_filename) as fin:
+        js = fin.read()
+    with open(css_filename) as fin:
+        css = fin.read()
+    print json
+    template_vars = {"json": json_filename,
+                     "js": js,
+                     "css": css}
+    loaded_template = load_template_file(template_file,
+                                         searchpath=searchpath)
+    rendered_template = render_template(loaded_template, template_vars)
+    save_template(output_filename, rendered_template)
 
 
 def draw_tree(input_file_name,

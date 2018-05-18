@@ -4,7 +4,9 @@
 import unittest
 import ConfigParser
 import subprocess as sp
+import os
 import utilities
+import mothulity_draw as md
 
 
 class PathTests(unittest.TestCase):
@@ -145,3 +147,40 @@ class UtilitiesTests(unittest.TestCase):
                 for o in self.config_2.options(s):
                     self.test_values.append((s, o, self.config_2.get(s, o)))
             self.assertEqual(self.ref_values_2, self.test_values)
+
+
+class MothulityDrawTests(unittest.TestCase):
+    """
+    Tests of mothulity_draw module.
+    """
+    def setUp(self):
+        """
+        Sets up class level attributes for the tests.
+        """
+        self.ref_json = "test_data/MothulityDraw/ref.json"
+        self.ref_js = "test_data/MothulityDraw/ref.js"
+        self.ref_css = "test_data/MothulityDraw/ref.css"
+        self.test_template = "test.jj2"
+        self.test_heatmap_filename = "test_data/MothulityDraw/test_heatmap.html"
+        with open("test_data/MothulityDraw/ref.html") as fin:
+            self.ref_html = fin.read()
+
+    # def tearDown(self):
+    #     """
+    #     Destroys files downloaded or created during the tests.
+    #     """
+    #     os.remove(self.test_heatmap_filename)
+
+    def test_draw_heatmap_js(self):
+        """
+        Tests if the json, javascript and css files are properly passed to
+        heatmap_template.html.jj2
+        """
+        md.draw_heatmap_js(json_filename=self.ref_json,
+                           js_filename=self.ref_js,
+                           css_filename=self.ref_css,
+                           output_filename=self.test_heatmap_filename,
+                           template_file=self.test_template,
+                           searchpath=utilities.get_dir_path("test_data/MothulityDraw/"))
+        with open(self.test_heatmap_filename) as fin:
+            self.assertEqual(self.ref_html, fin.read())
