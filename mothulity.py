@@ -146,7 +146,8 @@ def read_info_shared(input_file_name,
     >>> shared_info["junk_grps"]
     'F3D141-F3D143-F3D144'
     """
-    shared_df = pd.read_csv(input_file_name, sep=sep)
+    dtypes = {label_col: "str"}
+    shared_df = pd.read_csv(input_file_name, sep=sep, dtype=dtypes)
     otus_cols = [i for i in shared_df.columns if otu_col in i and i != num_col]
     grps_sizes = shared_df[[group_col] + otus_cols].sum(axis=1)
     label = shared_df[label_col][0]

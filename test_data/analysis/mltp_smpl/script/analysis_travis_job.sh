@@ -17,7 +17,7 @@
 mkdir -p /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/alpha /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/beta
 cp /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.shared /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/analysis_travis_job.shared
 
-cp /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.cons.tax.summary /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/alpha/analysis_travis_job.tax.summary
+cp /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.030.cons.tax.summary /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/alpha/analysis_travis_job.tax.summary
 
 
 #Go to subdirectory, and subsample shared file
@@ -29,7 +29,7 @@ mothur '#set.current(processors=1, shared=analysis_travis_job.shared); sub.sampl
 
 cp analysis_travis_job.shared ./alpha
 
-cp analysis_travis_job.0.03.subsample.shared ./beta/
+cp analysis_travis_job.0.030.subsample.shared ./beta/
 
 
 #Go to alpha directory and create krona chart, rarefaction, summary table
@@ -45,26 +45,26 @@ mothulity_draw.py analysis_travis_job.groups.summary --output analysis_travis_jo
 #Go to beta directory and create dist files for Jaccard and YC measures
 
 cd ../beta
-mothur '#set.current(processors=1, shared=analysis_travis_job.0.03.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
+mothur '#set.current(processors=1, shared=analysis_travis_job.0.030.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
 
 #Create phylogenetic tree for Jaccard and YC measures
 
-mothur '#tree.shared(phylip=analysis_travis_job.0.03.subsample.jclass.0.03.square.dist); tree.shared(phylip=analysis_travis_job.0.03.subsample.thetayc.0.03.square.dist)'
+mothur '#tree.shared(phylip=analysis_travis_job.0.030.subsample.jclass.0.030.square.dist); tree.shared(phylip=analysis_travis_job.0.030.subsample.thetayc.0.030.square.dist)'
 
 #Create scatter plots upon NMDS for Jaccard and YC measures
 
-mothur '#nmds(phylip=analysis_travis_job.0.03.subsample.jclass.0.03.square.dist); nmds(phylip=analysis_travis_job.0.03.subsample.thetayc.0.03.square.dist)'
+mothur '#nmds(phylip=analysis_travis_job.0.030.subsample.jclass.0.030.square.dist); nmds(phylip=analysis_travis_job.0.030.subsample.thetayc.0.030.square.dist)'
 
 
 
 #Draw beta directory pictures for Jaccard and YC measures
 
-mothulity_draw.py analysis_travis_job.0.03.subsample.jclass.0.03.square.dist --output analysis_travis_job.jclass.dist.svg --phylip
-mothulity_draw.py analysis_travis_job.0.03.subsample.jclass.0.03.square.tre --output analysis_travis_job.0.03.jclass.tre.svg --tree
-mothulity_draw.py analysis_travis_job.0.03.subsample.jclass.0.03.square.nmds.axes --output analysis_travis_job.jclass.nmds.html --axes
-mothulity_draw.py analysis_travis_job.0.03.subsample.thetayc.0.03.square.dist --output analysis_travis_job.thetayc.dist.svg --phylip
-mothulity_draw.py analysis_travis_job.0.03.subsample.thetayc.0.03.square.tre --output analysis_travis_job.0.03.thetayc.tre.svg --tree
-mothulity_draw.py analysis_travis_job.0.03.subsample.thetayc.0.03.square.nmds.axes --output analysis_travis_job.thetayc.nmds.html --axes
+mothulity_draw.py analysis_travis_job.0.030.subsample.jclass.0.030.square.dist --output analysis_travis_job.jclass.dist.svg --phylip
+mothulity_draw.py analysis_travis_job.0.030.subsample.jclass.0.030.square.tre --output analysis_travis_job.0.030.jclass.tre.svg --tree
+mothulity_draw.py analysis_travis_job.0.030.subsample.jclass.0.030.square.nmds.axes --output analysis_travis_job.jclass.nmds.html --axes
+mothulity_draw.py analysis_travis_job.0.030.subsample.thetayc.0.030.square.dist --output analysis_travis_job.thetayc.dist.svg --phylip
+mothulity_draw.py analysis_travis_job.0.030.subsample.thetayc.0.030.square.tre --output analysis_travis_job.0.030.thetayc.tre.svg --tree
+mothulity_draw.py analysis_travis_job.0.030.subsample.thetayc.0.030.square.nmds.axes --output analysis_travis_job.thetayc.nmds.html --axes
 
 #Go to OTU directory
 
