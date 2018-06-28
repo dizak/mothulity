@@ -60,7 +60,7 @@ unique.seqs(fasta=current, count=current);
 {% endif %}
 summary.seqs(fasta=current, count=current);
 pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}});
-chimera.uchime(fasta=current, count=current, dereplicate={{chimera_dereplicate}});
+chimera.vsearch(fasta=current, count=current, dereplicate={{chimera_dereplicate}});
 remove.seqs(fasta=current, accnos=current);
 summary.seqs(fasta=current, count=current);
 classify.seqs(fasta=current, count=current, reference={{align_database}},

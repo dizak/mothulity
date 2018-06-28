@@ -38,7 +38,7 @@ unique.seqs(fasta=current, count=current);
 
 summary.seqs(fasta=current, count=current);
 pre.cluster(fasta=current, count=current, diffs=2);
-chimera.uchime(fasta=current, count=current, dereplicate=T);
+chimera.vsearch(fasta=current, count=current, dereplicate=T);
 remove.seqs(fasta=current, accnos=current);
 summary.seqs(fasta=current, count=current);
 classify.seqs(fasta=current, count=current, reference=/home/travis/db/Unite_ITS_02/UNITEv6_sh_99.fasta,

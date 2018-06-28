@@ -382,7 +382,7 @@ def main():
                         dest="chimera_dereplicate",
                         metavar="",
                         default="T",
-                        help="checking for chimeras by group. chimera.uchime\
+                        help="checking for chimeras by group. chimera.vsearch\
                         param. Default <T>.")
     mothur.add_argument("--classify-seqs-cutoff",
                         action="store",
