@@ -263,7 +263,7 @@ def get_daughter_df(df,
     daughter_levels = int(sel_df.daughterlevels)
     if daughter_levels > 0:
         mother_rank = sel_df.rankID.to_string(index=False)
-        daughter_df = df[df.rankID.str.contains(mother_rank)][df.rankID.str.len() == len(mother_rank) + 2]
+        daughter_df = df[df.rankID.str.contains('^{}\.\d+$'.format(mother_rank))]
         return daughter_df
 
 
