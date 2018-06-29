@@ -148,13 +148,13 @@ def main():
                  command="unzip",
                  input_arg="",
                  output_arg="-d")
-        download(download_path=args.download_directory,
+        download(download_directory=args.download_directory,
                  filename="Silva.archaea.zip",
                  url="https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
                  command="unzip",
                  input_arg="",
                  output_arg="-d")
-        download(download_path=args.download_directory,
+        download(download_directory=args.download_directory,
                  filename="Silva.eukarya.zip",
                  url="https://www.mothur.org/w/images/3/3c/Silva.archaea.zip",
                  command="unzip",
