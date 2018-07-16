@@ -175,7 +175,7 @@ if [ -z "$_db_answer" ]; then
   while read _db_answer; do
     if [ "${_db_answer}" = 'yes' ]; then
       printf "Where would you like to download it?\n"
-      while read _db_path; do
+      while read -e _db_path; do
         verify_path "${_db_path}"
       done
       break
