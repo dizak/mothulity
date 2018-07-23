@@ -29,13 +29,6 @@ Your are more than welcomed to contribute by:
 3. ```bash INSTALL.sh```
 
 
-### Update
-
-```
-bash UPDATE.sh
-```
-
-
 ### Usage
 
 #### Databases
