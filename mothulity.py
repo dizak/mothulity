@@ -496,9 +496,15 @@ def main():
     nmds_jc_html = None
     nmds_th_html = None
 # Read-in config file. CLI overrides default directory.
-    if args.set_config_path and os.path.exists(args.files_directory):
-        config_path_abs = os.path.abspath(args.set_config_path)
-        print "Using {} as config file.".format(config_path_abs)
+    if args.set_config_path:
+        if os.path.isfile(args.set_config_path):
+            config_path_abs = os.path.abspath(args.set_config_path)
+            print "Using {} as config file.".format(config_path_abs)
+            time.sleep(2)
+        else:
+            print "Failed to find or open {} config file. Using default.".format(args.set_config_path)
+            time.sleep(2)
+            config_path_abs = get_dir_path("mothulity.config")
     else:
         config_path_abs = get_dir_path("mothulity.config")
     config = ConfigParser.SafeConfigParser()
