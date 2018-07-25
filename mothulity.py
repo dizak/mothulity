@@ -583,14 +583,20 @@ def main():
         if not taxonomy_database_abs:
             print "No taxonomy database path defined in config nor command-line. Quitting..."
             exit()
-# Validate if input and output directories exist and make them absolute paths.
+# Validate if input and output directories exist and do not contain dashes. Then make them absolute paths. If dashes - quit from here.
     if os.path.exists(args.files_directory):
         files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
+        if "-" in files_directory_abs:
+            print "Mothur does not accept dashes in the paths. Please rename:\n{}".format(files_directory_abs)
+            exit()
     else:
         print "Input directory not found. Quitting..."
         exit()
     if os.path.exists(args.output_dir):
         output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
+        if "-" in output_dir_abs:
+            print "Mothur does not accept dashes in the paths. Please rename:\n{}".format(output_dir_abs)
+            exit()
     else:
         print "Output directory not found. Quitting..."
         exit()
