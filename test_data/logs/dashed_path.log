@@ -1,0 +1,2 @@
+Mothur does not accept dashes in the paths. Please rename:
+/home/travis/build/dizak/mothulity/test_data/dashed-dir/fastq/
