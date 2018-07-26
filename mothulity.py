@@ -483,7 +483,7 @@ def main():
                           dest="set_config_path",
                           metavar="",
                           default=None,
-                          help="Set temporary path to taxonomy database.")
+                          help="Set temporary path to config file.")
     args = parser.parse_args()
 # Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
     align_database_abs = None
