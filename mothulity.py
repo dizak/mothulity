@@ -478,6 +478,12 @@ def main():
                           metavar="",
                           default=None,
                           help="Set persistent path to taxonomy database.")
+    settings.add_argument("--set-config-path",
+                          action="store",
+                          dest="set_config_path",
+                          metavar="",
+                          default=None,
+                          help="Set temporary path to config file.")
     args = parser.parse_args()
 # Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
     align_database_abs = None
@@ -489,8 +495,18 @@ def main():
     raref_html = None
     nmds_jc_html = None
     nmds_th_html = None
-# Read-in config file.
-    config_path_abs = get_dir_path("mothulity.config")
+# Read-in config file. CLI overrides default directory.
+    if args.set_config_path:
+        if os.path.isfile(args.set_config_path):
+            config_path_abs = os.path.abspath(args.set_config_path)
+            print "Using {} as config file.".format(config_path_abs)
+            time.sleep(2)
+        else:
+            print "Failed to find or open {} config file. Using default.".format(args.set_config_path)
+            time.sleep(2)
+            config_path_abs = get_dir_path("mothulity.config")
+    else:
+        config_path_abs = get_dir_path("mothulity.config")
     config = ConfigParser.SafeConfigParser()
     config.read(config_path_abs)
 # Set config file options.

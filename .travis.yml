@@ -29,6 +29,10 @@ script:
   - diff test_data/analysis/single_smpl/script/analysis_travis_job.sh analysis_travis_job.sh --ignore-blank-lines --ignore-trailing-space
   - mothulity.py test_data/dashed-dir/fastq --dry-run -r bash > test_dashed_path.log
   - diff test_data/logs/dashed_path.log test_dashed_path.log --ignore-blank-lines --ignore-trailing-space
+  - mothulity.py test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --set-config-path test_data/config/mothulity.config > test_config_success.log
+  - diff test_data/logs/config_success.log test_config_success.log --ignore-blank-lines --ignore-trailing-space
+  - mothulity.py test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --set-config-path test_data/config/ > test_config_fail.log
+  - diff test_data/logs/config_fail.log test_config_fail.log --ignore-blank-lines --ignore-trailing-space
 
 notifications:
   email:
