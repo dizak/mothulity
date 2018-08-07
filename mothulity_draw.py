@@ -1,11 +1,13 @@
 #! /usr/bin/env python
 
 
+from __future__ import print_function
+import six
 from __author import __author__
 from __version import __version__
 from utilities import get_dir_path
 import os
-import ConfigParser
+from six.moves import configparser
 import argparse
 from Bio import Phylo as ph
 import matplotlib
@@ -71,8 +73,8 @@ def draw_rarefaction(input_file_name,
     plt.title(title)
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
-    with open(output_file_name, "w") as fout:
-        fout.write(mpld3.fig_to_html(fig))
+    with open(output_file_name, "wb") as fout:
+        fout.write(mpld3.fig_to_html(fig).encode('utf-8'))
 
 
 def draw_heatmap(input_file_name,
@@ -181,7 +183,7 @@ def draw_scatter(input_file_name,
     """
     df = read_csv(input_file_name,
                   sep=sep)
-    fig, ax = plt.subplots(subplot_kw=dict(axisbg=backgroud_color))
+    fig, ax = plt.subplots()
     scatter = ax.scatter(np.array(df[axis1_col]),
                          np.array(df[axis2_col]),
                          c=np.random.random(size=len(df)),
@@ -229,8 +231,8 @@ def summary2html(input_file_name,
                          index=False)
     html_str = "{0}{1}{2}".format(css_link,
                                   html_df,
-                                  js_str)
-    with open(output_file_name, "w") as fout:
+                                  js_str).encode("utf-8")
+    with open(output_file_name, "wb") as fout:
         fout.write(html_str)
 
 
@@ -428,8 +430,11 @@ def main():
     parser = argparse.ArgumentParser(prog="mothulity_draw",
                                      usage="mothulity_draw [OPTION]",
                                      description="draws plots from\
-                                     mothur-generated files.",
-                                     version="0.9.4")
+                                     mothur-generated files.")
+    parser.add_argument("-v",
+                        "--version",
+                        action="version",
+                        version=__version__)
     parser.add_argument(action="store",
                         dest="input_file_name",
                         metavar="path/to/input_file",
@@ -479,7 +484,7 @@ def main():
     args = parser.parse_args()
 
     config_path_abs = get_dir_path("mothulity.config")
-    config = ConfigParser.SafeConfigParser()
+    config = configparser.ConfigParser()
     config.read(config_path_abs)
     datatables_css = config.get("css", "datatables")
     datatables_js = get_dir_path(config.get("js", "datatables"))

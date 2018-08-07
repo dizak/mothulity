@@ -152,7 +152,7 @@ fi
 ### Set up and test mothulity
 
 # Create regular mothulity env from mothulity.yaml
-conda env create --file "${_mothulity_path}/mothulity.yaml" --force
+conda env create --file "${_mothulity_path}/mothulity.yaml" --name mothulity --force
 # Get python interpreter's location from the env
 . activate mothulity
 ENV_PYTHON=$(which python)

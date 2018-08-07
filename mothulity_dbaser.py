@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 
+from __future__ import print_function
+import six
 from __author import __author__
 from __version import __version__
 import os, sys
@@ -61,32 +63,35 @@ def download(download_directory,
         Path where the database files would be downloaded.
     """
     download_path = "{}/{}".format(download_directory, filename)
-    print "Download path: {}".format(download_path)
-    print "Connecting..."
+    print("Download path: {}".format(download_path))
+    print("Connecting...")
     try:
         res = get_db(url, download_path)
         if res == 200:
-            print "Downloading done!"
-            print "Unpacking..."
+            print("Downloading done!")
+            print("Unpacking...")
             os.system("{} {} {} {} {}".format(command,
                                               input_arg,
                                               download_path,
                                               output_arg,
                                               download_directory))
             os.system("rm {}".format(download_path))
-            print "Unpacking done!"
+            print("Unpacking done!")
         else:
-            print "Failed to establish connection. Response code {}".format(res)
+            print("Failed to establish connection. Response code {}".format(res))
     except Exception as e:
-        print "Failed to establish connection."
+        print("Failed to establish connection.")
 
 
 def main():
     parser = argparse.ArgumentParser(prog="mothulity_dbaser",
                                      usage="mothulity_dbaser [OPTION]",
                                      description="downloads mothur-suitable\
-                                     databases",
-                                     version=__version__)
+                                     databases")
+    parser.add_argument("-v",
+                        "--version",
+                        action="version",
+                        version=__version__)
     parser.add_argument(action="store",
                         dest="download_directory",
                         metavar="path/to/files",

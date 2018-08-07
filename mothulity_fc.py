@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 
 
+from __future__ import print_function
+import six
 from __author import __author__
 from __version import __version__
 import os
@@ -23,7 +25,7 @@ def names_sanitizer(files_directory,
     Examples
     -------
     >>> import os
-    >>> open("./tests/test-test-test.test", "w").close()
+    >>> open("./tests/test-test-test.test", "wb").close()
     >>> names_sanitizer("./tests", "-")
     >>> "testtesttest.test" in os.listdir("./tests/")
     True
@@ -85,7 +87,7 @@ def left_n_right_generator(files_directory,
     files_list = os.listdir(files_directory)
     files_list = [i for i in files_list if files_extension == i.split(".")[-1]]
     sample_names_list = [i.split(split_sign)[0] for i in files_list]
-    sample_names_list = list(set(sample_names_list))
+    sample_names_list = sorted(list(set(sample_names_list)))
     for i in sample_names_list:
         for ii in files_list:
             if i == ii.split(split_sign)[0] and left_reads_sign in ii:
@@ -105,8 +107,11 @@ def main():
                                      description="creates mothur-suitable\
                                                     <.files> file just upon the\
                                                     input file names. Removes\
-                                                    <-> from file names",
-                                     version="1.0.1")
+                                                    <-> from file names")
+    parser.add_argument("-v",
+                        "--version",
+                        action="version",
+                        version=__version__)
     parser.add_argument(action="store",
                         dest="files_directory",
                         metavar="path/to/files",

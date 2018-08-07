@@ -1,9 +1,11 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
 
+
+from __future__ import print_function
+import six
 from __author import __author__
 from __version import __version__
-from utilities import *
+import utilities
 import time
 import jinja2 as jj2
 import argparse
@@ -12,14 +14,11 @@ from tqdm import tqdm
 import os
 import sys
 import glob
-import ConfigParser
+from six.moves import configparser
 import shelve
 import pandas as pd
 from bs4 import BeautifulSoup as bs
-import utilities
 
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 
 def load_template_file(template_file,
@@ -75,8 +74,6 @@ def render_template(template_loaded,
     searchpath=".")
     >>> vars = {"word1": "ipsum", "word2": "adipisicing", "word3": "tempor"}
     >>> rt = render_template(lt, vars)
-    >>> isinstance(rt, unicode)
-    True
     >>> str(rt)
     'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.'
     """
@@ -96,7 +93,7 @@ def save_template(out_file_name,
     template_rendered: unicode
         Temlplate rendered to unicode object.
     """
-    with open(out_file_name, "w") as fout:
+    with open(out_file_name, "wb") as fout:
         fout.write(template_rendered.encode("utf-8"))
 
 
@@ -209,12 +206,15 @@ def main():
     parser = argparse.ArgumentParser(prog="mothulity",
                                      usage="mothulity [OPTION]",
                                      description="creates headnode-suitable\
-                                     mothur script",
-                                     version=__version__)
+                                     mothur script")
     headnode = parser.add_argument_group("headnode options")
     mothur = parser.add_argument_group("mothur options")
     advanced = parser.add_argument_group("advanced options")
     settings = parser.add_argument_group("configuration settings")
+    parser.add_argument("-v",
+                        "--version",
+                        action="version",
+                        version=__version__)
     parser.add_argument(action="store",
                         dest="files_directory",
                         metavar="path/to/files",
@@ -499,15 +499,15 @@ def main():
     if args.set_config_path:
         if os.path.isfile(args.set_config_path):
             config_path_abs = os.path.abspath(args.set_config_path)
-            print "Using {} as config file.".format(config_path_abs)
+            print("Using {} as config file.".format(config_path_abs))
             time.sleep(2)
         else:
-            print "Failed to find or open {} config file. Using default.".format(args.set_config_path)
+            print("Failed to find or open {} config file. Using default.".format(args.set_config_path))
             time.sleep(2)
-            config_path_abs = get_dir_path("mothulity.config")
+            config_path_abs = utilities.get_dir_path("mothulity.config")
     else:
-        config_path_abs = get_dir_path("mothulity.config")
-    config = ConfigParser.SafeConfigParser()
+        config_path_abs = utilities.get_dir_path("mothulity.config")
+    config = configparser.ConfigParser()
     config.read(config_path_abs)
 # Set config file options.
     if any([args.set_align_database_path,
@@ -530,30 +530,30 @@ def main():
         analysis_template = config.get("templates", "analysis")
         output_template = config.get("templates", "output")
     except Exception as e:
-        print "Templates not found in config file! Quitting..."
+        print("Templates not found in config file! Quitting...")
         time.sleep(2)
         exit()
     try:
         align_database_abs = config.get("databases", "align")
     except Exception as e:
-        print "Align database path not found in config file."
+        print("Align database path not found in config file.")
         time.sleep(2)
     try:
         taxonomy_database_abs = config.get("databases", "taxonomy")
     except Exception as e:
-        print "Taxonomy database path not found in config file."
+        print("Taxonomy database path not found in config file.")
         time.sleep(2)
     try:
         datatables_css = config.get("css", "datatables")
         w3_css = config.get("css", "w3")
     except Exception as e:
-        print "CSS links not found in config file! Output will not display properly!"
+        print("CSS links not found in config file! Output will not display properly!")
         time.sleep(2)
     try:
-        datatables_js = get_dir_path(config.get("js", "datatables"))
-        slideshow_js = get_dir_path(config.get("js", "slideshow"))
+        datatables_js = utilities.get_dir_path(config.get("js", "datatables"))
+        slideshow_js = utilities.get_dir_path(config.get("js", "slideshow"))
     except Exception as e:
-        print "Javascript links not found in config file. Output will not display properly!"
+        print("Javascript links not found in config file. Output will not display properly!")
         time.sleep(2)
 # Override databases paths from config file with CLI args if specified.
     if args.align_database:
@@ -578,27 +578,27 @@ def main():
 # Unless args.analysis_only or args.render_html are True - quit from here.
     if not args.analysis_only and not args.render_html:
         if not align_database_abs:
-            print "No align database path defined in config nor command-line. Quitting..."
+            print("No align database path defined in config nor command-line. Quitting...")
             exit()
         if not taxonomy_database_abs:
-            print "No taxonomy database path defined in config nor command-line. Quitting..."
+            print("No taxonomy database path defined in config nor command-line. Quitting...")
             exit()
 # Validate if input and output directories exist and do not contain dashes. Then make them absolute paths. If dashes - quit from here.
     if os.path.exists(args.files_directory):
         files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
         if "-" in files_directory_abs:
-            print "Mothur does not accept dashes in the paths. Please rename:\n{}".format(files_directory_abs)
+            print("Mothur does not accept dashes in the paths. Please rename:\n{}".format(files_directory_abs))
             exit()
     else:
-        print "Input directory not found. Quitting..."
+        print("Input directory not found. Quitting...")
         exit()
     if os.path.exists(args.output_dir):
         output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
         if "-" in output_dir_abs:
-            print "Mothur does not accept dashes in the paths. Please rename:\n{}".format(output_dir_abs)
+            print("Mothur does not accept dashes in the paths. Please rename:\n{}".format(output_dir_abs))
             exit()
     else:
-        print "Output directory not found. Quitting..."
+        print("Output directory not found. Quitting...")
         exit()
 # Read file globs from specified directories.
     shared_files_list = glob.glob("{}{}".format(files_directory_abs,
@@ -615,22 +615,22 @@ def main():
         if args.render_html is True:
             pass
         else:
-            print "More than 1 shared files found. Quitting..."
+            print("More than 1 shared files found. Quitting...")
             time.sleep(2)
             exit()
     elif len(shared_files_list) == 1:
         shared_file = shared_files_list[0]
-        print "Found {} shared file".format(shared_file)
+        print("Found {} shared file".format(shared_file))
         if len(tax_sum_files_list) != 1:
-            print "WARNING!!! No proper tax.summary file found. The analysis will be incomplete."
+            print("WARNING!!! No proper tax.summary file found. The analysis will be incomplete.")
             time.sleep(2)
             tax_sum_file = None
         else:
             tax_sum_file = tax_sum_files_list[0]
-            print "Found {} tax.summary file".format(tax_sum_file)
+            print("Found {} tax.summary file".format(tax_sum_file))
         if len(design_files_list) != 0:
             if len(design_files_list) > 1:
-                print "More than 1 design files found. Will skip this part of analysis."
+                print("More than 1 design files found. Will skip this part of analysis.")
                 time.sleep(2)
                 design_file = None
             else:
@@ -639,24 +639,24 @@ def main():
             design_file = None
         if any([args.analysis_only, args.render_html]) is True:
             shared_info = read_info_shared(shared_file)
-            print "Found {} shared file".format(shared_file)
+            print("Found {} shared file".format(shared_file))
             time.sleep(2)
         elif any([args.analysis_only, args.render_html]) is False:
-            print "Found shared file but you do not want to run the analysis on it. Running preprocessing would overwrite it. Quitting..."
+            print("Found shared file but you do not want to run the analysis on it. Running preprocessing would overwrite it. Quitting...")
             time.sleep(2)
             exit()
     elif len(shared_files_list) == 0:
         if any([args.analysis_only, args.render_html]) is True:
-            print "No shared file found. Quitting..."
+            print("No shared file found. Quitting...")
             time.sleep(2)
             exit()
         else:
             if os.path.isfile(align_database_abs) is False:
-                print "No align database found in {}. Quitting...".format(align_database_abs)
+                print("No align database found in {}. Quitting...".format(align_database_abs))
                 time.sleep(2)
                 exit()
             if os.path.isfile(taxonomy_database_abs) is False:
-                print "No taxonomy database found in {}. Quitting...".format(taxonomy_database_abs)
+                print("No taxonomy database found in {}. Quitting...".format(taxonomy_database_abs))
                 time.sleep(2)
                 exit()
             shared_file = None
@@ -679,7 +679,7 @@ def main():
 
     with open(logfile_name, "a") as fin:
         fin.write("{} was called with these arguments:\n\n".format(sys.argv[0]))
-        for k, v in vars(args).iteritems():
+        for k, v in vars(args).items():
             if v is not None:
                 fin.write("--{}: {}\n".format(k, v))
 # Load preproc_template if args.analysis_only and args.render_html are False.
@@ -687,7 +687,7 @@ def main():
 # Rest of the variables must explicitly set to None or zero.
     if all([args.analysis_only, args.render_html]) is False:
         loaded_template = load_template_file(preproc_template,
-                                             searchpath=get_dir_path())
+                                             searchpath=utilities.get_dir_path())
         label = args.label
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
@@ -695,21 +695,21 @@ def main():
 # Label, number of samples and junk groups must be read from shared file.
     if args.analysis_only is True:
         loaded_template = load_template_file(analysis_template,
-                                             searchpath=get_dir_path())
+                                             searchpath=utilities.get_dir_path())
         sampl_num = shared_info["samples_number"]
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
-        print "Detected {} groups with {} label".format(sampl_num, label)
+        print("Detected {} groups with {} label".format(sampl_num, label))
         time.sleep(2)
         if len(junk_grps) > 0:
-            print "{} can distort the analysis due to size too small".format(junk_grps)
+            print("{} can distort the analysis due to size too small".format(junk_grps))
             time.sleep(2)
             if args.keep_all is True:
-                print "All groups will be kept due to --keep-all argument"
+                print("All groups will be kept due to --keep-all argument")
                 time.sleep(2)
                 junk_grps = 0
             else:
-                print "{} will be removed".format(junk_grps)
+                print("{} will be removed".format(junk_grps))
                 time.sleep(2)
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
@@ -718,7 +718,7 @@ def main():
 # Output-html varialbles must explicitly set.
     if args.render_html is True:
         loaded_template = load_template_file(output_template,
-                                             searchpath=get_dir_path())
+                                             searchpath=utilities.get_dir_path())
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
         sampl_num = shared_info["samples_number"]

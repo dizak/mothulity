@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 
-
+from __future__ import print_function
+import six
 import unittest
-import ConfigParser
+from six.moves import configparser
 import subprocess as sp
 import utilities
 
@@ -15,7 +15,7 @@ class PathTests(unittest.TestCase):
         """
         Tests if mothulity is in the system $PATH variable.
         """
-        self.assertEqual(sp.check_output(["which", "mothulity.py"]).strip().split("/")[-1],
+        self.assertEqual(sp.check_output(["which", "mothulity.py"]).decode('utf-8').strip().split("/")[-1],
                          "mothulity.py")
 
 
@@ -66,7 +66,7 @@ class ConfigTests(unittest.TestCase):
                            ('JUMBO', 'nodes', '4'),
                            ('JUMBO', 'ntasks_per_node', '1'),
                            ('JUMBO', 'processors', '128')]
-        self.config = ConfigParser.SafeConfigParser()
+        self.config = configparser.ConfigParser()
         self.config.read("./tests/test.config")
 
     def test_config_file_read(self):
@@ -109,9 +109,9 @@ class UtilitiesTests(unittest.TestCase):
         self.values_1 = ["value1", "value2"]
         self.options_2 = ["option3"]
         self.values_2 = ["value3"]
-        self.config_1 = ConfigParser.SafeConfigParser()
+        self.config_1 = configparser.ConfigParser()
         self.config_1.read("tests/test1.config")
-        self.config_2 = ConfigParser.SafeConfigParser()
+        self.config_2 = configparser.ConfigParser()
         self.config_2.read("tests/test2.config")
 
     def test_set_config_new(self):

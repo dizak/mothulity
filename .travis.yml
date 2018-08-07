@@ -1,12 +1,15 @@
 language: python
-python: 2.7
 
 os: linux
 
+env:
+  - CONDA_PY=2
+  - CONDA_PY=3
+
 install:
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-  - bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda3
-  - export PATH=$HOME/miniconda3/bin:$PATH
+  - wget https://repo.continuum.io/miniconda/Miniconda${CONDA_PY}-latest-Linux-x86_64.sh
+  - bash Miniconda${CONDA_PY}-latest-Linux-x86_64.sh -b -p $HOME/miniconda${CONDA_PY}
+  - export PATH=$HOME/miniconda${CONDA_PY}/bin:$PATH
   - conda config --set always_yes yes --set changeps1 no
   - conda info -a
 
@@ -14,6 +17,7 @@ before_script:
   - mkdir $HOME/db/
 
 script:
+  - echo "  - python=${CONDA_PY}" >> mothulity.yaml
   - ./INSTALL.sh -p $HOME/db/ -t 1 -y
   - source $HOME/.bashrc
   - source activate mothulity
