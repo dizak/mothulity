@@ -1,0 +1,99 @@
+#! /usr/bin/env python
+
+
+from __future__ import print_function
+import six
+from six.moves import configparser
+import argparse
+try:
+    from mothulity import __version__
+except ImportError:
+    __version__ = "development"
+try:
+    from mothulity import utilities as mut
+except ImportError:
+    import utilities as mut
+
+
+def main():
+    parser = argparse.ArgumentParser(prog="mothulity_draw",
+                                     usage="mothulity_draw [OPTION]",
+                                     description="draws plots from\
+                                     mothur-generated files.")
+    parser.add_argument("-v",
+                        "--version",
+                        action="version",
+                        version=__version__)
+    parser.add_argument(action="store",
+                        dest="input_file_name",
+                        metavar="path/to/input_file",
+                        default=".",
+                        help="input file name. Default CWD.")
+    parser.add_argument("-o",
+                        "--output",
+                        dest="output_file_name",
+                        metavar="",
+                        default=None,
+                        help="output file name")
+    parser.add_argument("--rarefaction",
+                        action="store_true",
+                        dest="rarefaction",
+                        default=False,
+                        help="Draw rarefaction curves plot.")
+    parser.add_argument("--phylip",
+                        action="store_true",
+                        dest="phylip",
+                        default=False,
+                        help="Draw heatmap")
+    parser.add_argument("--tree",
+                        action="store_true",
+                        dest="tree",
+                        default=False,
+                        help="Draw dendrogram.")
+    parser.add_argument("--axes",
+                        action="store_true",
+                        dest="axes",
+                        default=False,
+                        help="Draw scatter plots.")
+    parser.add_argument("--summary-table",
+                        action="store_true",
+                        dest="summary_table",
+                        help="Convert summary table into fancy DataTable.")
+    parser.add_argument("--krona-xml",
+                        action="store_true",
+                        dest="krona_xml",
+                        default=False,
+                        help="Convert mothur's tax.summary file to\
+                        krona-compatible xml.")
+    parser.add_argument("--render-html",
+                        action="store_true",
+                        dest="render_html",
+                        default=False,
+                        help="Pass args into fancy html.")
+    args = parser.parse_args()
+
+    config_path_abs = mut.get_dir_path("../config/mothulity.config")
+    config = configparser.ConfigParser()
+    config.read(config_path_abs)
+    datatables_css = config.get("css", "datatables")
+    datatables_js = mut.get_dir_path("../js/{}".format(config.get("js", "datatables")))
+
+    if args.rarefaction is True:
+        mut.draw_rarefaction(args.input_file_name, args.output_file_name)
+    if args.phylip is True:
+        mut.draw_heatmap(args.input_file_name, args.output_file_name)
+    if args.tree is True:
+        mut.draw_tree(args.input_file_name, args.output_file_name)
+    if args.axes is True:
+        mut.draw_scatter(args.input_file_name, args.output_file_name)
+    if args.summary_table is True:
+        mut.summary2html(args.input_file_name,
+                     args.output_file_name,
+                     datatables_css,
+                     datatables_js)
+    if args.krona_xml is True:
+        mut.constr_krona_xml(args.input_file_name, args.output_file_name)
+
+
+if __name__ == '__main__':
+    main()

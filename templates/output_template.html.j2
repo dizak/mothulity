@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {{w3_css}}
+    {{sum_html.link}}
+    <title>16S/ITS amplicon report</title>
+    <style>
+      iframe {
+        border: none;
+        align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="w3-container w3-grey">
+      <h1>{{job_name}}</h1>
+      <h2>cutoff at {{label}}</h2>
+      {% if junk_grps|length > 0 %}
+      <h3>Groups removed before subsampling: {{junk_grps}}</h3>
+      {% else %}
+      {% endif %}
+      <article class="w3-container w3-margin w3-card-8 w3-white">
+        <h1>Alpha Biodiversity</h1>
+        <h2>Biodiversity within a sample</h2>
+        <h3>Rarefaction</h3>
+        {{ raref_html.div}}
+        <p>
+          Rarefaction curves for the observed OTUs at a genetic distance of {{label}}.
+        </p>
+        <div class="w3-row">
+          <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
+            <h4>Citations:</h4>
+            <p>
+              <a href="https://www.mothur.org/wiki/Rarefaction.single">MOTHUR command</a>
+            </p>
+            <p>
+              <a href="https://en.wikipedia.org/wiki/Rarefaction_(ecology)#cite_note-1">Wikipedia article</a>
+            </p>
+          </div>
+        </div>
+        <h3>OTU classification</h3>
+        {% if exclude_krona == True %}
+          <div id="krona">
+          </div>
+        {% else %}
+          <iframe src="alpha/{{job_name}}.krona.html" width="90%;" height="700px;"></iframe>
+        {% endif %}
+        <p>
+          Taxonomical representation of the observed OTUs.
+        </p>
+        <h3>Summary</h3>
+        {{ sum_html.table }}
+        <div class="w3-row">
+          <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
+            <h4>Citations:</h4>
+            <p>
+              <a href="https://www.mothur.org/wiki/Summary.single">MOTHUR command</a>
+            </p>
+          </div>
+        </div>
+      </article>
+      {% if sampl_num > 1 %}
+      <article class="w3-container w3-margin w3-card-8 w3-white">
+        <h1>Beta Biodiversity</h1>
+        <h2>Biodiversity among the samples</h2>
+        <h3>Dendrograms and Heatmaps</h3>
+        <div class="w3-row-padding">
+          <div class="w3-col l6 m12 s12">
+            <img src="beta/{{job_name}}.{{label}}.jclass.tre.svg" alt="Dendrogram Jaccard" width="100%;" height="100%;"/>
+            <p>
+              Dendrogram of the similarity between the communities based on Jaccard measurement.
+              Relative scale.
+            </p>
+          </div>
+          <div class="w3-col l6 m12 s12">
+            <img src="beta/{{job_name}}.jclass.dist.svg" alt="Heatmap Jaccard" width="100%;" height="100%;"/>
+            <p>
+              Community distance heatmap according to Jaccard measurement.
+            </p>
+          </div>
+        </div>
+        <div class="w3-row-padding">
+          <div class="w3-col l6 m12 s12">
+            <img src="beta/{{job_name}}.{{label}}.thetayc.tre.svg" alt="Dendrogram Yue and Clayton" width="100%;" height="100%;"/>
+            <p>
+              Dendrogram of the similarity between the communities based on Yue and Clayton measurement.
+              Relative scale.
+            </p>
+          </div>
+          <div class="w3-col l6 m12 s12">
+            <img src="beta/{{job_name}}.thetayc.dist.svg" alt="Heatmap Yue and Clayton" width="100%;" height="100%;"/>
+            <p>
+              Community distance heatmap according to Yue and Claytons measurement.
+            </p>
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
+            <h4>Citations:</h4>
+            <p>
+              <a href="https://www.mothur.org/wiki/Tree.shared">MOTHUR command</a>
+            </p>
+          </div>
+        </div>
+        <h3>NMDS</h3>
+        <div class="w3-row">
+          <div class="w3-col l6 m12 s12">
+            {{ nmds_jc_html.div }}
+            <p>
+              Non-metric multidimensional scaling (NMDS) analysis upon Jaccard measure of dissimilarity between all the samples.
+              Proximity of the points on the plot reflects similarities of bacterial communities structure.
+            </p>
+          </div>
+          <div class="w3-col l6 m12 s12">
+            {{ nmds_th_html.div }}
+            <p>
+              Non-metric multidimensional scaling (NMDS) analysis upon Yue and Clayton measure of dissimilarity between all the samples.
+              Proximity of the points on the plot reflects similarities of bacterial communities structure.
+            </p>
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-container w3-col l4 m4 s6 w3-margin w3-card-8 w3-black">
+            <h4>Citations:</h4>
+            <p>
+              <a href="https://www.mothur.org/wiki/Nmds">MOTHUR command</a>
+            </p>
+            <p>
+              <a href="https://en.wikipedia.org/wiki/Multidimensional_scaling">Wikipedia article</a>
+            </p>
+          </div>
+        </div>
+      </article>
+      {% else %}
+      {% endif %}
+    </section>
+    {{ raref_html.script }}
+    {{ sum_html.googleapis_script }}
+    {{ sum_html.datatables_script }}
+    {{ sum_html.script }}
+    {{ nmds_jc_html.script }}
+    {{ nmds_th_html.script }}
+  </body>
+</html>

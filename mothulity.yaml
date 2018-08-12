@@ -11,6 +11,7 @@ dependencies:
   - numpy<=1.13.3
   - pandas
   - seaborn
+  - jinja2
   - lxml
   - beautifulsoup4
   - mothur=1.38.1.1=boost1.60_0

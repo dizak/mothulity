@@ -1,0 +1,7 @@
+include requirements.txt
+include LICENSE
+include README.md
+include config/mothulity.config
+include templates/*j2
+include js/*js
+recursive-include bin/mothur/ *

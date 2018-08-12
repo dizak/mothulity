@@ -33,18 +33,18 @@ cp analysis_travis_job.shared ./alpha
 #Go to alpha directory and create krona chart, rarefaction, summary table
 
 cd ./alpha
-mothulity_draw.py analysis_travis_job.tax.summary --output analysis_travis_job.krona.xml  --krona-xml
+mothulity_draw analysis_travis_job.tax.summary --output analysis_travis_job.krona.xml  --krona-xml
 ktImportXML analysis_travis_job.krona.xml -o analysis_travis_job.krona.html
 mothur '#set.current(processors=1, shared=analysis_travis_job.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-ace-chao-jack-simpson-invsimpson-shannon-npshannon)'
-mothulity_draw.py analysis_travis_job.groups.rarefaction --output analysis_travis_job.raref.html --rarefaction
-mothulity_draw.py analysis_travis_job.groups.summary --output analysis_travis_job.sum.html --summary-table
+mothulity_draw analysis_travis_job.groups.rarefaction --output analysis_travis_job.raref.html --rarefaction
+mothulity_draw analysis_travis_job.groups.summary --output analysis_travis_job.sum.html --summary-table
 
 #Go to OTU directory
 
 cd ../
 
 #Render html output
-mothulity.py /home/travis/build/dizak/mothulity/test_data/analysis/single_smpl/shared_tax/ --render-html --job-name analysis_travis_job
+mothulity /home/travis/build/dizak/mothulity/test_data/analysis/single_smpl/shared_tax/ --render-html --job-name analysis_travis_job
 
 #Go to project's root directory
 

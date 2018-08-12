@@ -23,3 +23,7 @@ There are two options:
 - label-of-issue#number-of-issue
 
 For instance: no-email-notification#13 or cleaner-code-in-decision-tree#17 or bug#42
+
+## Installation for development
+
+mothulity is meant to be used after installation with pip. For local development, please add /path/to/mothulity-scripts/ and /path/to/mothulity/embedded/executables to your $PATH

@@ -13,7 +13,7 @@
 . activate mothulity
 
 ###Create *files file###
-mothulity_fc.py /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/ -o /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/travis_job.files
+mothulity_fc /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/ -o /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/travis_job.files
 
 ###Sequence preprocessing###
 mothur '#set.dir(input=/home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/, output=/home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/);
@@ -56,4 +56,4 @@ count.groups(shared=current)'
 
 
 ###Call mothulity for the analysis part###
-mothulity.py /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/ -n analysis_travis_job --output-dir /home/travis/build/dizak/mothulity/ --analysis-only -r bash
+mothulity /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/ -n analysis_travis_job --output-dir /home/travis/build/dizak/mothulity/ --analysis-only -r bash

@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+{% if run == "sbatch" or nodes %}
+#SBATCH --job-name="{{job_name}}"
+#SBATCH --partition={{partition}}
+#SBATCH --nodes={{nodes}}
+#SBATCH --ntasks-per-node={{ntasks_per_node}}
+#SBATCH --exclude=gpu[1-8]
+{% endif %}
+#Activate the env
+. activate mothulity
+
+###OTU approach analysis###
+
+#Create directories and shorten shared file name
+
+mkdir -p {{files_directory}}analysis/OTU/alpha {% if sampl_num > 1 %}{{files_directory}}analysis/OTU/beta{% else %}{% endif %}
+cp {{shared_file}} {{files_directory}}analysis/OTU/{{job_name}}.shared
+{% if tax_sum_file %}
+cp {{tax_sum_file}} {{files_directory}}analysis/OTU/alpha/{{job_name}}.tax.summary
+{% endif %}
+{% if junk_grps|length > 0 %}
+#Go to subdirectory, remove junk groups and subsample shared file
+
+cd {{files_directory}}analysis/OTU
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); remove.groups(shared=current, groups={{junk_grps}}); sub.sample(shared=current)'
+
+#Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory
+
+cp {{job_name}}.shared ./alpha
+cp {{job_name}}.{{label}}.pick.{{label}}.subsample.shared ./beta/{{job_name}}.{{label}}.subsample.shared
+{% else %}
+#Go to subdirectory, and subsample shared file
+
+cd {{files_directory}}analysis/OTU
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); sub.sample(shared=current)'
+
+#Copy non-subsampled shared file to alpha directory and subsampled shared file to beta directory
+
+cp {{job_name}}.shared ./alpha
+{% if sampl_num > 1 %}
+cp {{job_name}}.{{label}}.subsample.shared ./beta/
+{% endif %}
+{% endif %}
+#Go to alpha directory and create krona chart, rarefaction, summary table
+
+cd ./alpha
+mothulity_draw {{job_name}}.tax.summary --output {{job_name}}.krona.xml  --krona-xml
+ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-ace-chao-jack-simpson-invsimpson-shannon-npshannon)'
+mothulity_draw {{job_name}}.groups.rarefaction --output {{job_name}}.raref.html --rarefaction
+mothulity_draw {{job_name}}.groups.summary --output {{job_name}}.sum.html --summary-table
+{% if sampl_num > 1 %}
+
+#Go to beta directory and create dist files for Jaccard and YC measures
+
+cd ../beta
+mothur '#set.current(processors={{processors}}, shared={{job_name}}.{{label}}.subsample.shared); dist.shared(shared=current, calc=thetayc-jclass, output=square)'
+
+#Create phylogenetic tree for Jaccard and YC measures
+
+mothur '#tree.shared(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); tree.shared(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
+
+#Create scatter plots upon NMDS for Jaccard and YC measures
+
+mothur '#nmds(phylip={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist); nmds(phylip={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist)'
+
+{% if design_file %}
+#Test parsimony
+mothur '#parsimony(tree={{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre, group={{design_file}}.design, groups=all)'
+mothur '#parsimony(tree={{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre, group={{design_file}}.design, groups=all)'
+{% endif %}
+
+#Draw beta directory pictures for Jaccard and YC measures
+
+mothulity_draw {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.dist --output {{job_name}}.jclass.dist.svg --phylip
+mothulity_draw {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.tre --output {{job_name}}.{{label}}.jclass.tre.svg --tree
+mothulity_draw {{job_name}}.{{label}}.subsample.jclass.{{label}}.square.nmds.axes --output {{job_name}}.jclass.nmds.html --axes
+mothulity_draw {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.dist --output {{job_name}}.thetayc.dist.svg --phylip
+mothulity_draw {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.tre --output {{job_name}}.{{label}}.thetayc.tre.svg --tree
+mothulity_draw {{job_name}}.{{label}}.subsample.thetayc.{{label}}.square.nmds.axes --output {{job_name}}.thetayc.nmds.html --axes
+{% endif %}
+#Go to OTU directory
+
+cd ../
+
+#Render html output
+mothulity {{files_directory}} --render-html --job-name {{job_name}} {% if exclude_krona %}--exclude-krona{% endif %}
+
+#Go to project's root directory
+
+cd ../../
+
+#Zip the results
+
+zip -r {{job_name}}.zip analysis/
+{% if notify_email %}
+#Send mail
+headnode_notifier.py {{notify_email}} --subject '{{job_name}} analysis part has finished' --body 'Please download the attachment and inspect the results of {{job_name}}.{% if sampl_num == 1 %} Please note, that there was only one sample, therefore no beta analysis was carried out.{% endif%}' --attach {{job_name}}.zip
+{% endif %}

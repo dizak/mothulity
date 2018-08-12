@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+{% if run == "sbatch" or nodes %}
+#SBATCH --job-name="{{job_name}}"
+#SBATCH --partition={{partition}}
+#SBATCH --nodes={{nodes}}
+#SBATCH --exclusive
+#SBATCH --exclude=gpu[1-8]
+  {% if node_list %}
+#SBATCH --nodelist={{node_list}}
+  {% endif %}
+{% endif %}
+#Activate the env
+{% if nodes > 1 %}
+. activate mothulity_sm
+{% else %}
+. activate mothulity
+{% endif %}
+###Create *files file###
+mothulity_fc {{files_directory}} -o {{files_directory}}{{job_name}}.files
+{% if nodes > 1 %}
+########################
+# WARNING
+# Mothur was invoked on multiple nodes.
+# Please make sure it is the MPI-enabled version.
+# Processors argument will be removed from within Mothur.
+########################
+###Sequence preprocessing###
+srun mpirun mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
+{% else %}
+###Sequence preprocessing###
+mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
+set.current(processors={{processors}});
+{% endif %}
+make.contigs(file={{job_name}}.files);
+summary.seqs(fasta=current);
+{% if  min_length and max_length %}
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, maxlength={{max_length}}, minoverlap={{min_overlap}});
+{% elif min_length and max_length %}
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minlength={{min_length}}, minoverlap={{min_overlap}}, optimize=end, criteria={{screen_criteria}});
+{% elif min_length and max_length %}
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, maxlength={{max_length}}, minoverlap={{min_overlap}}, optimize=start, criteria={{screen_criteria}});
+{% else %}
+screen.seqs(fasta=current, contigsreport={{job_name}}.contigs.report, group=current, maxambig={{max_ambig}}, maxhomop={{max_homop}}, minoverlap={{min_overlap}}, optimize=start-end, criteria={{screen_criteria}});
+{% endif %}
+summary.seqs(fasta=current);
+{% if classify_ITS %}
+chop.seqs(fasta=current, group=current, numbases={{chop_length}});
+{% endif %}
+unique.seqs(fasta=current);
+count.seqs(name=current, group=current);
+{% if classify_ITS %}
+{% else %}
+align.seqs(fasta=current, reference={{align_database}});
+summary.seqs(fasta=current, count=current);
+screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria={{screen_criteria}});
+summary.seqs(fasta=current, count=current);
+filter.seqs(fasta=current, vertical=T, trump=.);
+unique.seqs(fasta=current, count=current);
+{% endif %}
+summary.seqs(fasta=current, count=current);
+pre.cluster(fasta=current, count=current, diffs={{precluster_diffs}});
+chimera.vsearch(fasta=current, count=current, dereplicate={{chimera_dereplicate}});
+remove.seqs(fasta=current, accnos=current);
+summary.seqs(fasta=current, count=current);
+classify.seqs(fasta=current, count=current, reference={{align_database}},
+taxonomy={{taxonomy_database}}, cutoff={{classify_seqs_cutoff}});
+{% if classify_ITS %}
+remove.lineage(fasta=current, count=current, taxonomy=current,
+taxon=Chloroplast-Mitochondria-unknown-Unknown);
+pairwise.seqs(fasta=current, cutoff={{cluster_cutoff}}, output=lt);
+  {% if full_ram_load %}
+cluster(phylip=current, cutoff={{cluster_cutoff}});
+  {% else %}
+cluster.split(phylip=current, cutoff={{cluster_cutoff}}, large=T);
+  {% endif %}
+{% else %}
+remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);
+  {% if full_ram_load %}
+dist.seqs(fasta=current, cutoff={{cluster_cutoff}});
+cluster(column=current, count=current, method={{cluster_method}});
+  {% else%}
+cluster.split(fasta=current, count=current, taxonomy=current, cutoff={{cluster_cutoff}}, large=T, method={{cluster_method}});
+  {% endif %}
+{% endif %}
+make.shared(list=current, count=current, label={{label}});
+classify.otu(list=current, count=current, taxonomy=current, label={{label}});
+count.groups(shared=current)'
+
+{% if notify_email %}
+###Send mail###
+headnode_notifier.py {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body 'Please login and inspect the results of {{job_name}}.'
+{% else %}
+{% endif %}
+###Call mothulity for the analysis part###
+mothulity {{files_directory}} -n analysis_{{job_name}} --output-dir {{output_dir}} --analysis-only {% if run %}-r {{run}}{% endif %} {% if notify_email %}--notify-email {{notify_email}}{% endif %}

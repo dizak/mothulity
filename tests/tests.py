@@ -4,19 +4,47 @@ import six
 import unittest
 from six.moves import configparser
 import subprocess as sp
-import utilities
+from mothulity import utilities
 
 
 class PathTests(unittest.TestCase):
     """
     Tests of the $PATH system variable.
     """
-    def test_path(self):
+    def test_mothulity_path(self):
         """
         Tests if mothulity is in the system $PATH variable.
         """
-        self.assertEqual(sp.check_output(["which", "mothulity.py"]).decode('utf-8').strip().split("/")[-1],
-                         "mothulity.py")
+        self.assertEqual(sp.check_output(["which", "mothulity"]).decode('utf-8').strip().split("/")[-1],
+                         "mothulity")
+
+    def test_mothulity_dbaser_path(self):
+        """
+        Tests if mothulity_dbaser is in the system $PATH variable.
+        """
+        self.assertEqual(sp.check_output(["which", "mothulity_dbaser"]).decode('utf-8').strip().split("/")[-1],
+                         "mothulity_dbaser")
+
+    def test_mothulity_draw_path(self):
+        """
+        Tests if mothulity_draw is in the system $PATH variable.
+        """
+        self.assertEqual(sp.check_output(["which", "mothulity_draw"]).decode('utf-8').strip().split("/")[-1],
+                         "mothulity_draw")
+
+    def test_mothulity_fc_path(self):
+        """
+        Tests if mothulity_fc is in the system $PATH variable.
+        """
+        self.assertEqual(sp.check_output(["which", "mothulity_fc"]).decode('utf-8').strip().split("/")[-1],
+                         "mothulity_fc")
+
+    def test_mothur_path(self):
+        """
+        Tests if mothur is in the system $PATH variable.
+        """
+        self.assertEqual(sp.check_output(["which", "mothur"]).decode('utf-8').strip().split("/")[-1],
+                         "mothur")
 
 
 class ConfigTests(unittest.TestCase):
