@@ -2,6 +2,8 @@
 layout: default
 ---
 
+[![Downloads](http://pepy.tech/badge/mothulity)](http://pepy.tech/project/mothulity)
+
 [FAQs](./faqs.html)
 
 
