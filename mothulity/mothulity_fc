@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 import six
+import argparse
 import pandas as pd
 try:
     from mothulity import __version__
@@ -76,8 +77,8 @@ def main():
     args = parser.parse_args()
 
     if args.original_names is False:
-        names_sanitizer(args.files_directory,
-                        "-")
+        mut.names_sanitizer(args.files_directory,
+                            "-")
     else:
         pass
     left_n_right = mut.left_n_right_generator(args.files_directory,
