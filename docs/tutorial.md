@@ -2,15 +2,6 @@
 layout: default
 ---
 
-[Home](./index.html)
-
-[FAQs](./faqs.html)
-
-[Tutorial](./tutorial.html)
-
-[Output Example](./analysis-example/analysis-my-first-mothulity-project.html)
-
-
 # Tutorial
 
 
