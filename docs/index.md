@@ -4,15 +4,17 @@ layout: default
 
 [![Downloads](http://pepy.tech/badge/mothulity)](http://pepy.tech/project/mothulity)
 
+[Home](./index.html)
+
 [FAQs](./faqs.html)
+
+[Tutorial](./tutorial.html)
 
 
 # mothulity
 
 
 Run your 16S/ITS **analysis** with a **single command**
-
-Install your **dependencies** running a single script and **no root**
 
 **Easily** queue your job on a **computing cluster**
 
