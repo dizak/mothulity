@@ -8,6 +8,8 @@ layout: default
 
 [Tutorial](./tutorial.html)
 
+[Output Example](./analysis-example/analysis-my-first-mothulity-project.html)
+
 Q: _Is mothulity the same thing as [Mothur](https://mothur.org/wiki/Main_Page)?_
 
 A: No. [Mothur](https://mothur.org/wiki/Main_Page) is a project developed by Pat Schloss and his collaborators.
