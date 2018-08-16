@@ -160,4 +160,4 @@ mothulity ~/MiSeq_SOP -r bash -n my_first_mothulity_project
 
 ```-n my_first_mothulity_project``` is used to name files, directories and give a title the final output.
 
-The output is placed in ```~/MiSeq_SOP/analysis/OTU/analysis_my_first_mothulity_project.html``` and should look like [this](../analysis_example/analysis_my_first_mothulity_project.html)
+The output is placed in ```~/MiSeq_SOP/analysis/OTU/analysis_my_first_mothulity_project.html``` and should look like [this](./analysis-example/analysis-my-first-mothulity-project.html)
