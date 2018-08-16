@@ -2,3 +2,4 @@ theme: jekyll-theme-minimal
 title: mothulity project
 description: run mothur with single command
 logo: /assets/img/logo.png
+google_analytics: UA-124060014-1
