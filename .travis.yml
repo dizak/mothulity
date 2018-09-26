@@ -22,6 +22,8 @@ install:
 
 before_script:
   - mkdir $HOME/db/
+  - hash ktImportXML
+  - hash mothur
 
 script:
   - python -m doctest mothulity/utilities.py -v

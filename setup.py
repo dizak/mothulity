@@ -8,6 +8,9 @@ j2_files = glob("templates/*j2")
 js_files = glob("js/*js")
 config_files = glob("config/*config")
 blast_bin_files = glob("bin/mothur/blast/bin/*")
+kronatools_img_files = glob("bin/kronatools/img/*")
+kronatools_lib_files = glob("bin/kronatools/lib/*")
+kronatools_src_files = glob("bin/kronatools/src/*")
 
 
 setup(
@@ -25,7 +28,11 @@ setup(
             "bin/mothur/mothur",
             "bin/mothur/uchime",
             "bin/mothur/vsearch",
+            "bin/kronatools/scripts/ktImportXML",
         ]),
+        ("img", kronatools_img_files),
+        ("lib", kronatools_lib_files),
+        ("src", kronatools_src_files),
     ],
     install_requires=open("requirements.txt").readlines(),
     description="Easy-to-use tool facilitating work with Mothur.",
