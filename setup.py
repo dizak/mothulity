@@ -34,6 +34,7 @@ setup(
         ("lib", kronatools_lib_files),
         ("src", kronatools_src_files),
     ],
+    python_requires='<3.7',
     install_requires=open("requirements.txt").readlines(),
     description="Easy-to-use tool facilitating work with Mothur.",
     long_description=open("README.md").read(),
