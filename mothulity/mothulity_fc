@@ -16,64 +16,81 @@ except ImportError:
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="mothur_files_creator",
-                                     usage="mothur_files_creator [directory] [OPTION]",
-                                     description="creates mothur-suitable\
-                                                    <.files> file just upon the\
-                                                    input file names. Removes\
-                                                    <-> from file names")
-    parser.add_argument("-v",
-                        "--version",
-                        action="version",
-                        version=__version__)
-    parser.add_argument(action="store",
-                        dest="files_directory",
-                        metavar="path/to/files",
-                        help="input directory path.")
-    parser.add_argument("-o",
-                        "--output",
-                        action="store",
-                        dest="output_file_name",
-                        metavar="",
-                        default="mothur.files",
-                        help="output file name. Default <mothur.files>")
-    parser.add_argument("-s",
-                        "--split-sign",
-                        action="store",
-                        dest="split_sign",
-                        metavar="",
-                        default="_",
-                        help="first group of characters before this sign is\
-                                recognized as sample name. Default <_>")
-    parser.add_argument("-e",
-                        "--files-extension",
-                        action="store",
-                        dest="files_extension",
-                        metavar="",
-                        default="fastq",
-                        help="reads files are recognized by this. Default\
-                                <fastq>")
-    parser.add_argument("-l",
-                        "--left-reads-sign",
-                        action="store",
-                        dest="left_reads_sign",
-                        metavar="",
-                        default="R1",
-                        help="left reads files are recognized by this.\
-                                Default <R1>")
-    parser.add_argument("-r",
-                        "--right-reads-sign",
-                        action="store",
-                        dest="right_reads_sign",
-                        metavar="",
-                        default="R2",
-                        help="right reads files are recognized by this.\
-                                Default <R2>")
-    parser.add_argument("--original-names",
-                        action="store_true",
-                        dest="original_names",
-                        default=False,
-                        help="use if you do not want to modify file names")
+    parser = argparse.ArgumentParser(
+        prog="mothur_files_creator",
+        usage="mothur_files_creator [directory] [OPTION]",
+        description="""
+        create mothur-suitable <.files> file just upon the input file names.
+        Removes <-> from file names.
+        """,
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=__version__,
+    )
+    parser.add_argument(
+        action="store",
+        dest="files_directory",
+        metavar="path/to/files",
+        help="input directory path.",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        action="store",
+        dest="output_file_name",
+        metavar="",
+        default="mothur.files",
+        help="output file name. Default <mothur.files>",
+    )
+    parser.add_argument(
+        "-s",
+        "--split-sign",
+        action="store",
+        dest="split_sign",
+        metavar="",
+        default="_",
+        help="""
+        first group of characters before this sign is recognized as
+        sample name. Default <_>.
+        """,
+    )
+    parser.add_argument(
+        "-e",
+        "--files-extension",
+        action="store",
+        dest="files_extension",
+        metavar="",
+        default="fastq",
+        help="reads files are recognized by this. Default <fastq>",
+    )
+    parser.add_argument(
+        "-l",
+        "--left-reads-sign",
+        action="store",
+        dest="left_reads_sign",
+        metavar="",
+        default="R1",
+        help="left reads files are recognized by this. Default <R1>",
+    )
+    parser.add_argument(
+        "-r",
+        "--right-reads-sign",
+        action="store",
+        dest="right_reads_sign",
+        metavar="",
+        default="R2",
+        help="right reads files are recognized by this. Default <R2>",
+    )
+    parser.add_argument(
+        "--original-names",
+        action="store_true",
+        dest="original_names",
+        default=False,
+        help="do not modify file names.",
+    )
 
     if len(sys.argv)==1:
         parser.print_help()
