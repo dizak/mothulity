@@ -29,7 +29,7 @@ script:
   - python -m doctest mothulity/utilities.py -v
   - python -m unittest -v tests.tests
   - mothulity_dbaser $HOME/db --unite-ITS-02
-  - mothulity . --set-align-database-path $HOME/db/Unite_ITS_02/UNITEv6_sh_99.fasta --set-taxonomy-database-path $HOME/db/Unite_ITS_02/UNITEv6_sh_99.tax
+  - mothulity --set-align-database-path $HOME/db/Unite_ITS_02/UNITEv6_sh_99.fasta --set-taxonomy-database-path $HOME/db/Unite_ITS_02/UNITEv6_sh_99.tax
   - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job
   - diff test_data/new_run/mltp_smpl/script/travis_job.sh travis_job.sh --ignore-blank-lines --ignore-trailing-space
   - mothulity test_data/analysis/mltp_smpl/shared_tax --dry-run -r bash -n analysis_travis_job --analysis-only

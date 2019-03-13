@@ -70,7 +70,17 @@ def main():
                         dest="render_html",
                         default=False,
                         help="Pass args into fancy html.")
-    args = parser.parse_args()
+
+    if len(sys.argv)==1:
+        parser.print_help()
+        parser.exit()
+
+    try:
+        args = parser.parse_args()
+    except SystemExit as error:
+        if error.code == 2:
+            parser.print_help()
+        parser.exit()
 
     config_path_abs = mut.get_dir_path("../config/mothulity.config")
     config = configparser.ConfigParser()
