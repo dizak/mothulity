@@ -37,7 +37,7 @@ setup(
     python_requires='<3.7',
     install_requires=open("requirements.txt").readlines(),
     description="Easy-to-use tool facilitating work with Mothur.",
-    long_description=open("README.md").read(),
+    long_description=open("README.md").read().split('\n\n\n### Contribution')[0],
     long_description_content_type="text/markdown",
     author_email="dariusz.izak@ibb.waw.pl",
     url="https://github.com/dizak/mothulity",
