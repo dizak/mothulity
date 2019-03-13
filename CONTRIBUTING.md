@@ -9,6 +9,8 @@ Below you can find the description of mothulity structure and contribution guide
 
 [Branch Names](#branch-names)
 
+[Indentation style](#indentation-style)
+
 [Hard-Coding](#hard-coding)
 
 [Testing](#testing)
@@ -45,6 +47,32 @@ The branch names **must** be named after issues so they **must** contain the cor
 
 For instance: BUG#42 or UPD#66 or ENH#13
 
+## Indentation style
+
+The indentation style is the one saving most space in the single line:
+
+  **BAD**
+
+  ```python
+  foo(bar, baz)
+  ```
+
+  **BAD**
+
+  ```python
+  foo(bar,
+      baz)
+  ```
+
+  **GOOD**
+
+  ```python
+  foo(
+    bar,
+    baz,
+  )
+  ```
+
 ## Hard-coding
 
 **No hard-coding is allowed**. The ```config``` file is meant for the persistent storage.
@@ -63,8 +91,10 @@ def f(arg1):
 **GOOD**
 
 ```python
-def f(arg1,
-      arg2='answer to everything'):
+def f(
+  arg1,
+  arg2='answer to everything',
+  ):
     if arg1 == arg2:
         return 42
 ```
