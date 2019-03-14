@@ -21,39 +21,46 @@ def main():
         usage="mothulity_dbaser [OPTION]",
         description="downloads mothur-suitable databases",
     )
-    parser.add_argument("-v",
+    parser.add_argument(
+        "-v",
         "--version",
         action="version",
         version=__version__,
     )
-    parser.add_argument(action="store",
+    parser.add_argument(
+        action="store",
         dest="download_directory",
         metavar="path/to/files",
         default=".",
         nargs="?",
         help="directory where the database is downloaded.",
     )
-    parser.add_argument("--unite-ITS-02",
+    parser.add_argument(
+        "--unite-ITS-02",
         action="store_true",
         dest="unite_ITS_02",
         help="download UNITE ITS 02.",
     )
-    parser.add_argument("--unite-ITS-s-02",
+    parser.add_argument(
+        "--unite-ITS-s-02",
         action="store_true",
         dest="unite_ITS_s_02",
         help="download UNITE ITS s 02.",
     )
-    parser.add_argument("--silva-102",
+    parser.add_argument(
+        "--silva-102",
         action="store_true",
         dest="silva_102",
         help="download Silva v102.",
     )
-    parser.add_argument("--silva-119",
+    parser.add_argument(
+        "--silva-119",
         action="store_true",
         dest="silva_119",
         help="download Silva v119.",
     )
-    parser.add_argument("--silva-123",
+    parser.add_argument(
+        "--silva-123",
         action="store_true",
         dest="silva_123",
         help="download Silva v123.",
