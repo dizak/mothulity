@@ -7,8 +7,6 @@
 #SBATCH --ntasks-per-node=6
 #SBATCH --exclude=gpu[1-8]
 
-#Activate the env
-. activate mothulity
 
 ###OTU approach analysis###
 

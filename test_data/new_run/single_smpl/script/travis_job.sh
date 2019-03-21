@@ -8,9 +8,6 @@
 #SBATCH --exclude=gpu[1-8]
 
 
-#Activate the env
-
-. activate mothulity
 
 ###Create *files file###
 mothulity_fc /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/ -o /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/travis_job.files

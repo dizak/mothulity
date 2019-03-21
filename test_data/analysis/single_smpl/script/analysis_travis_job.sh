@@ -7,14 +7,12 @@
 #SBATCH --ntasks-per-node=6
 #SBATCH --exclude=gpu[1-8]
 
-#Activate the env
-. activate mothulity
 
 ###OTU approach analysis###
 
 #Create directories and shorten shared file name
 
-mkdir -p /home/travis/build/dizak/mothulity/test_data/analysis/single_smpl/shared_tax/analysis/OTU/alpha 
+mkdir -p /home/travis/build/dizak/mothulity/test_data/analysis/single_smpl/shared_tax/analysis/OTU/alpha
 cp /home/travis/build/dizak/mothulity/test_data/analysis/single_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.shared /home/travis/build/dizak/mothulity/test_data/analysis/single_smpl/shared_tax/analysis/OTU/analysis_travis_job.shared
 
 cp /home/travis/build/dizak/mothulity/test_data/analysis/single_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.cons.tax.summary /home/travis/build/dizak/mothulity/test_data/analysis/single_smpl/shared_tax/analysis/OTU/alpha/analysis_travis_job.tax.summary
