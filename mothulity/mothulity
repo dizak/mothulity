@@ -164,12 +164,14 @@ def main():
              partition=<string>
              nodes=<integer>
              ntasks_per_node=<integer>
+             node_list=<integer>
              processors=<integer>".
         For instance:
             "name=small
              partition=short
              nodes=1
              ntasks_per_node=1
+             node_list=n42
              processors=12".
         """
     )
