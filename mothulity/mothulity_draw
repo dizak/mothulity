@@ -4,7 +4,7 @@
 from __future__ import print_function
 import six
 from six.moves import configparser
-import argparse
+import argparse, sys
 try:
     from mothulity import __version__
 except ImportError:
