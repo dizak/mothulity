@@ -48,12 +48,6 @@ def main():
         help="download UNITE ITS s 02.",
     )
     parser.add_argument(
-        "--silva-102",
-        action="store_true",
-        dest="silva_102",
-        help="download Silva v102.",
-    )
-    parser.add_argument(
         "--silva-119",
         action="store_true",
         dest="silva_119",
@@ -97,15 +91,6 @@ def main():
             output_arg="-d",
         )
 
-    if args.silva_102:
-        mut.download(
-            download_directory=args.download_directory,
-            filename="Silva.bacteria.zip",
-            url="https://www.mothur.org/w/images/9/98/Silva.bacteria.zip",
-            command="unzip",
-            input_arg="",
-            output_arg="-d",
-        )
         mut.download(
             download_directory=args.download_directory,
             filename="Silva.archaea.zip",
