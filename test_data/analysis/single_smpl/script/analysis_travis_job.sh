@@ -33,7 +33,7 @@ cp analysis_travis_job.shared ./alpha
 cd ./alpha
 mothulity_draw analysis_travis_job.tax.summary --output analysis_travis_job.krona.xml  --krona-xml
 ktImportXML analysis_travis_job.krona.xml -o analysis_travis_job.krona.html
-mothur '#set.current(processors=1, shared=analysis_travis_job.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-ace-chao-jack-simpson-invsimpson-shannon-npshannon)'
+mothur '#set.current(processors=1, shared=analysis_travis_job.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-ace-chao-jack-simpson-invsimpson-shannon-npshannon, subsample=T)'
 mothulity_draw analysis_travis_job.groups.rarefaction --output analysis_travis_job.raref.html --rarefaction
 mothulity_draw analysis_travis_job.groups.summary --output analysis_travis_job.sum.html --summary-table
 
