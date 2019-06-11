@@ -26,7 +26,7 @@ summary.seqs(fasta=current);
 unique.seqs(fasta=current);
 count.seqs(name=current, group=current);
 
-align.seqs(fasta=current, reference=/home/travis/db/Unite_ITS_02/UNITEv6_sh_99.fasta);
+align.seqs(fasta=current, reference=/home/travis/build/dizak/mothulity/test_data/database/t19.align);
 summary.seqs(fasta=current, count=current);
 screen.seqs(fasta=current, count=current, summary=current,  optimize=start-end, criteria=95);
 summary.seqs(fasta=current, count=current);
@@ -38,8 +38,8 @@ pre.cluster(fasta=current, count=current, diffs=2);
 chimera.vsearch(fasta=current, count=current, dereplicate=T);
 remove.seqs(fasta=current, accnos=current);
 summary.seqs(fasta=current, count=current);
-classify.seqs(fasta=current, count=current, reference=/home/travis/db/Unite_ITS_02/UNITEv6_sh_99.fasta,
-taxonomy=/home/travis/db/Unite_ITS_02/UNITEv6_sh_99.tax, cutoff=80);
+classify.seqs(fasta=current, count=current, reference=/home/travis/build/dizak/mothulity/test_data/database/t19.align,
+taxonomy=/home/travis/build/dizak/mothulity/test_data/database/t19.tax, cutoff=80);
 
 remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-Eukaryota-unknown-Unknown);
 

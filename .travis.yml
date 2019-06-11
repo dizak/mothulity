@@ -26,22 +26,62 @@ before_script:
   - hash mothur
 
 script:
+# Doctests
   - python -m doctest mothulity/utilities.py -v
+# Unittests
   - python -m unittest -v tests.tests
+# Database download test
   - mothulity_dbaser $HOME/db --unite-ITS-02
-  - mothulity --set-align-database-path $HOME/db/Unite_ITS_02/UNITEv6_sh_99.fasta --set-taxonomy-database-path $HOME/db/Unite_ITS_02/UNITEv6_sh_99.tax
-  - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job
+# Set persistent databases paths
+  - mothulity --set-align-database-path test_data/database/t19.align --set-taxonomy-database-path test_data/database/t19.tax
+# Run new analysis on multiple samples.
+  - mothulity test_data/new_run/mltp_smpl/fastq -r bash -n travis_job
+## Check results files list
+  - ls test_data/new_run/mltp_smpl/fastq/ --hide mothur*logfile > test_files_list
+  - diff test_data/new_run/mltp_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space
+## Check shared file content
+  - diff <(awk '{print $1,$2}' test_data/new_run/mltp_smpl/fastq/*shared) <(awk '{print $1,$2}' test_data/analysis/mltp_smpl/shared_tax/*shared)
+## Check tax.summary file content
+  - diff <(awk '{if ($1 <= 3) print $1,$2,$3}' test_data/new_run/mltp_smpl/fastq/*cons.tax.summary) <(awk '{if ($1 <= 3) print $1,$2,$3}' test_data/analysis/mltp_smpl/shared_tax/*cons.tax.summary)
+## Check the HTML report presence
+  - ls test_data/new_run/mltp_smpl/fastq/analysis/OTU/analysis_travis_job.html
+## Check the script content
   - diff test_data/new_run/mltp_smpl/script/travis_job.sh travis_job.sh --ignore-blank-lines --ignore-trailing-space
-  - mothulity test_data/analysis/mltp_smpl/shared_tax --dry-run -r bash -n analysis_travis_job --analysis-only
-  - diff test_data/analysis/mltp_smpl/script/analysis_travis_job.sh analysis_travis_job.sh --ignore-blank-lines --ignore-trailing-space
-  - mothulity test_data/new_run/single_smpl/fastq --dry-run -r bash -n travis_job
+# Run new analysis on a single sample.
+  - mothulity test_data/new_run/single_smpl/fastq -r bash -n travis_job
+## Check results files list
+  - ls test_data/new_run/single_smpl/fastq/ --hide mothur*logfile > test_files_list
+  - diff test_data/new_run/single_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space
+## Check shared file content
+  - diff <(awk '{print $1,$2}' test_data/new_run/single_smpl/fastq/*shared) <(awk '{print $1,$2}' test_data/analysis/single_smpl/shared_tax/*shared)
+## Check tax.summary file content
+  - diff <(awk '{if ($1 <= 3) print $1,$2,$3}' test_data/new_run/single_smpl/fastq/*cons.tax.summary) <(awk '{if ($1 <= 3) print $1,$2,$3}' test_data/analysis/single_smpl/shared_tax/*cons.tax.summary)
+## Check the HTML report presence 
+  - ls test_data/new_run/single_smpl/fastq/analysis/OTU/analysis_travis_job.html
+## Check the script content
   - diff test_data/new_run/single_smpl/script/travis_job.sh travis_job.sh --ignore-blank-lines --ignore-trailing-space
-  - mothulity test_data/analysis/single_smpl/shared_tax --dry-run -r bash -n analysis_travis_job --analysis-only
+# Run analysis on multiple samples
+  - mothulity test_data/analysis/mltp_smpl/shared_tax -r bash -n analysis_travis_job --analysis-only
+## Check results files list
+  - ls test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/ --hide mothur*logfile > test_files_list
+  - diff test_data/analysis/mltp_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space
+## Check the script content
+  - diff test_data/analysis/mltp_smpl/script/analysis_travis_job.sh analysis_travis_job.sh --ignore-blank-lines --ignore-trailing-space
+# Run analysis on a single sample
+  - mothulity test_data/analysis/single_smpl/shared_tax -r bash -n analysis_travis_job --analysis-only
+## Check results files list
+  - ls test_data/analysis/single_smpl/shared_tax/analysis/OTU/ --hide mothur*logfile > test_files_list
+  - diff test_data/analysis/single_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space
+## Check the script content
   - diff test_data/analysis/single_smpl/script/analysis_travis_job.sh analysis_travis_job.sh --ignore-blank-lines --ignore-trailing-space
+# Check how mothulity refuses to work with dashed directories
   - mothulity test_data/dashed-dir/fastq --dry-run -r bash > test_dashed_path.log
   - diff test_data/logs/dashed_path.log test_dashed_path.log --ignore-blank-lines --ignore-trailing-space
+# Check how mothulty saves setting to config file before running the analysis
+  - rm -r test_data/new_run/mltp_smpl/fastq/!(*fastq)
   - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --set-main-config-path test_data/config/mothulity.config > test_config_success.log
   - diff test_data/logs/config_success.log test_config_success.log --ignore-blank-lines --ignore-trailing-space
+# Check how mothulity refuses to save settign to non-existing config file
   - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --set-main-config-path test_data/config/ > test_config_fail.log
   - diff test_data/logs/config_fail.log test_config_fail.log --ignore-blank-lines --ignore-trailing-space
 
