@@ -77,6 +77,7 @@ cluster(column=current, count=current, method={{cluster_method}});
 cluster.split(fasta=current, count=current, taxonomy=current, cutoff={{cluster_cutoff}}, large=T, method={{cluster_method}});
   {% endif %}
 {% endif %}
+remove.rare(list=current, count=current, nseqs=2, label={{label}});
 make.shared(list=current, count=current, label={{label}});
 classify.otu(list=current, count=current, taxonomy=current, label={{label}});
 count.groups(shared=current)'
