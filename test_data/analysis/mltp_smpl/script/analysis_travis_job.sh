@@ -13,9 +13,9 @@
 #Create directories and shorten shared file name
 
 mkdir -p /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/alpha /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/beta
-cp /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.shared /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/analysis_travis_job.shared
+cp /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.shared /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/analysis_travis_job.shared
 
-cp /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.cons.tax.summary /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/alpha/analysis_travis_job.tax.summary
+cp /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.0.03.cons.tax.summary /home/travis/build/dizak/mothulity/test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/alpha/analysis_travis_job.tax.summary
 
 
 #Go to subdirectory, and subsample shared file
