@@ -46,6 +46,7 @@ remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast
 cluster.split(fasta=current, count=current, taxonomy=current, cutoff=0.03, large=T, method=agc);
 
 
+remove.rare(list=current, count=current, nseqs=2, label=0.03);
 make.shared(list=current, count=current, label=0.03);
 classify.otu(list=current, count=current, taxonomy=current, label=0.03);
 count.groups(shared=current)'
