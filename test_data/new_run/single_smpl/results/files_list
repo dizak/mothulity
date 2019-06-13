@@ -35,8 +35,8 @@ travis_job.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch
 travis_job.trim.contigs.good.unique.good.filter.unique.precluster.fasta
 travis_job.trim.contigs.good.unique.good.filter.unique.precluster.KA1k.map
 travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta
-travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.0.03.cons.tax.summary
 travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.0.03.cons.taxonomy
+travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.0.03.cons.tax.summary
 travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.count.summary
 travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.list
 travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.shared
