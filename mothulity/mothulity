@@ -427,6 +427,19 @@ def main():
         """
     )
     mothur.add_argument(
+        "--remove-rare-nseq",
+        action="store",
+        dest="remove_rare_nseq",
+        metavar="",
+        default=2,
+        help="""
+        Removes OTUs with total abundance less than or equal to nseqs.
+        --remove-rare-nseq 1 removes all singletons,
+        --remove-rare-nseq 0 prevents software from removing any OTU despite its rarity.
+        Default <2>.
+        """
+    )
+    mothur.add_argument(
         "--keep-all",
         action="store_true",
         dest="keep_all",
@@ -781,6 +794,7 @@ def main():
                      "cluster_method": args.cluster_method,
                      "full_ram_load": args.full_ram_load,
                      "label": label,
+                     "remove_rare_nseq": args.remove_rare_nseq,
                      "junk_grps": junk_grps,
                      "notify_email": args.notify_email,
                      "sampl_num": sampl_num,
