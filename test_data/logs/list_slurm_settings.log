@@ -1,0 +1,6 @@
+travis
+-------
+exclusive:
+nodes: 1
+partition: test
+processors: 12

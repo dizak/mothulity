@@ -1,31 +1,19 @@
 #!/usr/bin/env bash
-
-{% if run == "sbatch" or nodes %}
+{% if slurm_setting %}
 #SBATCH --job-name="{{job_name}}"
-#SBATCH --partition={{partition}}
-#SBATCH --nodes={{nodes}}
-#SBATCH --exclusive
-#SBATCH --exclude=gpu[1-8]
-  {% if node_list %}
-#SBATCH --nodelist={{node_list}}
-  {% endif %}
+  {%- for key, value in slurm_setting.items() %}
+    {%- if value|length > 0 %}
+#SBATCH --{{ key }}={{ value }}
+    {%- else %}
+#SBATCH --{{ key }}
+    {%- endif %}
+  {%- endfor %}
 {% endif %}
 ###Create *files file###
 mothulity_fc {{files_directory}} -o {{files_directory}}{{job_name}}.files
-{% if nodes > 1 %}
-########################
-# WARNING
-# Mothur was invoked on multiple nodes.
-# Please make sure it is the MPI-enabled version.
-# Processors argument will be removed from within Mothur.
-########################
-###Sequence preprocessing###
-srun mpirun mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
-{% else %}
 ###Sequence preprocessing###
 mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 set.current(processors={{processors}});
-{% endif %}
 make.contigs(file={{job_name}}.files);
 summary.seqs(fasta=current);
 {% if  min_length and max_length %}

@@ -5,6 +5,7 @@ from __future__ import print_function
 import six
 import sys
 import os
+import psutil
 from glob import glob
 from six.moves import configparser
 import jinja2 as jj2
@@ -97,6 +98,24 @@ def path2name(path,
         return str(path.split(slash)[-1].strip(hid_char))
     else:
         return str(path.split(slash)[-1].strip(hid_char).split(".")[0])
+
+
+def determine_cpus(memory_per_cpu=3):
+    """
+    Returns the number of CPUS to use assuming there must be a minimal size of
+    RAM per CPU core.
+
+    memory_per_cpu: int
+        GigaBytes of RAM that should be saved for a single CPU core. Default
+        <3>
+    """
+    cpus = psutil.cpu_count()
+    mem = psutil.virtual_memory().total / 1024 ** 3
+    supp_cpus = int(mem / memory_per_cpu)
+    if supp_cpus > cpus:
+        return cpus
+    else:
+        return supp_cpus
 
 
 def set_config(filename,

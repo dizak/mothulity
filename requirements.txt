@@ -10,3 +10,4 @@ jinja2
 lxml
 beautifulsoup4
 headnode-notifier
+psutil

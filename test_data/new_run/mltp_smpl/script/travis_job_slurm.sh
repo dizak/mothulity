@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 
+#SBATCH --job-name="travis_job_slurm"
+#SBATCH --exclusive
+#SBATCH --nodes=1
+#SBATCH --partition=test
+#SBATCH --processors=12
+
 ###Create *files file###
-mothulity_fc /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/ -o /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/travis_job.files
+mothulity_fc /home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/ -o /home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/travis_job_slurm.files
 
 ###Sequence preprocessing###
-mothur '#set.dir(input=/home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/, output=/home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/);
-set.current(processors=2);
+mothur '#set.dir(input=/home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/, output=/home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/);
+set.current(processors=12);
 
-make.contigs(file=travis_job.files);
+make.contigs(file=travis_job_slurm.files);
 summary.seqs(fasta=current);
 
-screen.seqs(fasta=current, contigsreport=travis_job.contigs.report, group=current, maxambig=0, maxhomop=8, minoverlap=25, optimize=start-end, criteria=95);
+screen.seqs(fasta=current, contigsreport=travis_job_slurm.contigs.report, group=current, maxambig=0, maxhomop=8, minoverlap=25, optimize=start-end, criteria=95);
 
 summary.seqs(fasta=current);
 
@@ -45,4 +51,4 @@ count.groups(shared=current)'
 
 
 ###Call mothulity for the analysis part###
-mothulity /home/travis/build/dizak/mothulity/test_data/new_run/single_smpl/fastq/ -n analysis_travis_job --output-dir /home/travis/build/dizak/mothulity/ --analysis-only -r bash
+mothulity /home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/ -n analysis_travis_job_slurm --output-dir /home/travis/build/dizak/mothulity/ --analysis-only -r sbatch

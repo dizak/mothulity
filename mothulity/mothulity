@@ -122,6 +122,16 @@ def main():
         prevents mothur script execution. Default <False>.
         """
     )
+    parser.add_argument(
+        "--processors",
+        action="store",
+        dest="processors",
+        metavar="",
+        default=None,
+        help="""
+        number of processors to use. Overrides any other source of this setting.
+        """
+    )
     databases.add_argument(
         "--set-align-database-path",
         action="store",
@@ -176,70 +186,13 @@ def main():
         """
     )
     slurm.add_argument(
-        "--partition",
-        action="store",
-        dest="partition",
-        metavar="",
-        default="long",
-        help="""
-        slurm's partition. Values: test, short, big, long, accel. Accel necessary
-        for phi/gpu nodes Default <long>.
-        """
-    )
-    slurm.add_argument(
-        "--nodes",
-        action="store",
-        dest="nodes",
-        metavar="",
-        default=1,
-        help="""
-        number of nodes. Default: <1>.
-        """
-    )
-    slurm.add_argument(
-        "--ntasks-per-node",
-        action="store",
-        dest="ntasks_per_node",
-        metavar="",
-        default=6,
-        help="""
-        number of tasks to invoke on each node. Default <6>
-        """
-    )
-    slurm.add_argument(
-        "--node-list",
-        action="store",
-        dest="node_list",
-        metavar="",
-        default=None,
-        help="""
-        request a specific list of nodes
-        """
-    )
-    slurm.add_argument(
-        "--processors",
-        action="store",
-        dest="processors",
-        metavar="",
-        default=1,
-        help="""
-        number of logical processors. Default: <24>.
-        """
-    )
-    slurm.add_argument(
-        "--resources",
-        action="store",
-        dest="resources",
-        metavar="",
-        default=None,
-        help="""
-        shortcut for slurm's resources reservation. Accepted values are: si<N>gle
-        for single n node. <S>mall, <M>edium, <L>arge, <XL>arge for regular
-        nodes with MPI. <PHI> for single phi node, <JUMBO> for two phi nodes.
-        Overrides all the other slurm arguments. WARNING! Options for MPI require
-        MPI-enabled version of mothur which is NOT included with mothulity and
-        must be compiled by the user and callable system-wide.
-        """
+    "--use-slurm-setting",
+    action="store",
+    dest="use_slurm_setting",
+    metavar="",
+    help="""
+    use previously set SLURM setting (with --add-slurm-setting).
+    """
     )
     mothur.add_argument(
         "--max-ambig",
@@ -494,6 +447,7 @@ def main():
 # Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
     align_database_abs = None
     taxonomy_database_abs = None
+    slurm_setting = None
     junk_grps = 0
     sampl_num = None
     krona_html = None
@@ -534,8 +488,8 @@ def main():
             exit()
         for section in slurm_config.sections():
             print(section, end="\n-------\n")
-            for key in slurm_config[section]:
-                print(key, slurm_mothu_config.get(section, key), sep=': ')
+            for k, v in slurm_config.items(section):
+                print(k, v, sep=': ')
         exit()
 # Set config file options.
     if any((args.set_align_database_path, args.set_taxonomy_database_path)):
@@ -548,13 +502,19 @@ def main():
             with open(mothu_config_path_abs, "w") as fout: mothu_config.write(fout)
         exit()
     if args.add_slurm_setting:
-        slurm_setting = dict(i.split("=") for i in args.add_slurm_setting.split())
+        slurm_setting = dict(
+            i.split("=")
+            if '=' in i
+            else (i, '')
+            for i in args.add_slurm_setting.split()
+            )
         section = slurm_setting['name']
         slurm_setting.pop('name')
-        slurm_config.read_dict({section: slurm_setting})
+        slurm_config.add_section(section)
+        for k, v in slurm_setting.items(): slurm_config.set(section, k, v)
         with open(slurm_config_path_abs, "w") as fout: slurm_config.write(fout)
         exit()
-# Read options from config file.
+# Read options from config file and wrap them up into proper variables
 # If config file is the only source of the variable content and it is not found - quit from here.
     try:
         preproc_template = mothu_config.get("templates", "preproc")
@@ -586,25 +546,21 @@ def main():
     except Exception as e:
         print("Javascript links not found in config file. Output will not display properly!")
         time.sleep(2)
+    if args.use_slurm_setting:
+        try:
+            slurm_setting = {
+                    k: v
+                    for k, v in slurm_config.items(args.use_slurm_setting)
+            }
+        except Exception as e:
+            print("SLURM setting not found in config file! Quitting...")
+            time.sleep(2)
+            exit()
 # Override databases paths from config file with CLI args if specified.
     if args.align_database:
         align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
     if args.taxonomy_database:
         taxonomy_database_abs = os.path.abspath(os.path.expanduser(args.taxonomy_database))
-# Override or not slurm options with args.resources.
-    if args.resources is not None:
-        node_list = None
-        resources = args.resources.upper()
-        partition = mothu_config.get(resources, "partition")
-        nodes = int(mothu_config.get(resources, "nodes"))
-        ntasks_per_node = int(mothu_config.get(resources, "ntasks_per_node"))
-        processors = int(mothu_config.get(resources, "processors"))
-    else:
-        nodes = args.nodes
-        node_list = args.node_list
-        ntasks_per_node = args.ntasks_per_node
-        processors = args.processors
-        partition = args.partition
 # Make sure essential variables that can be overriden by CLI are defined.
 # Unless args.analysis_only or args.render_html are True - quit from here.
     if not args.analysis_only and not args.render_html:
@@ -614,6 +570,10 @@ def main():
         if not taxonomy_database_abs:
             print("No taxonomy database path defined in config nor command-line. Quitting...")
             exit()
+    processors = mut.determine_cpus()
+    if slurm_setting:
+        if slurm_setting['processors']: processors = slurm_setting['processors']
+    if args.processors: processors = args.processors
 # Validate if input and output directories exist and do not contain dashes. Then make them absolute paths. If dashes - quit from here.
     if os.path.exists(args.files_directory):
         files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
@@ -771,11 +731,8 @@ def main():
                      "output_dir": output_dir_abs,
                      "job_name": args.job_name,
                      "run": args.run,
-                     "partition": partition,
-                     "nodes": nodes,
-                     "ntasks_per_node": ntasks_per_node,
-                     "node_list": node_list,
                      "processors": processors,
+                     "slurm_setting": slurm_setting,
                      "max_ambig": args.max_ambig,
                      "max_homop": args.max_homop,
                      "min_length": args.min_length,

@@ -36,8 +36,8 @@ script:
 # Run new analysis on multiple samples.
   - mothulity test_data/new_run/mltp_smpl/fastq -r bash -n travis_job
 ## Check results files list
-  - ls test_data/new_run/mltp_smpl/fastq/ --hide mothur*logfile > test_files_list
-  - diff test_data/new_run/mltp_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space
+  - ls --hide mothur*logfile test_data/new_run/mltp_smpl/fastq/  > test_files_list
+  - diff test_data/new_run/mltp_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space --ignore-matching-lines "mothur*logfile"
 ## Check shared file content
   - diff <(awk '{print $1,$2}' test_data/new_run/mltp_smpl/fastq/*shared) <(awk '{print $1,$2}' test_data/analysis/mltp_smpl/shared_tax/*shared)
 ## Check tax.summary file content
@@ -49,8 +49,8 @@ script:
 # Run new analysis on a single sample.
   - mothulity test_data/new_run/single_smpl/fastq -r bash -n travis_job
 ## Check results files list
-  - ls test_data/new_run/single_smpl/fastq/ --hide mothur*logfile > test_files_list
-  - diff test_data/new_run/single_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space
+  - ls --hide mothur*logfile test_data/new_run/single_smpl/fastq/  > test_files_list
+  - diff test_data/new_run/single_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space --ignore-matching-lines "mothur*logfile"
 ## Check shared file content
   - diff <(awk '{print $1,$2}' test_data/new_run/single_smpl/fastq/*shared) <(awk '{print $1,$2}' test_data/analysis/single_smpl/shared_tax/*shared)
 ## Check tax.summary file content
@@ -62,22 +62,32 @@ script:
 # Run analysis on multiple samples
   - mothulity test_data/analysis/mltp_smpl/shared_tax -r bash -n analysis_travis_job --analysis-only
 ## Check results files list
-  - ls test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/ --hide mothur*logfile > test_files_list
-  - diff test_data/analysis/mltp_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space
+  - ls --hide mothur*logfile test_data/analysis/mltp_smpl/shared_tax/analysis/OTU/ > test_files_list
+  - diff test_data/analysis/mltp_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space --ignore-matching-lines "mothur*logfile"
 ## Check the script content
   - diff test_data/analysis/mltp_smpl/script/analysis_travis_job.sh analysis_travis_job.sh --ignore-blank-lines --ignore-trailing-space
 # Run analysis on a single sample
   - mothulity test_data/analysis/single_smpl/shared_tax -r bash -n analysis_travis_job --analysis-only
 ## Check results files list
-  - ls test_data/analysis/single_smpl/shared_tax/analysis/OTU/ --hide mothur*logfile > test_files_list
-  - diff test_data/analysis/single_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space
+  - ls --hide mothur*logfile test_data/analysis/single_smpl/shared_tax/analysis/OTU/ > test_files_list
+  - diff test_data/analysis/single_smpl/results/files_list test_files_list --ignore-blank-lines --ignore-trailing-space --ignore-matching-lines "mothur*logfile"
 ## Check the script content
   - diff test_data/analysis/single_smpl/script/analysis_travis_job.sh analysis_travis_job.sh --ignore-blank-lines --ignore-trailing-space
+# Remove run
+  - rm -r test_data/new_run/mltp_smpl/fastq/!(*fastq)
+# Check slurm add/list/use
+## Add slurm setting
+  - mothulity . --add-slurm-setting "name=travis partition=test nodes=1 processors=12 exclusive"
+## List slurm setting
+  - diff <(mothulity . --list-slurm-settings | sort) <(sort test_data/logs/list_slurm_settings.log) --ignore-blank-lines --ignore-trailing-space
+## Generate mothur script with slurm flags
+  - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r sbatch -n travis_job_slurm --use-slurm-setting travis
+  - cat travis_job_slurm.sh
+  - diff <(sort test_data/new_run/mltp_smpl/script/travis_job_slurm.sh) <(sort travis_job_slurm.sh) --ignore-blank-lines --ignore-trailing-space
 # Check how mothulity refuses to work with dashed directories
   - mothulity test_data/dashed-dir/fastq --dry-run -r bash > test_dashed_path.log
   - diff test_data/logs/dashed_path.log test_dashed_path.log --ignore-blank-lines --ignore-trailing-space
 # Check how mothulty saves setting to config file before running the analysis
-  - rm -r test_data/new_run/mltp_smpl/fastq/!(*fastq)
   - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --set-main-config-path test_data/config/mothulity.config > test_config_success.log
   - diff test_data/logs/config_success.log test_config_success.log --ignore-blank-lines --ignore-trailing-space
 # Check how mothulity refuses to save settign to non-existing config file

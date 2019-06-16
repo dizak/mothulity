@@ -1,20 +1,11 @@
 #!/usr/bin/env bash
 
-
-#SBATCH --job-name="travis_job"
-#SBATCH --partition=long
-#SBATCH --nodes=1
-#SBATCH --exclusive
-#SBATCH --exclude=gpu[1-8]
-
-
-
 ###Create *files file###
 mothulity_fc /home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/ -o /home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/travis_job.files
 
 ###Sequence preprocessing###
 mothur '#set.dir(input=/home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/, output=/home/travis/build/dizak/mothulity/test_data/new_run/mltp_smpl/fastq/);
-set.current(processors=1);
+set.current(processors=2);
 
 make.contigs(file=travis_job.files);
 summary.seqs(fasta=current);
