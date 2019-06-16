@@ -19,6 +19,8 @@ layout: default
 
 [Running Analysis](#running-analysis)
 
+[Slurm Workload Manager](#slurm-md)
+
 ```mothulity``` is simple to use. Nevertheless, it won't hurt to show some brief usage example.
 
 
@@ -154,3 +156,52 @@ mothulity ~/MiSeq_SOP -r bash -n my_first_mothulity_project
 ```-n my_first_mothulity_project``` is used to name files, directories and give a title the final output.
 
 The output is placed in ```~/MiSeq_SOP/analysis/OTU/analysis_my_first_mothulity_project.html``` and should look like [this](./analysis-example/analysis-my-first-mothulity-project.html)
+
+
+## [Slurm Workload Manager](https://www.schedmd.com)
+
+
+```mothulity``` can be conveniently used with [Slurm Workload Manager](https://www.schedmd.com) so it is good idea to use it on your HPC/computing facility. It requires two steps:
+
+1. Configuration of your queues/jobs.
+
+1. Specifying the ```sbatch``` as shell to run.
+
+There are three options to manage [Slurm Workload Manager](https://www.schedmd.com):
+
+1.```--add-slurm-setting```
+
+1.```--list-slurm-settings```
+
+1. ```--use-slurm-setting```
+
+The user is free to go with any configuration really. A real-life example might be:
+
+1.
+```bash
+mothulity --add-slurm-setting "name=big_queue partition=long processors=32 exclusive"
+```
+
+The options specified here are used as SBATCH flags. The ```name``` keyword is reserved and is used to call the desired settings later on. The setting is permanent. Another setting with the same name would **overwrite the previous one**!
+
+1.
+```bash
+mothulity ~/MiSeq_SOP -n my_first_mothulity_project -r sbatch --use-slurm-setting big_queue
+```
+
+This tells ```mothulity``` to run the analysis using [SLURM](https://slurm.schedmd.com/) with previously defined ```big_queue``` settings. It renders:
+
+
+```bash
+#SBATCH --job-name="my_first_mothulity_project"
+#SBATCH --partition=test
+#SBATCH --exclusive
+```
+
+and puts it before the rest of the script that runs [Mothur](https://mothur.org/wiki/Main_Page)
+
+1. If you want to what settings are already saved - type:
+
+```bash
+mothulity --list-slurm-settings
+```
