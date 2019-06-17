@@ -881,3 +881,42 @@ def constr_krona_xml(input_file_name,
                         pretty_print=True,
                         xml_declaration=True,
                         encoding="utf-8")
+
+def define_region_pos(region):
+    """
+    Defines alignment database's region position.
+
+    Parameters
+    -------
+    region: str
+        region name/type
+    """
+    if region == "v3":
+        positions = [6388, 13861]
+    elif region == "v4":
+        positions = [11894, 25319]
+    elif region == "v3v4":
+        positions = [6388, 25319]
+    else:
+        print("Unknown region {}. Cannot cut alignment database.".format(region))
+        positions = False
+    return positions
+
+def dbcut_get_db_names(align_database_abs, region):
+    """
+    Get absolute path to tmp database and its final form (.align)
+    created during mothur's alignment customization.
+
+    Parameters
+    -------
+    align_database_abs: str
+        Absolute path to original align_database file.
+    region: str
+        Desired region name or coordinates.
+    """
+    splited_abs = os.path.splitext(align_database_abs)
+    raw_name = splited_abs[0]
+    extension = splited_abs[1]
+    cutted_db_tmp = raw_name + ".pcr" + extension
+    new_align_database_abs = raw_name + "_" + region + ".align"
+    return cutted_db_tmp, new_align_database_abs
