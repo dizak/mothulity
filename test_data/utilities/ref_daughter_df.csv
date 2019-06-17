@@ -1,0 +1,4 @@
+	taxlevel	rankID	taxon	daughterlevels	total	KA1k	QA1k
+4	4	0.1.1.1.1	Actinobacteria_unclassified	1	6	4	5
+7	4	0.1.1.1.2	Corynebacteriales	1	72	43	64
+10	4	0.1.1.1.3	Micrococcales	1	2	1	2

@@ -5,6 +5,7 @@ import unittest
 from six.moves import configparser
 import subprocess as sp
 from mothulity import utilities
+import pandas as pd
 
 
 class PathTests(unittest.TestCase):
@@ -142,6 +143,18 @@ class UtilitiesTests(unittest.TestCase):
         self.config_2 = configparser.ConfigParser()
         self.config_2.read("tests/test2.config")
 
+        self.ref_tax_summary_df = pd.read_csv(
+            'test_data/utilities/ref_daughter_df.csv',
+            sep='\t',
+            index_col=[0],
+        )
+        print(self.ref_tax_summary_df)
+        self.tax_summary_path = 'test_data/analysis/mltp_smpl/shared_tax/travis_job.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.agc.unique_list.0.03.pick.0.03.cons.tax.summary'
+        self.tax_summary_df = pd.read_csv(self.tax_summary_path, sep='\t')
+        self.mother_taxon = 'Actinobacteria'
+        self.mother_rank = '0.1.1.1' 
+        self.tax_level = 3
+
     def test_set_config_new(self):
         """
         Test if configuration is properly set in the config file with complete
@@ -173,3 +186,18 @@ class UtilitiesTests(unittest.TestCase):
                 for o in self.config_2.options(s):
                     self.test_values.append((s, o, self.config_2.get(s, o)))
             self.assertEqual(self.ref_values_2, self.test_values)
+
+    def test_get_daughter_df(self):
+        """
+        Test if daughter taxa are propely selected from the pandas.DataFrame
+        representing the tax.summary file.
+        """
+        pd.testing.assert_frame_equal(
+            self.ref_tax_summary_df,
+            utilities.get_daughter_df(
+                self.tax_summary_df,
+                self.mother_taxon,
+                self.mother_rank,
+                self.tax_level,
+            ),
+        )

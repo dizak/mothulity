@@ -721,7 +721,7 @@ def get_daughter_df(df,
                 (df.taxlevel == tax_level)]
     daughter_levels = int(sel_df.daughterlevels)
     if daughter_levels > 0:
-        mother_rank = sel_df.rankID.to_string(index=False)
+        mother_rank = sel_df.rankID.to_string(index=False).strip()
         daughter_df = df[df.rankID.str.contains('^{}\.\d+$'.format(mother_rank))]
         return daughter_df
 
