@@ -338,7 +338,7 @@ def main():
         "--alignment-region",
         action="store",
         dest="alignment_region",
-        metavar="6388-13861",
+        metavar="",
         default=False,
         help="""
         Cuts choosen alignment database to desired region.
@@ -347,7 +347,8 @@ def main():
         coordinates must be separate by '-'.
         In order to determine the coordinates perfectly matching used primers
         it is strongly recommended to follow PD Schloss guide
-        (available on mothur blog).
+        (available on mothur blog:
+        http://blog.mothur.org/2016/07/07/Customization-for-your-region/).
         """
     )
     mothur.add_argument(
@@ -690,7 +691,7 @@ def main():
             print("Wrong alignment customization specification: {}.".format(args.alignment_region))
         else: # len(region) == 1 case
             region_pos = mut.define_region_pos(args.alignment_region)
-        if region_pos == False:
+        if region_pos is False:
             print("""Type proper region name/coordinates for db cutting or use already existing database.""")
             time.sleep(2)
             exit()

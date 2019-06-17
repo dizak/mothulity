@@ -76,6 +76,11 @@ make.shared(list=current, count=current, label={{label}});
 classify.otu(list=current, count=current, taxonomy=current, label={{label}});
 count.groups(shared=current)'
 
+{% if dbcut_settings %}
+###Remove customized database###
+rm {{align_database}}
+{% endif %}
+
 {% if notify_email %}
 ###Send mail###
 headnode_notifier.py {{notify_email}} --subject '{{job_name}} sequence preprocessing part has finished' --body 'Please login and inspect the results of {{job_name}}.'
