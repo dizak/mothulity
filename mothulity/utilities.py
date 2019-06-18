@@ -899,7 +899,7 @@ def define_region_pos(region):
     -------
     >>> define_region_pos("v3")
     [6388, 13861]
-    >>> define_region_pos("v3v4r")
+    >>> define_region_pos("v3v4")
     [6388, 25319]
     """
     if region == "v3":
