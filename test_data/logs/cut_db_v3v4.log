@@ -1,0 +1,3 @@
+Alignment region custamization will be executed with the following parameters: 
+ original database: /home/travis/build/dizak/mothulity/test_data/database/t19.align,
+ region coordinates: 6388-25319

@@ -18,7 +18,6 @@ try:
 except ImportError:
     import utilities as mut
 
-
 def main():
     parser = argparse.ArgumentParser(
         prog="mothulity",
@@ -692,7 +691,7 @@ def main():
         else: # len(region) == 1 case
             region_pos = mut.define_region_pos(args.alignment_region)
         if region_pos is False:
-            print("""Type proper region name/coordinates for db cutting or use already existing database.""")
+            print("Type proper region name/coordinates for db cutting or use already existing database.")
             time.sleep(2)
             exit()
         org_db_abs = align_database_abs
@@ -700,6 +699,10 @@ def main():
         region_start = region_pos[0]
         region_end = region_pos[1]
         dbcut_settings = {"cut_out": cutted_db_tmp, "org_db": org_db_abs, "region_start": region_start, "region_end": region_end}
+        print("\nAlignment region custamization will be executed with",
+        "the following parameters: \n",
+        "original database: {},\n".format(org_db_abs),
+        "region coordinates: {}-{}".format(region_start, region_end, cutted_db_tmp))
     else:
         dbcut_settings = False
 # Get current time and create logfile.
