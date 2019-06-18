@@ -890,6 +890,17 @@ def define_region_pos(region):
     -------
     region: str
         region name/type
+    Returns
+    -------
+    list of integers
+        Coordinates (start and end point) of the region.
+
+    Examples
+    -------
+    >>> define_region_pos("v3")
+    [6388, 13861]
+    >>> path2name("v3v4r")
+    [6388, 25319]
     """
     if region == "v3":
         positions = [6388, 13861]
