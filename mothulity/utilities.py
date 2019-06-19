@@ -890,6 +890,7 @@ def define_region_pos(region):
     -------
     region: str
         region name/type
+
     Returns
     -------
     list of integers
@@ -924,6 +925,17 @@ def dbcut_get_db_names(align_database_abs, region):
         Absolute path to original align_database file.
     region: str
         Desired region name or coordinates.
+
+    Returns
+    -------
+    str, str
+        Abs path to cutted db (tmp file created by mothur)
+        Abs path to new customized alignment db.
+
+    Examples
+    -------
+    >>> dbcut_get_db_names("/home/user/foo.align","v3")
+    "/home/user/foo.pcr.align", "/home/user/foo_v3.align"
     """
     splited_abs = os.path.splitext(align_database_abs)
     raw_name = splited_abs[0]
