@@ -935,7 +935,7 @@ def dbcut_get_db_names(align_database_abs, region):
     Examples
     -------
     >>> dbcut_get_db_names("/home/user/foo.align","v3")
-    ("/home/user/foo.pcr.align", "/home/user/foo_v3.align")
+    ('/home/user/foo.pcr.align', '/home/user/foo_v3.align')
     """
     splited_abs = os.path.splitext(align_database_abs)
     raw_name = splited_abs[0]
