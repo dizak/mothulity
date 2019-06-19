@@ -11,6 +11,12 @@
 {% endif %}
 ###Create *files file###
 mothulity_fc {{files_directory}} -o {{files_directory}}{{job_name}}.files
+{% if dbcut_settings %}
+###Prepare database###
+mothur '#set.current(processors={{processors}});
+pcr.seqs(fasta={{dbcut_settings.org_db}}, start={{dbcut_settings.region_start}}, end={{dbcut_settings.region_end}}, keepdots=F)'
+mv {{dbcut_settings.cut_out}} {{align_database}}
+{% endif %}
 ###Sequence preprocessing###
 mothur '#set.dir(input={{files_directory}}, output={{files_directory}});
 set.current(processors={{processors}});
@@ -69,6 +75,11 @@ remove.rare(list=current, count=current, nseqs={{remove_rare_nseq}}, label={{lab
 make.shared(list=current, count=current, label={{label}});
 classify.otu(list=current, count=current, taxonomy=current, label={{label}});
 count.groups(shared=current)'
+
+{% if dbcut_settings %}
+###Remove customized database###
+rm {{align_database}}
+{% endif %}
 
 {% if notify_email %}
 ###Send mail###

@@ -55,7 +55,7 @@ script:
   - diff <(awk '{print $1,$2}' test_data/new_run/single_smpl/fastq/*shared) <(awk '{print $1,$2}' test_data/analysis/single_smpl/shared_tax/*shared)
 ## Check tax.summary file content
   - diff <(awk '{if ($1 <= 3) print $1,$2,$3}' test_data/new_run/single_smpl/fastq/*cons.tax.summary) <(awk '{if ($1 <= 3) print $1,$2,$3}' test_data/analysis/single_smpl/shared_tax/*cons.tax.summary)
-## Check the HTML report presence 
+## Check the HTML report presence
   - ls test_data/new_run/single_smpl/fastq/analysis/OTU/analysis_travis_job.html
 ## Check the script content
   - diff test_data/new_run/single_smpl/script/travis_job.sh travis_job.sh --ignore-blank-lines --ignore-trailing-space
@@ -93,6 +93,12 @@ script:
 # Check how mothulity refuses to save settign to non-existing config file
   - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --set-main-config-path test_data/config/ > test_config_fail.log
   - diff test_data/logs/config_fail.log test_config_fail.log --ignore-blank-lines --ignore-trailing-space
+# Check how mothulity proceedes with customizing alignment database (for v3v4 region)
+  - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --alignment-region v3v4 > test_cut_db_v3v4.log
+  - diff test_data/logs/cut_db_v3v4.log test_cut_db_v3v4.log --ignore-blank-lines --ignore-trailing-space
+# Check how mothulity refuse performing alignment database custamization (wrong coordinates)
+  - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --alignment-region 123-v4 > test_cut_db_fail.log
+  - diff test_data/logs/cut_db_fail.log test_cut_db_fail.log --ignore-blank-lines --ignore-trailing-space
 
 notifications:
   email:

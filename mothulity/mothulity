@@ -18,7 +18,6 @@ try:
 except ImportError:
     import utilities as mut
 
-
 def main():
     parser = argparse.ArgumentParser(
         prog="mothulity",
@@ -332,6 +331,23 @@ def main():
         help="""
         path/to/taxonomy-database. Used by classify.seqs as <taxonomy> argument.
         Default <~/db/Silva.nr_v119/silva.nr_v119.tax>.
+        """
+    )
+    mothur.add_argument(
+        "--alignment-region",
+        action="store",
+        dest="alignment_region",
+        metavar="",
+        default=False,
+        help="""
+        Cuts choosen alignment database to desired region.
+        Available options: v3, v4, v3v4, <start-end>.
+        In case of passing start-end posittion instead of region name,
+        coordinates must be separate by '-'.
+        In order to determine the coordinates perfectly matching used primers
+        it is strongly recommended to follow PD Schloss guide
+        (available on mothur blog:
+        http://blog.mothur.org/2016/07/07/Customization-for-your-region/).
         """
     )
     mothur.add_argument(
@@ -657,6 +673,38 @@ def main():
         "I don't know what you what me to do!!! There are no files I can recognize in here!"
         time.sleep(2)
         exit()
+# Set up alignment region cutting (if option was specified).
+# Note that task must be done after original align_database_abs path check.
+    if args.alignment_region:
+        region = args.alignment_region.split("-")
+        region_pos = False
+        if len(region) == 2:
+            try:
+                if int(region[0]) < int(region[1]):
+                    region_pos = region
+                else:
+                    print("Error: DB cut start position higher then the end one.")
+            except:
+                print("Error: DB alignment region coordinates contain both '-' and charaters different then numbers.")
+        elif len(region) > 2:
+            print("Wrong alignment customization specification: {}.".format(args.alignment_region))
+        else: # len(region) == 1 case
+            region_pos = mut.define_region_pos(args.alignment_region)
+        if region_pos is False:
+            print("Type proper region name/coordinates for db cutting or use already existing database.")
+            time.sleep(2)
+            exit()
+        org_db_abs = align_database_abs
+        cutted_db_tmp, align_database_abs = mut.dbcut_get_db_names(align_database_abs, args.alignment_region)
+        region_start = region_pos[0]
+        region_end = region_pos[1]
+        dbcut_settings = {"cut_out": cutted_db_tmp, "org_db": org_db_abs, "region_start": region_start, "region_end": region_end}
+        print("\nAlignment region custamization will be executed with",
+        "the following parameters: \n",
+        "original database: {},\n".format(org_db_abs),
+        "region coordinates: {}-{}".format(region_start, region_end, cutted_db_tmp))
+    else:
+        dbcut_settings = False
 # Get current time and create logfile.
     run_time_sig = "{}{}{}{}{}{}".format(time.localtime().tm_year,
                                          time.localtime().tm_mon,
@@ -733,6 +781,7 @@ def main():
                      "run": args.run,
                      "processors": processors,
                      "slurm_setting": slurm_setting,
+                     "dbcut_settings": dbcut_settings,
                      "max_ambig": args.max_ambig,
                      "max_homop": args.max_homop,
                      "min_length": args.min_length,
