@@ -1,0 +1,2 @@
+Error: DB alignment region coordinates contain both '-' and charaters different then numbers.
+Type proper region name/coordinates for db cutting or use already existing database.

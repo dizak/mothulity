@@ -96,6 +96,9 @@ script:
 # Check how mothulity proceedes with customizing alignment database (for v3v4 region)
   - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --alignment-region v3v4 > test_cut_db_v3v4.log
   - diff test_data/logs/cut_db_v3v4.log test_cut_db_v3v4.log --ignore-blank-lines --ignore-trailing-space
+# Check how mothulity refuse performing alignment database custamization (wrong coordinates)
+  - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --alignment-region 123-v4 > test_cut_db_fail.log
+  - diff test_data/logs/cut_db_fail.log test_cut_db_fail.log --ignore-blank-lines --ignore-trailing-space
 
 notifications:
   email:
