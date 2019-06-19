@@ -928,14 +928,14 @@ def dbcut_get_db_names(align_database_abs, region):
 
     Returns
     -------
-    str, str
-        Abs path to cutted db (tmp file created by mothur)
-        Abs path to new customized alignment db.
+    touple of strings
+        (Abs path to cutted db (tmp file created by mothur),
+        Abs path to new customized alignment db)
 
     Examples
     -------
     >>> dbcut_get_db_names("/home/user/foo.align","v3")
-    "/home/user/foo.pcr.align", "/home/user/foo_v3.align"
+    ("/home/user/foo.pcr.align", "/home/user/foo_v3.align")
     """
     splited_abs = os.path.splitext(align_database_abs)
     raw_name = splited_abs[0]
