@@ -588,7 +588,7 @@ def main():
             exit()
     processors = mut.determine_cpus()
     if slurm_setting:
-        if slurm_setting['processors']: processors = slurm_setting['processors']
+        if slurm_setting['processors']: processors = slurm_setting.pop('processors')
     if args.processors: processors = args.processors
 # Validate if input and output directories exist and do not contain dashes. Then make them absolute paths. If dashes - quit from here.
     if os.path.exists(args.files_directory):
