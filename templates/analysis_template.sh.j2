@@ -50,7 +50,7 @@ mothulity_draw {{job_name}}.tax.summary --output {{job_name}}.krona.xml  --krona
 ktImportXML {{job_name}}.krona.xml -o {{job_name}}.krona.html
 mothur '#set.current(processors={{processors}}, shared={{job_name}}.shared); rarefaction.single(shared=current, calc=sobs, freq=100); summary.single(shared=current, calc=nseqs-coverage-sobs-ace-chao-jack-simpson-invsimpson-shannon-npshannon, subsample=T)'
 mothulity_draw {{job_name}}.groups.rarefaction --output {{job_name}}.raref.html --rarefaction
-mothulity_draw {{job_name}}.groups.summary --output {{job_name}}.sum.html --summary-table
+mothulity_draw {{job_name}}.groups.ave-std.summary --output {{job_name}}.sum.html --summary-table
 {% if sampl_num > 1 %}
 
 #Go to beta directory and create dist files for Jaccard and YC measures
