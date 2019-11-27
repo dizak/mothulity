@@ -11,7 +11,8 @@ blast_bin_files = glob("bin/mothur/blast/bin/*")
 kronatools_img_files = glob("bin/kronatools/img/*")
 kronatools_lib_files = glob("bin/kronatools/lib/*")
 kronatools_src_files = glob("bin/kronatools/src/*")
-
+test_run_database = glob("test_data/database/*")
+test_run_samples = glob("test_data/new_run/mltp_smpl/fastq/*")
 
 setup(
     name="mothulity",
@@ -33,6 +34,8 @@ setup(
         ("img", kronatools_img_files),
         ("lib", kronatools_lib_files),
         ("src", kronatools_src_files),
+        ("test_run_database", test_run_database),
+        ("test_run_samples", test_run_samples)
     ],
     python_requires='<3.7, !=3.4',
     install_requires=open("requirements.txt").readlines(),

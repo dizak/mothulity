@@ -24,6 +24,7 @@ def main():
         usage="mothulity [OPTION]",
         description="creates slurm-suitable mothur script."
     )
+    test_run = parser.add_argument_group("get test-run data in CWD")
     databases = parser.add_argument_group("databases options")
     slurm = parser.add_argument_group("slurm options")
     mothur = parser.add_argument_group("mothur options")
@@ -129,6 +130,15 @@ def main():
         default=None,
         help="""
         number of processors to use. Overrides any other source of this setting.
+        """
+    )
+    test_run.add_argument(
+        "--get-test-run-data",
+        action="store_true",
+        dest="get_test_run_data",
+        default=False,
+        help="""
+        Copy the test-run database and samples set in your CWD.
         """
     )
     databases.add_argument(
@@ -460,6 +470,14 @@ def main():
             parser.print_help()
         parser.exit()
 
+# Copy the test-run set into the CWD
+    if args.get_test_run_data:
+        test_run_database_path_abs = mut.get_dir_path("../test_run_database")
+        test_run_samples_path_abs = mut.get_dir_path("../test_run_samples")
+        print("Copying the test-run files into your CWD...")
+        os.system("cp -r {} .".format(test_run_database_path_abs))
+        os.system("cp -r {} .".format(test_run_samples_path_abs))
+        exit()
 # Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
     align_database_abs = None
     taxonomy_database_abs = None

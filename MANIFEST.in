@@ -5,3 +5,5 @@ include config/mothulity.config
 include templates/*j2
 include js/*js
 recursive-include bin/mothur/ *
+include test_run_database/*
+include test_run_samples/*
