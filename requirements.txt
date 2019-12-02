@@ -1,7 +1,7 @@
 requests
 tqdm
 biopython
-matplotlib<=2.0.0
+matplotlib
 numpy
 pandas
 seaborn
