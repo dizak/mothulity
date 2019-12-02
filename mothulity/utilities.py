@@ -19,13 +19,14 @@ matplotlib.use('Agg')
 import pylab
 import matplotlib.pyplot as plt
 import matplotlib.style as style
-import mpld3
 import numpy as np
 from pandas import read_csv
 from seaborn import heatmap
 from seaborn import pairplot
 from seaborn import lmplot
 from lxml import etree as et
+import base64
+from io import BytesIO
 
 
 def get_dir_path(file_name=""):
@@ -314,9 +315,8 @@ def parse_html(input_file_name,
                 "googleapis_script": tags[3],
                 "datatables_script": tags[4],
                 "script": tags[5]}
-    elif html_type == "rarefaction" or html_type == "nmds":
-        return {"div": str(soup.div),
-                "script": str(soup.script)}
+    elif html_type == "nmds" or html_type == "rarefaction":
+        return {"img": soup.img}
 
 
 def names_sanitizer(files_directory,
@@ -439,8 +439,7 @@ def get_db(url,
     total_len = int(res.headers.get("content-length"))
     if res.status_code == 200:
         with open(save_path, "wb") as fout:
-            for i in tqdm(res.iter_content(chunk_size=chunk),
-                          total=total_len / chunk):
+            for i in tqdm(res.iter_content(chunk_size=chunk)):
                 fout.write(i)
     return res.status_code
 
@@ -521,17 +520,17 @@ def draw_rarefaction(input_file_name,
     fig, ax = plt.subplots()
     df[cols].plot(ax=ax,
                   figsize=figsize)
-    labels = list(df.columns.values)
-    for i in range(len(labels)):
-        tooltip = mpld3.plugins.LineLabelTooltip(ax.get_lines()[i],
-                                                 labels[i])
-        mpld3.plugins.connect(plt.gcf(), tooltip)
     plt.grid(True)
     plt.title(title)
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
-    with open(output_file_name, "wb") as fout:
-        fout.write(mpld3.fig_to_html(fig).encode('utf-8'))
+    # Embed the result in the html output.
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    encoded = base64.b64encode(buf.getvalue()).decode('utf-8')
+    html ='<img src=\'data:image/png;base64,{}\'>'.format(encoded)
+    with open(output_file_name, "w") as fout:
+        fout.write(html)
 
 
 def draw_heatmap(input_file_name,
@@ -639,20 +638,30 @@ def draw_scatter(input_file_name,
         Delimiter to use for reading-in axes file.
     """
     df = read_csv(input_file_name,
-                  sep=sep)
+                  sep=sep, 
+                  index_col=group_col)
     fig, ax = plt.subplots()
-    scatter = ax.scatter(np.array(df[axis1_col]),
-                         np.array(df[axis2_col]),
-                         c=np.random.random(size=len(df)),
-                         s=100,
-                         alpha=0.3,
-                         cmap=plt.cm.jet)
+    variants = set(df.index.values) 
+    for i, variant in enumerate(variants):
+        x = np.array(df.loc[variant][axis1_col])
+        y = np.array(df.loc[variant][axis2_col])
+        ax.scatter(x, 
+                   y, 
+                   s=point_size, 
+                   label=variant, 
+                   alpha=point_alpha, 
+                   cmap=plt.cm.jet(i))
+
+    ax.legend()
     ax.grid(color=grid_color, linestyle=grid_style)
     ax.set_title(title_text, size=title_size)
-    labels = list(df[group_col])
-    tooltip = mpld3.plugins.PointLabelTooltip(scatter, labels=labels)
-    mpld3.plugins.connect(fig, tooltip)
-    mpld3.save_html(fig, output_file_name)
+    # Embed the result in the html output.
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
+    encoded = base64.b64encode(buf.getvalue()).decode('utf-8')
+    html ='<img src=\'data:image/png;base64,{}\'>'.format(encoded)
+    with open(output_file_name, "w") as fout:
+        fout.write(html)
 
 
 def summary2html(input_file_name,
