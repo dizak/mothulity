@@ -18,7 +18,7 @@ Q: _How do I install mothulity?_
 A: With ```pip```:
 
 ```bash
-pip install mothulity
+pip install --user mothulity
 ```
 
 Using a virtual environment is advised. Not because mothulity is badly desined and has spaghetti-tangled dependencies hell.

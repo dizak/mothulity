@@ -21,6 +21,8 @@ layout: default
 
 [Slurm Workload Manager](#slurm-md)
 
+[Minified Test-Run Dataset](#minified-test-run-dataset)
+
 ```mothulity``` is simple to use. Nevertheless, it won't hurt to show some brief usage example.
 
 
@@ -33,7 +35,7 @@ It should be self-explainatory. If not - each step is explained in the subsequen
 
 ```bash
 mkdir databases_directory
-pip install mothulity
+pip install --user mothulity
 mothulity_dbaser databases_directory --silva-119
 --set-align-database-path databases_directory/silva.nr_v119.align
 --set-taxonomy-database-path databases_directory/silva.nr_v119.tax
@@ -80,13 +82,16 @@ this is how mothulity sees it:
 
 
 ```bash
-pip install mothulity
+pip install --user mothulity
 ```
 
 
 ```mothulity``` comes with [Mothur](https://mothur.org/wiki/Main_Page) bundled.
 If you are fine with this, go ahead and install it system-wide.
 Nevertheless, it is a good practise to install software in a separate, [virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtualenv/).
+Moreover, there is still an ongoing debate over where ```pip``` is supposed to store data files (on which ```mothulity``` depends heavily).
+The behaviour of ```pip``` in this matter can vary in different distributions.
+It is highly recommended that you use the ```--user``` option outside ```virtualenv```.
 
 
 ## Downloading Databases
@@ -205,3 +210,17 @@ and puts it before the rest of the script that runs [Mothur](https://mothur.org/
 ```bash
 mothulity --list-slurm-settings
 ```
+
+## Minified Test-Run Dataset
+
+The above example uses real data (real means any interpretation makes sense in real world) and real databases.
+If you just want to test if everything works as expected save yourself time and RAM, then you can use ```mothulity``` built-in test-run dataset.
+If ```mothulity``` is correctly installed - you do not need to download anything.
+Just type:
+
+```bash
+mothulity --get-test-run-data
+```
+
+It copies the test_run_database test_run_samples directories into your ```CWD```.
+The procedure work just the same as described above, the files are just much, much smaller.

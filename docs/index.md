@@ -18,7 +18,7 @@ Now it is **possible** and **easy** with ```mothulity```!
 
 
 ```bash
-pip install mothulity
+pip install --user mothulity
 ```
 
 
