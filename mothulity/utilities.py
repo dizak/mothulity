@@ -1,6 +1,11 @@
 #! /usr/bin/env python
 
 
+"""
+Functions used by the other parts of the package
+"""
+
+
 from __future__ import print_function
 import six
 import sys
