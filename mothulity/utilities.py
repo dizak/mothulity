@@ -7,31 +7,27 @@ Functions used by the other parts of the package
 
 
 from __future__ import print_function
-import six
-import sys
+from io import BytesIO
+import base64
 import os
+import sys
 import psutil
-from glob import glob
 from six.moves import configparser
-import jinja2 as jj2
-import pandas as pd
-from bs4 import BeautifulSoup as bs
-import requests as rq
-from tqdm import tqdm
+
 from Bio import Phylo as ph
-import matplotlib
-matplotlib.use('Agg')
-import pylab
-import matplotlib.pyplot as plt
-import matplotlib.style as style
-import numpy as np
+from bs4 import BeautifulSoup as bs
+from lxml import etree as et
 from pandas import read_csv
 from seaborn import heatmap
-from seaborn import pairplot
-from seaborn import lmplot
-from lxml import etree as et
-import base64
-from io import BytesIO
+from tqdm import tqdm
+import pylab
+import numpy as np
+import jinja2 as jj2
+import pandas as pd
+import requests as rq
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt#pylint: disable=wrong-import-position
 
 
 def get_dir_path(file_name=""):
