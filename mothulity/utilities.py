@@ -14,6 +14,8 @@ import sys
 import psutil
 from six.moves import configparser
 
+import matplotlib#pylint: disable=wrong-import-position
+matplotlib.use('Agg')#pylint: disable=wrong-import-position
 from Bio import Phylo as ph
 from bs4 import BeautifulSoup as bs
 from lxml import etree as et
@@ -25,9 +27,7 @@ import numpy as np
 import jinja2 as jj2
 import pandas as pd
 import requests as rq
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt#pylint: disable=wrong-import-position
+import matplotlib.pyplot as plt
 
 
 def get_dir_path(file_name=""):
