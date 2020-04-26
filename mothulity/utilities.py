@@ -115,8 +115,7 @@ def determine_cpus(memory_per_cpu=3):
     supp_cpus = int(mem / memory_per_cpu)
     if supp_cpus > cpus:
         return cpus
-    else:
-        return supp_cpus
+    return supp_cpus
 
 
 def set_config(filename,
