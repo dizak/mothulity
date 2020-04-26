@@ -98,8 +98,7 @@ def path2name(path,
     """
     if extension is True:
         return str(path.split(slash)[-1].strip(hid_char))
-    else:
-        return str(path.split(slash)[-1].strip(hid_char).split(".")[0])
+    return str(path.split(slash)[-1].strip(hid_char).split(".")[0])
 
 
 def determine_cpus(memory_per_cpu=3):
