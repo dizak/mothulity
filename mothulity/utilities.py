@@ -118,26 +118,6 @@ def determine_cpus(memory_per_cpu=3):
     return supp_cpus
 
 
-def set_config(filename,
-               section,
-               options,
-               values,
-               clean=False):
-    if os.path.exists(filename):
-        config = configparser.ConfigParser()
-        config.read(os.path.abspath(filename))
-        if clean and section in config.sections():
-            config.remove_section(section)
-        if section not in config.sections():
-            config.add_section(section)
-        for o, v in zip(options, values):
-            config.set(section, o, v)
-        with open(filename, "w") as fout:
-            config.write(fout)
-    else:
-        return None
-
-
 def load_template_file(template_file,
                        searchpath="/"):
     """
