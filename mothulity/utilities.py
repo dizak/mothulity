@@ -12,7 +12,6 @@ import base64
 import os
 import sys
 import psutil
-from six.moves import configparser
 
 import matplotlib#pylint: disable=wrong-import-position
 matplotlib.use('Agg')#pylint: disable=wrong-import-position
