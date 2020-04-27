@@ -141,9 +141,9 @@ def load_template_file(template_file,
     >>> isinstance(lt, jinja2.environment.Template)
     True
     """
-    template_Loader = jj2.FileSystemLoader(searchpath=searchpath)
-    template_Env = jj2.Environment(loader=template_Loader)
-    template = template_Env.get_template(template_file)
+    template_loader = jj2.FileSystemLoader(searchpath=searchpath)
+    template_env = jj2.Environment(loader=template_loader)
+    template = template_env.get_template(template_file)
     return template
 
 
