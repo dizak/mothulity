@@ -26,7 +26,7 @@ import numpy as np
 import jinja2 as jj2
 import pandas as pd
 import requests as rq
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt#pylint: disable=ungrouped-imports
 
 
 def get_dir_path(file_name=""):
