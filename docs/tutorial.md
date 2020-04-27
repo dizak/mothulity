@@ -72,7 +72,7 @@ this is how mothulity sees it:
 
   * The separator is ```_```.
   * The sample name is the first part of the name.
-  * ```R1``` means *left* and ```R2``` means *right*.
+  * ```R1``` means *forward* and ```R2``` means *backward*.
   * ```fastq``` extension means it is a valid file to take as an input.
 
 ## Installing
