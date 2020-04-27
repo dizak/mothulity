@@ -37,8 +37,8 @@ It should be self-explainatory. If not - each step is explained in the subsequen
 mkdir databases_directory
 pip install --user mothulity
 mothulity_dbaser databases_directory --silva-119
---set-align-database-path databases_directory/silva.nr_v119.align
---set-taxonomy-database-path databases_directory/silva.nr_v119.tax
+mothulity --set-align-database-path databases_directory/silva.nr_v119.align
+mothulity --set-taxonomy-database-path databases_directory/silva.nr_v119.tax
 mothulity project/fastq/directory -r bash -n my_first_mothulity_project
 ```
 
@@ -112,7 +112,7 @@ mothulity_dbaser ~/databases_directory --silva-119
 ## Setting Persistent Database Path
 
 
-```mothulity``` needs to know where the databases live.You can specify the path each time you run the analysis with:
+```mothulity``` needs to know where the databases live.You can specify the path each time you run the analysis using arguments:
 
 
 
@@ -129,11 +129,11 @@ and
 ```
 
 
-or you can set it persistently with:
+or you can set it persistently with commands:
 
 
 ```bash
---set-align-database-path ~/databases_directory/silva.nr_v119.align
+mothulity --set-align-database-path ~/databases_directory/silva.nr_v119.align
 ```
 
 
@@ -141,7 +141,7 @@ and
 
 
 ```bash
---set-taxonomy-database-path ~/databases_directory/silva.nr_v119.tax
+mothulity --set-taxonomy-database-path ~/databases_directory/silva.nr_v119.tax
 ```
 
 
