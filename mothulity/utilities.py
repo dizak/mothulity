@@ -195,10 +195,12 @@ def save_template(out_file_name,
 
 def read_info_shared(input_file_name,
                      min_fold=5,
-                     label_col="label",
-                     group_col="Group",
-                     otu_col="Otu",
-                     num_col="numOtus",
+                     cols={
+                         'label': 'label',
+                         'group': "Group",
+                         'otu': "Otu",
+                         'num': "numOtus",
+                     },
                      sep="\t",
                      format_junk_grps=True):
     """
@@ -239,13 +241,13 @@ def read_info_shared(input_file_name,
     >>> shared_info["junk_grps"]
     'F3D141-F3D143-F3D144'
     """
-    dtypes = {label_col: "str"}
+    dtypes = {cols['label']: "str"}
     shared_df = pd.read_csv(input_file_name, sep=sep, dtype=dtypes)
-    otus_cols = [i for i in shared_df.columns if otu_col in i and i != num_col]
-    grps_sizes = shared_df[[group_col] + otus_cols].sum(axis=1)
-    label = shared_df[label_col][0]
-    grps_num = len(shared_df[group_col])
-    sizes_df = pd.DataFrame({"GROUPS": shared_df[group_col],
+    otus_cols = [i for i in shared_df.columns if cols['otu'] in i and i != cols['num']]
+    grps_sizes = shared_df[[cols['group']] + otus_cols].sum(axis=1)
+    label = shared_df[cols['label']][0]
+    grps_num = len(shared_df[cols['group']])
+    sizes_df = pd.DataFrame({"GROUPS": shared_df[cols['group']],
                              "GROUP_SIZES": grps_sizes})
     threshold = sizes_df.GROUP_SIZES.mean() / min_fold
     size_bool = (sizes_df.GROUP_SIZES < threshold)
