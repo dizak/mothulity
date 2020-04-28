@@ -288,14 +288,14 @@ def parse_html(input_file_name,
                          "img_logo": body[2],
                          "noscript": body[3],
                          "div_krona": body[4]}}
-    elif html_type == "summary":
+    if html_type == "summary":
         tags = [str(i) for i in list(soup.children) if i != "\n"]
         return {"link": tags[0],
                 "table": tags[1],
                 "googleapis_script": tags[3],
                 "datatables_script": tags[4],
                 "script": tags[5]}
-    elif html_type == "nmds" or html_type == "rarefaction":
+    if html_type in ("nmds", "rarefaction"):
         return {"img": soup.img}
 
 
