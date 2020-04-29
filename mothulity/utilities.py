@@ -463,7 +463,7 @@ def download(download_directory,
             print("Unpacking done!")
         else:
             print("Failed to establish connection. Response code {}".format(res))
-    except Exception:
+    except rq.exceptions.ConnectionError:
         print("Failed to establish connection.")
 
 
