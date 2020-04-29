@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+#pylint: disable=invalid-name
 
 """
 Functions used by the other parts of the package
