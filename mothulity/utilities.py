@@ -503,7 +503,7 @@ def draw_rarefaction(input_file_name,
     cols = [i for i in df.columns if "lci" not in i]
     cols = [i for i in cols if "hci" not in i]
     df = df[cols]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     df[cols].plot(ax=ax,
                   figsize=figsize)
     plt.grid(True)
