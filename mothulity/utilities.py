@@ -627,15 +627,15 @@ def draw_scatter(input_file_name,
                   sep=sep,
                   index_col=group_col)
     _, ax = plt.subplots()
-    variants = set(df.index.values) 
+    variants = set(df.index.values)
     for i, variant in enumerate(variants):
         x = np.array(df.loc[variant][axis1_col])
         y = np.array(df.loc[variant][axis2_col])
-        ax.scatter(x, 
-                   y, 
-                   s=point_size, 
-                   label=variant, 
-                   alpha=point_alpha, 
+        ax.scatter(x,
+                   y,
+                   s=point_size,
+                   label=variant,
+                   alpha=point_alpha,
                    cmap=plt.cm.jet(i))
 
     ax.legend()
