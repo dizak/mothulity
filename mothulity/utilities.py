@@ -514,7 +514,7 @@ def draw_rarefaction(input_file_name,
     buf = BytesIO()
     plt.savefig(buf, format="png")
     encoded = base64.b64encode(buf.getvalue()).decode('utf-8')
-    html ='<img src=\'data:image/png;base64,{}\'>'.format(encoded)
+    html = '<img src=\'data:image/png;base64,{}\'>'.format(encoded)
     with open(output_file_name, "w") as fout:
         fout.write(html)
 
