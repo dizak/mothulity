@@ -624,7 +624,7 @@ def draw_scatter(input_file_name,
         Delimiter to use for reading-in axes file.
     """
     df = read_csv(input_file_name,
-                  sep=sep, 
+                  sep=sep,
                   index_col=group_col)
     fig, ax = plt.subplots()
     variants = set(df.index.values) 
