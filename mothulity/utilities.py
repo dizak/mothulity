@@ -423,7 +423,6 @@ def get_db(url,
     True
     """
     res = rq.get(url, stream=True)
-    total_len = int(res.headers.get("content-length"))
     if res.status_code == 200:
         with open(save_path, "wb") as fout:
             for i in tqdm(res.iter_content(chunk_size=chunk)):
