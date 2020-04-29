@@ -626,7 +626,7 @@ def draw_scatter(input_file_name,
     df = read_csv(input_file_name,
                   sep=sep,
                   index_col=group_col)
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     variants = set(df.index.values) 
     for i, variant in enumerate(variants):
         x = np.array(df.loc[variant][axis1_col])
