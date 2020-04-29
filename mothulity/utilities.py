@@ -589,7 +589,7 @@ def draw_scatter(input_file_name,
                  point_alpha=0.3,
                  grid_color="white",
                  grid_style="solid",
-                 backgroud_color="#EEEEEE",
+                 backgroud_color="#EEEEEE",#pylint: disable=unused-argument
                  sep="\t"):
     """
     Draw scatter plot from mothur's axes file and save figure to file.
