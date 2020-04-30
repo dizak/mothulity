@@ -650,7 +650,7 @@ def draw_scatter(input_file_name,
         fout.write(html)
 
 
-def summary2html(input_file_name,
+def summary2html(input_file_name,#pylint: disable=dangerous-default-value
                  output_file_name,
                  css_link,
                  js_input_file_name,
