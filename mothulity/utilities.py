@@ -194,7 +194,7 @@ def save_template(out_file_name,
         fout.write(template_rendered.encode("utf-8"))
 
 
-def read_info_shared(input_file_name,#pylint: disable=dangerous-default-value
+def read_info_shared(input_file_name,#pylint: disable=dangerous-default-value,too-many-locals
                      min_fold=5,
                      cols={
                          'label': 'label',
