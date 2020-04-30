@@ -827,7 +827,7 @@ def populate_count(df,
                 et.SubElement(count_elem, "val").text = str(ii)
 
 
-def constr_krona_xml(input_file_name,
+def constr_krona_xml(input_file_name,#pylint: disable=dangerous-default-value
                      output_file_name,
                      sep="\t",
                      root_tag="krona",
