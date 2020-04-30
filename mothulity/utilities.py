@@ -467,7 +467,7 @@ def download(download_directory,#pylint: disable=too-many-arguments
         print("Failed to establish connection.")
 
 
-def draw_rarefaction(input_file_name,
+def draw_rarefaction(input_file_name,#pylint: disable=too-many-arguments
                      output_file_name,
                      title="Rarefaction curve",
                      ylabel="OTU count",
