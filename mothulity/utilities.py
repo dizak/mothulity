@@ -717,7 +717,7 @@ def get_daughter_df(df,
     daughter_levels = int(sel_df.daughterlevels)
     if daughter_levels > 0:
         mother_rank = sel_df.rankID.to_string(index=False).strip()
-        daughter_df = df[df.rankID.str.contains('^{}\.\d+$'.format(mother_rank))]
+        daughter_df = df[df.rankID.str.contains('^{}\.\d+$'.format(mother_rank))]#pylint: disable=anomalous-backslash-in-string
         return daughter_df
 
 
