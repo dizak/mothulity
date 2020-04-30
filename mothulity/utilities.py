@@ -430,7 +430,7 @@ def get_db(url,
     return res.status_code
 
 
-def download(download_directory,
+def download(download_directory,#pylint: disable=too-many-arguments
              filename,
              url,
              command,
