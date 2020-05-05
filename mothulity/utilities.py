@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-#pylint: disable=invalid-name
+#pylint: disable=invalid-name,too-many-arguments,too-many-locals
 
 """
 Functions used by the other parts of the package
