@@ -636,7 +636,7 @@ def draw_scatter(input_file_name,
                    s=point_size,
                    label=variant,
                    alpha=point_alpha,
-                   cmap=plt.cm.jet(i))
+                   cmap=plt.cm.jet(i))#pylint: disable=no-member
 
     ax.legend()
     ax.grid(color=grid_color, linestyle=grid_style)
