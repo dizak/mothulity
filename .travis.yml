@@ -51,6 +51,8 @@ script:
   - diff <(awk '{if ($1 <= 3) print $1,$2,$3}' test_data/new_run/mltp_smpl/fastq/*cons.tax.summary) <(awk '{if ($1 <= 3) print $1,$2,$3}' test_data/analysis/mltp_smpl/shared_tax/*cons.tax.summary)
 ## Check the HTML report presence
   - ls test_data/new_run/mltp_smpl/fastq/analysis/OTU/analysis_travis_job.html
+## Check the HTML report content
+  - cat test_data/new_run/mltp_smpl/fastq/analysis/OTU/analysis_travis_job.html
 ## Check the script content
   - diff test_data/new_run/mltp_smpl/script/travis_job.sh travis_job.sh --ignore-blank-lines --ignore-trailing-space
 # Run new analysis on a single sample.
