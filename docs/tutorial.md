@@ -112,7 +112,7 @@ mothulity_dbaser ~/databases_directory --silva-119
 ## Setting Persistent Database Path
 
 
-```mothulity``` needs to know where the databases live.You can specify the path each time you run the analysis using arguments:
+```mothulity``` needs to know where the databases live. You can specify the paths each time you run the analysis using arguments:
 
 
 
@@ -126,6 +126,14 @@ and
 
 ```bash
 --taxonomy-database ~/databases_directory/silva.nr_v119.tax
+```
+
+
+so example usage would look like:
+
+
+```bash
+mothulity project/fastq/directory -r bash -n my_first_mothulity_project --align-database ~/databases_directory/silva.nr_v119.align --taxonomy-database ~/databases_directory/silva.nr_v119.tax
 ```
 
 
