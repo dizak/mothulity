@@ -37,8 +37,8 @@ It should be self-explainatory. If not - each step is explained in the subsequen
 mkdir databases_directory
 pip install --user mothulity
 mothulity_dbaser databases_directory --silva-119
---set-align-database-path databases_directory/silva.nr_v119.align
---set-taxonomy-database-path databases_directory/silva.nr_v119.tax
+mothulity --set-align-database-path databases_directory/silva.nr_v119.align
+mothulity --set-taxonomy-database-path databases_directory/silva.nr_v119.tax
 mothulity project/fastq/directory -r bash -n my_first_mothulity_project
 ```
 
@@ -72,7 +72,7 @@ this is how mothulity sees it:
 
   * The separator is ```_```.
   * The sample name is the first part of the name.
-  * ```R1``` means *left* and ```R2``` means *right*.
+  * ```R1``` means *forward* and ```R2``` means *backward*.
   * ```fastq``` extension means it is a valid file to take as an input.
 
 ## Installing
@@ -112,7 +112,7 @@ mothulity_dbaser ~/databases_directory --silva-119
 ## Setting Persistent Database Path
 
 
-```mothulity``` needs to know where the databases live.You can specify the path each time you run the analysis with:
+```mothulity``` needs to know where the databases live. You can specify the paths each time you run the analysis using arguments:
 
 
 
@@ -129,11 +129,19 @@ and
 ```
 
 
-or you can set it persistently with:
+so example usage would look like:
 
 
 ```bash
---set-align-database-path ~/databases_directory/silva.nr_v119.align
+mothulity project/fastq/directory -r bash -n my_first_mothulity_project --align-database ~/databases_directory/silva.nr_v119.align --taxonomy-database ~/databases_directory/silva.nr_v119.tax
+```
+
+
+or you can set it persistently with commands:
+
+
+```bash
+mothulity --set-align-database-path ~/databases_directory/silva.nr_v119.align
 ```
 
 
@@ -141,7 +149,7 @@ and
 
 
 ```bash
---set-taxonomy-database-path ~/databases_directory/silva.nr_v119.tax
+mothulity --set-taxonomy-database-path ~/databases_directory/silva.nr_v119.tax
 ```
 
 
@@ -174,22 +182,20 @@ The output is placed in ```~/MiSeq_SOP/analysis/OTU/analysis_my_first_mothulity_
 
 There are three options to manage [Slurm Workload Manager](https://www.schedmd.com):
 
-1.```--add-slurm-setting```
+1. ```--add-slurm-setting```
 
-1.```--list-slurm-settings```
+1. ```--list-slurm-settings```
 
 1. ```--use-slurm-setting```
 
 The user is free to go with any configuration really. A real-life example might be:
 
-1.
 ```bash
 mothulity --add-slurm-setting "name=big_queue partition=long processors=32 exclusive"
 ```
 
 The options specified here are used as SBATCH flags. The ```name``` keyword is reserved and is used to call the desired settings later on. The setting is permanent. Another setting with the same name would **overwrite the previous one**!
 
-1.
 ```bash
 mothulity ~/MiSeq_SOP -n my_first_mothulity_project -r sbatch --use-slurm-setting big_queue
 ```
@@ -205,7 +211,7 @@ This tells ```mothulity``` to run the analysis using [SLURM](https://slurm.sched
 
 and puts it before the rest of the script that runs [Mothur](https://mothur.org/wiki/Main_Page)
 
-1. If you want to what settings are already saved - type:
+If you want to what settings are already saved - type:
 
 ```bash
 mothulity --list-slurm-settings
