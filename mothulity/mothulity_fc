@@ -18,7 +18,7 @@ except ImportError:
     import utilities as mut
 
 
-def main():
+def main():#pylint: disable=missing-function-docstring
     parser = argparse.ArgumentParser(
         prog="mothur_files_creator",
         usage="mothur_files_creator [directory] [OPTION]",
