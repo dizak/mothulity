@@ -1,5 +1,8 @@
 #! /usr/bin/env python
 
+"""
+CLI utility for generating plots on mothur output
+"""
 
 from __future__ import print_function
 import six
