@@ -68,7 +68,7 @@ def main():#pylint: disable=missing-function-docstring
         help="download Silva v132.",
     )
 
-    if len(sys.argv)==1:
+    if len(sys.argv) == 1:
         parser.print_help()
         parser.exit()
 
