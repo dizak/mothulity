@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+"""
+CLI utility for downloading databases
+"""
 
 from __future__ import print_function
 import six
