@@ -479,7 +479,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         print("Copying the test-run files into your CWD...")
         os.system("cp -r {} .".format(test_run_database_path_abs))
         os.system("cp -r {} .".format(test_run_samples_path_abs))
-        exit()
+        sys.exit(0)
 # Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
     align_database_abs = None
     taxonomy_database_abs = None
@@ -521,12 +521,12 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
     if args.list_slurm_settings:
         if len(slurm_config.sections()) == 0:
             print("No SLURM settings defined.")
-            exit()
+            sys.exit(1)
         for section in slurm_config.sections():
             print(section, end="\n-------\n")
             for k, v in slurm_config.items(section):
                 print(k, v, sep=': ')
-        exit()
+        sys.exit(0)
 # Set config file options.
     if any((args.set_align_database_path, args.set_taxonomy_database_path)):
         if "databases" not in mothu_config.sections(): mothu_config.add_section("databases")
