@@ -17,7 +17,7 @@ except ImportError:
     import utilities as mut
 
 
-def main():
+def main():#pylint: disable=missing-function-docstring
     parser = argparse.ArgumentParser(
         prog="mothulity_dbaser",
         usage="mothulity_dbaser [OPTION]",
