@@ -5,9 +5,9 @@ CLI utility for generating plots on mothur output
 """
 
 from __future__ import print_function
-import six
+import argparse
+import sys
 from six.moves import configparser
-import argparse, sys
 try:
     from mothulity import __version__
 except ImportError:
