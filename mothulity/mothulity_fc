@@ -111,11 +111,13 @@ def main():#pylint: disable=missing-function-docstring
                             "-")
     else:
         pass
-    left_n_right = mut.left_n_right_generator(args.files_directory,
-                                          args.split_sign,
-                                          args.files_extension,
-                                          args.left_reads_sign,
-                                          args.right_reads_sign)
+    left_n_right = mut.left_n_right_generator(
+        args.files_directory,
+        args.split_sign,
+        args.files_extension,
+        args.left_reads_sign,
+        args.right_reads_sign,
+    )
     files_dataframe = pd.merge(left=pd.DataFrame(left_n_right["left"]),
                                right=pd.DataFrame(left_n_right["right"]),
                                on="name")
