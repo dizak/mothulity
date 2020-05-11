@@ -197,13 +197,13 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         """
     )
     slurm.add_argument(
-    "--use-slurm-setting",
-    action="store",
-    dest="use_slurm_setting",
-    metavar="",
-    help="""
-    use previously set SLURM setting (with --add-slurm-setting).
-    """
+        "--use-slurm-setting",
+        action="store",
+        dest="use_slurm_setting",
+        metavar="",
+        help="""
+        use previously set SLURM setting (with --add-slurm-setting).
+        """
     )
     mothur.add_argument(
         "--max-ambig",
