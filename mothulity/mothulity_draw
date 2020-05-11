@@ -120,10 +120,12 @@ def main():#pylint: disable=missing-function-docstring
     if args.axes is True:
         mut.draw_scatter(args.input_file_name, args.output_file_name)
     if args.summary_table is True:
-        mut.summary2html(args.input_file_name,
-                     args.output_file_name,
-                     datatables_css,
-                     datatables_js)
+        mut.summary2html(
+            args.input_file_name,
+            args.output_file_name,
+            datatables_css,
+            datatables_js,
+        )
     if args.krona_xml is True:
         mut.constr_krona_xml(args.input_file_name, args.output_file_name)
 
