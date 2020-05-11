@@ -38,6 +38,15 @@ def main():
         version=__version__
     )
     parser.add_argument(
+        "--citation",
+        action="store_true",
+        dest="citation",
+        default=False,
+        help="""
+        displays information how to cite the tool and exit.
+        """
+    )
+    parser.add_argument(
         action="store",
         dest="files_directory",
         metavar="path/to/files",
@@ -459,15 +468,22 @@ def main():
         """
     )
 
-    if len(sys.argv)==1:
-        parser.print_help()
-        parser.exit()
-
     try:
         args = parser.parse_args()
     except SystemExit as error:
         if error.code == 2:
             parser.print_help()
+        parser.exit()
+
+    if args.citation:
+        print("\nIf used in research, please cite: \n",
+        "Izak, D., A. Gromadka, and S. Kaczanowski. \n",
+        "'Mothulity Facilitates 16S/ITS Amplicon Diversity Analysis.' \n",
+        "Current Protocols in Bioinformatics 69.1 (2020). \n")
+        parser.exit()
+
+    if len(sys.argv)==1:
+        parser.print_help()
         parser.exit()
 
 # Copy the test-run set into the CWD
