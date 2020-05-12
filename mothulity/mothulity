@@ -554,7 +554,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
             )
             with open(mothu_config_path_abs, "w") as fout:
                 mothu_config.write(fout)
-        exit()
+        sys.exit(0)
     if args.add_slurm_setting:
         slurm_setting = dict(
             i.split("=")
@@ -567,7 +567,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         slurm_config.add_section(section)
         for k, v in slurm_setting.items(): slurm_config.set(section, k, v)
         with open(slurm_config_path_abs, "w") as fout: slurm_config.write(fout)
-        exit()
+        sys.exit(0)
 # Read options from config file and wrap them up into proper variables
 # If config file is the only source of the variable content and it is not found - quit from here.
     try:
@@ -577,7 +577,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
     except Exception as e:
         print("Templates not found in config file! Quitting...")
         time.sleep(2)
-        exit()
+        sys.exit(1)
     try:
         align_database_abs = mothu_config.get("databases", "align")
     except Exception as e:
@@ -609,7 +609,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         except Exception as e:
             print("SLURM setting not found in config file! Quitting...")
             time.sleep(2)
-            exit()
+            sys.exit(1)
 # Override databases paths from config file with CLI args if specified.
     if args.align_database:
         align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
@@ -620,10 +620,10 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
     if not args.analysis_only and not args.render_html:
         if not align_database_abs:
             print("No align database path defined in config nor command-line. Quitting...")
-            exit()
+            sys.exit(1)
         if not taxonomy_database_abs:
             print("No taxonomy database path defined in config nor command-line. Quitting...")
-            exit()
+            sys.exit(1)
     processors = mut.determine_cpus()
     if slurm_setting:
         if slurm_setting['processors']: processors = slurm_setting.pop('processors')
@@ -633,18 +633,18 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
         if "-" in files_directory_abs:
             print("Mothur does not accept dashes in the paths. Please rename:\n{}".format(files_directory_abs))
-            exit()
+            sys.exit(1)
     else:
         print("Input directory not found. Quitting...")
-        exit()
+        sys.exit(1)
     if os.path.exists(args.output_dir):
         output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
         if "-" in output_dir_abs:
             print("Mothur does not accept dashes in the paths. Please rename:\n{}".format(output_dir_abs))
-            exit()
+            sys.exit(1)
     else:
         print("Output directory not found. Quitting...")
-        exit()
+        sys.exit(1)
 # Read file globs from specified directories.
     shared_files_list = glob("{}{}".format(files_directory_abs,
                                            mothu_config.get("file_globs",
@@ -662,7 +662,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         else:
             print("More than 1 shared files found. Quitting...")
             time.sleep(2)
-            exit()
+            sys.exit(1)
     elif len(shared_files_list) == 1:
         shared_file = shared_files_list[0]
         print("Found {} shared file".format(shared_file))
@@ -689,28 +689,28 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         elif any([args.analysis_only, args.render_html]) is False:
             print("Found shared file but you do not want to run the analysis on it. Running preprocessing would overwrite it. Quitting...")
             time.sleep(2)
-            exit()
+            sys.exit(1)
     elif len(shared_files_list) == 0:
         if any([args.analysis_only, args.render_html]) is True:
             print("No shared file found. Quitting...")
             time.sleep(2)
-            exit()
+            sys.exit(1)
         else:
             if os.path.isfile(align_database_abs) is False:
                 print("No align database found in {}. Quitting...".format(align_database_abs))
                 time.sleep(2)
-                exit()
+                sys.exit(1)
             if os.path.isfile(taxonomy_database_abs) is False:
                 print("No taxonomy database found in {}. Quitting...".format(taxonomy_database_abs))
                 time.sleep(2)
-                exit()
+                sys.exit(1)
             shared_file = None
             tax_sum_file = None
             design_file = None
     else:
         "I don't know what you what me to do!!! There are no files I can recognize in here!"
         time.sleep(2)
-        exit()
+        sys.exit(1)
 # Set up alignment region cutting (if option was specified).
 # Note that task must be done after original align_database_abs path check.
     if args.alignment_region:
@@ -731,7 +731,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         if region_pos is False:
             print("Type proper region name/coordinates for db cutting or use already existing database.")
             time.sleep(2)
-            exit()
+            sys.exit(1)
         org_db_abs = align_database_abs
         cutted_db_tmp, align_database_abs = mut.dbcut_get_db_names(align_database_abs, args.alignment_region)
         region_start = region_pos[0]
