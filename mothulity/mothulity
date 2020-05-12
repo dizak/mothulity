@@ -547,8 +547,13 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
             with open(mothu_config_path_abs, "w") as fout:
                 mothu_config.write(fout)
         if args.set_taxonomy_database_path:
-            mothu_config.set("databases", "taxonomy", os.path.abspath(args.set_taxonomy_database_path))
-            with open(mothu_config_path_abs, "w") as fout: mothu_config.write(fout)
+            mothu_config.set(
+                "databases",
+                "taxonomy",
+                os.path.abspath(args.set_taxonomy_database_path),
+            )
+            with open(mothu_config_path_abs, "w") as fout:
+                mothu_config.write(fout)
         exit()
     if args.add_slurm_setting:
         slurm_setting = dict(
