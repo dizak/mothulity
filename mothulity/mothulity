@@ -482,7 +482,8 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         os.system("cp -r {} .".format(test_run_database_path_abs))
         os.system("cp -r {} .".format(test_run_samples_path_abs))
         sys.exit(0)
-# Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
+# Define variables that can overridden by CLI, config or other function.
+# Should cause exit if <None> in a proper place in the decision tree.
     align_database_abs = None
     taxonomy_database_abs = None
     slurm_setting = None
