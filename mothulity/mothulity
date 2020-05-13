@@ -565,8 +565,10 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         section = slurm_setting['name']
         slurm_setting.pop('name')
         slurm_config.add_section(section)
-        for k, v in slurm_setting.items(): slurm_config.set(section, k, v)
-        with open(slurm_config_path_abs, "w") as fout: slurm_config.write(fout)
+        for k, v in slurm_setting.items():
+            slurm_config.set(section, k, v)
+        with open(slurm_config_path_abs, "w") as fout:
+            slurm_config.write(fout)
         sys.exit(0)
 # Read options from config file and wrap them up into proper variables
 # If config file is the only source of the variable content and it is not found - quit from here.
@@ -626,8 +628,10 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
             sys.exit(1)
     processors = mut.determine_cpus()
     if slurm_setting:
-        if slurm_setting['processors']: processors = slurm_setting.pop('processors')
-    if args.processors: processors = args.processors
+        if slurm_setting['processors']:
+            processors = slurm_setting.pop('processors')
+    if args.processors:
+        processors = args.processors
 # Validate if input and output directories exist and do not contain dashes. Then make them absolute paths. If dashes - quit from here.
     if os.path.exists(args.files_directory):
         files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
