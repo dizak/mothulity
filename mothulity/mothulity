@@ -629,7 +629,8 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
             processors = slurm_setting.pop('processors')
     if args.processors:
         processors = args.processors
-# Validate if input and output directories exist and do not contain dashes. Then make them absolute paths. If dashes - quit from here.
+# Validate if input and output directories exist and do not contain dashes.
+# Then make them absolute paths. If dashes - quit from here.
     if os.path.exists(args.files_directory):
         files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
         if "-" in files_directory_abs:
