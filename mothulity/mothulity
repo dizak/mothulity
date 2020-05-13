@@ -605,8 +605,8 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
     if args.use_slurm_setting:
         try:
             slurm_setting = {
-                    k: v
-                    for k, v in slurm_config.items(args.use_slurm_setting)
+                k: v
+                for k, v in slurm_config.items(args.use_slurm_setting)
             }
         except Exception:#pylint: disable=broad-except
             print("SLURM setting not found in config file! Quitting...")
@@ -650,15 +650,27 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         print("Output directory not found. Quitting...")
         sys.exit(1)
 # Read file globs from specified directories.
-    shared_files_list = glob("{}{}".format(files_directory_abs,
-                                           mothu_config.get("file_globs",
-                                                      "shared")))
-    tax_sum_files_list = glob("{}{}".format(files_directory_abs,
-                                            mothu_config.get("file_globs",
-                                                       "tax_sum")))
-    design_files_list = glob("{}{}".format(files_directory_abs,
-                                           mothu_config.get("file_globs",
-                                                      "design")))
+    shared_files_list = glob("{}{}".format(
+        files_directory_abs,
+        mothu_config.get(
+            "file_globs",
+            "shared",
+        ),
+    ))
+    tax_sum_files_list = glob("{}{}".format(
+        files_directory_abs,
+        mothu_config.get(
+            "file_globs",
+            "tax_sum",
+        ),
+    ))
+    design_files_list = glob("{}{}".format(
+        files_directory_abs,
+        mothu_config.get(
+            "file_globs",
+            "design",
+        ),
+    ))
 # Make decision what to do based on file globs.
     if len(shared_files_list) > 1:
         if args.render_html is True:
@@ -741,10 +753,16 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         region_start = region_pos[0]
         region_end = region_pos[1]
         dbcut_settings = {"cut_out": cutted_db_tmp, "org_db": org_db_abs, "region_start": region_start, "region_end": region_end}
-        print("\nAlignment region custamization will be executed with",
-        "the following parameters: \n",
-        "original database: {},\n".format(org_db_abs),
-        "region coordinates: {}-{}".format(region_start, region_end, cutted_db_tmp))
+        print(
+            "\nAlignment region custamization will be executed with",
+            "the following parameters: \n",
+            "original database: {},\n".format(org_db_abs),
+            "region coordinates: {}-{}".format(
+                region_start,
+                region_end,
+                cutted_db_tmp,
+            ),
+        )
     else:
         dbcut_settings = False
 # Get current time and create logfile.
@@ -767,16 +785,20 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
 # Label must be from args.label.
 # Rest of the variables must explicitly set to None or zero.
     if all([args.analysis_only, args.render_html]) is False:
-        loaded_template = mut.load_template_file(preproc_template,
-                                             searchpath=mut.get_dir_path("../templates"))
+        loaded_template = mut.load_template_file(
+            preproc_template,
+            searchpath=mut.get_dir_path("../templates"),
+        )
         label = args.label
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 # Load analysis_template if args.analysis_only is True.
 # Label, number of samples and junk groups must be read from shared file.
     if args.analysis_only is True:
-        loaded_template = mut.load_template_file(analysis_template,
-                                             searchpath=mut.get_dir_path("../templates"))
+        loaded_template = mut.load_template_file(
+            analysis_template,
+            searchpath=mut.get_dir_path("../templates"),
+        )
         sampl_num = shared_info["samples_number"]
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
@@ -798,22 +820,34 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
 # All non-output-html variables must be read from shared file.
 # Output-html varialbles must explicitly set.
     if args.render_html is True:
-        loaded_template = mut.load_template_file(output_template,
-                                             searchpath=mut.get_dir_path("../templates"))
+        loaded_template = mut.load_template_file(
+            output_template,
+            searchpath=mut.get_dir_path("../templates"),
+        )
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
         sampl_num = shared_info["samples_number"]
-        krona_html = mut.parse_html("alpha/{}.krona.html".format(args.job_name),
-                                html_type="krona")
-        sum_html = mut.parse_html("alpha/{}.sum.html".format(args.job_name),
-                              html_type="summary")
-        raref_html = mut.parse_html("alpha/{}.raref.html".format(args.job_name),
-                                html_type="rarefaction")
+        krona_html = mut.parse_html(
+            "alpha/{}.krona.html".format(args.job_name),
+            html_type="krona",
+        )
+        sum_html = mut.parse_html(
+            "alpha/{}.sum.html".format(args.job_name),
+            html_type="summary",
+        )
+        raref_html = mut.parse_html(
+            "alpha/{}.raref.html".format(args.job_name),
+            html_type="rarefaction",
+        )
         if sampl_num > 1:
-            nmds_jc_html = mut.parse_html("beta/{}.jclass.nmds.html".format(args.job_name),
-                                      html_type="nmds")
-            nmds_th_html = mut.parse_html("beta/{}.thetayc.nmds.html".format(args.job_name),
-                                      html_type="nmds")
+            nmds_jc_html = mut.parse_html(
+                "beta/{}.jclass.nmds.html".format(args.job_name),
+                html_type="nmds",
+            )
+            nmds_th_html = mut.parse_html(
+                "beta/{}.thetayc.nmds.html".format(args.job_name),
+                html_type="nmds",
+            )
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 # Pass all the variables to template and render to str.
@@ -858,14 +892,21 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
                      "nmds_jc_html": nmds_jc_html,
                      "nmds_th_html": nmds_th_html,
                      "exclude_krona": args.exclude_krona}
-    rendered_template = mut.render_template(loaded_template,
-                                        template_vars)
+    rendered_template = mut.render_template(
+        loaded_template,
+        template_vars,
+    )
 # Save template as bash script of HTML file depending on args.render_html value.
     if args.render_html is True:
-        mut.save_template("{}.html".format(args.job_name), rendered_template)
+        mut.save_template(
+            "{}.html".format(args.job_name),
+            rendered_template,
+        )
     else:
-        mut.save_template("{}{}.sh".format(output_dir_abs, args.job_name),
-                      rendered_template)
+        mut.save_template(
+            "{}{}.sh".format(output_dir_abs, args.job_name),
+            rendered_template,
+        )
 # Run outputted script or not depending on args.run and args.dry-run
     if args.run is not None and args.dry_run is not True:
         os.system("{} {}".format(args.run, "{}{}.sh".format(output_dir_abs,
