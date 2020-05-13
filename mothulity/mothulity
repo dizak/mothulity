@@ -722,7 +722,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
             tax_sum_file = None
             design_file = None
     else:
-        "I don't know what you what me to do!!! There are no files I can recognize in here!"
+        print("I don't know what you what me to do!!! There are no files I can recognize in here!")
         time.sleep(2)
         sys.exit(1)
 # Set up alignment region cutting (if option was specified).
