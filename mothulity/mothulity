@@ -576,30 +576,30 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         preproc_template = mothu_config.get("templates", "preproc")
         analysis_template = mothu_config.get("templates", "analysis")
         output_template = mothu_config.get("templates", "output")
-    except Exception as e:
+    except Exception:
         print("Templates not found in config file! Quitting...")
         time.sleep(2)
         sys.exit(1)
     try:
         align_database_abs = mothu_config.get("databases", "align")
-    except Exception as e:
+    except Exception:
         print("Align database path not found in config file.")
         time.sleep(2)
     try:
         taxonomy_database_abs = mothu_config.get("databases", "taxonomy")
-    except Exception as e:
+    except Exception:
         print("Taxonomy database path not found in config file.")
         time.sleep(2)
     try:
         datatables_css = mothu_config.get("css", "datatables")
         w3_css = mothu_config.get("css", "w3")
-    except Exception as e:
+    except Exception:
         print("CSS links not found in config file! Output will not display properly!")
         time.sleep(2)
     try:
         datatables_js = mut.get_dir_path("../js/{}".format(mothu_config.get("js", "datatables")))
         slideshow_js = mut.get_dir_path("../js/{}".format(mothu_config.get("js", "slideshow")))
-    except Exception as e:
+    except Exception:
         print("Javascript links not found in config file. Output will not display properly!")
         time.sleep(2)
     if args.use_slurm_setting:
@@ -608,7 +608,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
                     k: v
                     for k, v in slurm_config.items(args.use_slurm_setting)
             }
-        except Exception as e:
+        except Exception:
             print("SLURM setting not found in config file! Quitting...")
             time.sleep(2)
             sys.exit(1)
