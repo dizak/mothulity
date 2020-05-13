@@ -758,7 +758,6 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
             "region coordinates: {}-{}".format(
                 region_start,
                 region_end,
-                cutted_db_tmp,
             ),
         )
     else:
