@@ -604,10 +604,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         time.sleep(2)
     if args.use_slurm_setting:
         try:
-            slurm_setting = {
-                k: v
-                for k, v in slurm_config.items(args.use_slurm_setting)
-            }
+            slurm_setting = dict(slurm_config.items(args.use_slurm_setting))
         except Exception:#pylint: disable=broad-except
             print("SLURM setting not found in config file! Quitting...")
             time.sleep(2)
