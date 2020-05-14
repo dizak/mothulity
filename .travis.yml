@@ -92,7 +92,7 @@ script:
   - cat travis_job_slurm.sh
   - diff <(sort test_data/new_run/mltp_smpl/script/travis_job_slurm.sh) <(sort travis_job_slurm.sh) --ignore-blank-lines --ignore-trailing-space
 # Check how mothulity refuses to work with dashed directories
-  - mothulity test_data/dashed-dir/fastq --dry-run -r bash || true > test_dashed_path.log
+  - mothulity test_data/dashed-dir/fastq --dry-run -r bash > test_dashed_path.log || true
   - diff test_data/logs/dashed_path.log test_dashed_path.log --ignore-blank-lines --ignore-trailing-space
 # Check how mothulty saves setting to config file before running the analysis
   - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --set-main-config-path test_data/config/mothulity.config > test_config_success.log
@@ -104,7 +104,7 @@ script:
   - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --alignment-region v3v4 > test_cut_db_v3v4.log
   - diff test_data/logs/cut_db_v3v4.log test_cut_db_v3v4.log --ignore-blank-lines --ignore-trailing-space
 # Check how mothulity refuse performing alignment database custamization (wrong coordinates)
-  - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --alignment-region 123-v4 || true > test_cut_db_fail.log
+  - mothulity test_data/new_run/mltp_smpl/fastq --dry-run -r bash -n travis_job --alignment-region 123-v4 > test_cut_db_fail.log || true
   - diff test_data/logs/cut_db_fail.log test_cut_db_fail.log --ignore-blank-lines --ignore-trailing-space
 
 notifications:
