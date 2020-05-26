@@ -745,10 +745,18 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
             time.sleep(2)
             sys.exit(1)
         org_db_abs = align_database_abs
-        cutted_db_tmp, align_database_abs = mut.dbcut_get_db_names(align_database_abs, args.alignment_region)
+        cutted_db_tmp, align_database_abs = mut.dbcut_get_db_names(
+            align_database_abs,
+            args.alignment_region,
+        )
         region_start = region_pos[0]
         region_end = region_pos[1]
-        dbcut_settings = {"cut_out": cutted_db_tmp, "org_db": org_db_abs, "region_start": region_start, "region_end": region_end}
+        dbcut_settings = {
+            "cut_out": cutted_db_tmp,
+            "org_db": org_db_abs,
+            "region_start": region_start,
+            "region_end": region_end,
+        }
         print(mmes.info.DBCUT_PARAMS.format(
             org_db_abs,
             region_start,
