@@ -19,8 +19,10 @@ except ImportError:
     __version__ = "development"
 try:
     import mothulity.utilities as mut
+    import mothulity.messages as mmes
 except ImportError:
     import utilities as mut
+    import messages as mmes
 
 def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-branches,too-many-statements
     parser = argparse.ArgumentParser(
