@@ -9,8 +9,8 @@ Copying the test-run files into your CWD...
 """
 DBCUT_PARAMS = """
 Alignment region custamization will be executed with the following parameters:
-original database: {}
-region coordinates: {}-{}
+ original database: {}
+ region coordinates: {}-{}
 """
 CONFIG_USED = """
 Using {} as config file.
