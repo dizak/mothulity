@@ -60,8 +60,7 @@ DB_CUT_END_BEFORE_START = """
 Error: DB cut start position higher then the end one.
 """
 DB_CUT_NON_ALPHA_CHARS = """
-Error: DB alignment region coordinates contain both '-' and
-charaters different then numbers.
+Error: DB alignment region coordinates contain both '-' and charaters different then numbers.
 """
 DB_CUT_TOO_MANY_REGIONS = """
 Wrong alignment customization specification: {}.
