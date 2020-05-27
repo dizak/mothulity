@@ -8,9 +8,9 @@ FILES_COPIED = """
 Copying the test-run files into your CWD...
 """
 DBCUT_PARAMS = """
-Alignment region custamization will be executed with
-the following parameters:
-original database: {}
+Alignment region custamization will be executed with\n
+the following parameters:\n
+original database: {}\n
 region coordinates: {}-{}
 """
 CONFIG_USED = """
