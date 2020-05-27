@@ -503,7 +503,7 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
             print(mmes.info.CONFIG_USED.format(mothu_config_path_abs))
             time.sleep(2)
         else:
-            print(mmes.warning.CONFIG_OPEN_FAIL.format(args.set_main_config_path))
+            print(mmes.warnings.CONFIG_OPEN_FAIL.format(args.set_main_config_path))
             time.sleep(2)
             mothu_config_path_abs = mut.get_dir_path("../config/mothulity.config")
     if args.set_slurm_config_path:
