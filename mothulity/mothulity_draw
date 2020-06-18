@@ -4,10 +4,10 @@
 CLI utility for generating plots on mothur output
 """
 
-from __future__ import print_function
+import configparser
 import argparse
 import sys
-from six.moves import configparser
+
 try:
     from mothulity import __version__
 except ImportError:

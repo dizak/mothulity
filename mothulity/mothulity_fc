@@ -4,7 +4,6 @@
 CLI utility for generating files mothur file
 """
 
-from __future__ import print_function
 import argparse
 import sys
 import pandas as pd

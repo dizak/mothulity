@@ -6,13 +6,12 @@
 Main mothulity CLI
 """
 
-from __future__ import print_function
 import sys
 import os
 from glob import glob
 import time
 import argparse
-from six.moves import configparser
+import configparser
 try:
     from mothulity import __version__
 except ImportError:
@@ -42,6 +41,15 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
         "--version",
         action="version",
         version=__version__
+    )
+    parser.add_argument(
+        "--citation",
+        action="store_true",
+        dest="citation",
+        default=False,
+        help="""
+        displays information how to cite the tool and exit.
+        """
     )
     parser.add_argument(
         action="store",
@@ -474,6 +482,17 @@ def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-
     except SystemExit as error:
         if error.code == 2:
             parser.print_help()
+        parser.exit()
+
+    if args.citation:
+        print("\nIf used in research, please cite: \n",
+        "Izak, D., A. Gromadka, and S. Kaczanowski. \n",
+        "'Mothulity Facilitates 16S/ITS Amplicon Diversity Analysis.' \n",
+        "Current Protocols in Bioinformatics 69.1 (2020). \n")
+        parser.exit()
+
+    if len(sys.argv)==1:
+        parser.print_help()
         parser.exit()
 
 # Copy the test-run set into the CWD
