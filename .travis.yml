@@ -15,6 +15,9 @@ deploy:
     branch: master
     python: 3.6
 
+before_install:
+    - pip install pylint
+
 install:
   - python setup.py sdist
   - pip install dist/mothulity-*.tar.gz
@@ -25,6 +28,9 @@ before_script:
   - hash mothur
 
 script:
+# Linter
+  - pylint mothulity/*py
+  - pylint mothulity/messages/*py
 # Doctests
   - python -m doctest mothulity/utilities.py -v
 # Unittests
