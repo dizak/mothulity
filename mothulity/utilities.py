@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-#pylint: disable=invalid-name,too-many-arguments,too-many-locals
+#pylint: disable=invalid-name,too-many-arguments,too-many-locals; extension-pkg-whitelist=lxml
 
 """
 Functions used by the other parts of the package
@@ -261,7 +261,7 @@ def read_info_shared(input_file_name,#pylint: disable=dangerous-default-value,to
     return out_dict
 
 
-def parse_html(input_file_name,
+def parse_html(input_file_name,#pylint: disable=inconsistent-return-statements
                html_type,
                parser="html.parser",
                newline="\n"):
@@ -688,7 +688,7 @@ def summary2html(input_file_name,#pylint: disable=dangerous-default-value
         fout.write(html_str)
 
 
-def get_daughter_df(df,
+def get_daughter_df(df,#pylint: disable=inconsistent-return-statements
                     mother_taxon,
                     mother_rank,
                     tax_level):
