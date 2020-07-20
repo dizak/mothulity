@@ -1,32 +1,33 @@
 #! /usr/bin/env python
 
+#pylint: disable=invalid-name,too-many-arguments,too-many-locals; extension-pkg-whitelist=lxml
+
+"""
+Functions used by the other parts of the package
+"""
+
 
 from __future__ import print_function
-import six
-import sys
+from io import BytesIO
+import base64
 import os
+import sys
 import psutil
-from glob import glob
-from six.moves import configparser
-import jinja2 as jj2
-import pandas as pd
-from bs4 import BeautifulSoup as bs
-import requests as rq
-from tqdm import tqdm
+
+import matplotlib#pylint: disable=wrong-import-position
+matplotlib.use('Agg')#pylint: disable=wrong-import-position
 from Bio import Phylo as ph
-import matplotlib
-matplotlib.use('Agg')
-import pylab
-import matplotlib.pyplot as plt
-import matplotlib.style as style
-import numpy as np
+from bs4 import BeautifulSoup as bs
+from lxml import etree as et
 from pandas import read_csv
 from seaborn import heatmap
-from seaborn import pairplot
-from seaborn import lmplot
-from lxml import etree as et
-import base64
-from io import BytesIO
+from tqdm import tqdm
+import pylab
+import numpy as np
+import jinja2 as jj2
+import pandas as pd
+import requests as rq
+import matplotlib.pyplot as plt#pylint: disable=ungrouped-imports
 
 
 def get_dir_path(file_name=""):
@@ -97,8 +98,7 @@ def path2name(path,
     """
     if extension is True:
         return str(path.split(slash)[-1].strip(hid_char))
-    else:
-        return str(path.split(slash)[-1].strip(hid_char).split(".")[0])
+    return str(path.split(slash)[-1].strip(hid_char).split(".")[0])
 
 
 def determine_cpus(memory_per_cpu=3):
@@ -115,28 +115,7 @@ def determine_cpus(memory_per_cpu=3):
     supp_cpus = int(mem / memory_per_cpu)
     if supp_cpus > cpus:
         return cpus
-    else:
-        return supp_cpus
-
-
-def set_config(filename,
-               section,
-               options,
-               values,
-               clean=False):
-    if os.path.exists(filename):
-        config = configparser.ConfigParser()
-        config.read(os.path.abspath(filename))
-        if clean and section in config.sections():
-            config.remove_section(section)
-        if section not in config.sections():
-            config.add_section(section)
-        for o, v in zip(options, values):
-            config.set(section, o, v)
-        with open(filename, "w") as fout:
-            config.write(fout)
-    else:
-        return None
+    return supp_cpus
 
 
 def load_template_file(template_file,
@@ -163,9 +142,9 @@ def load_template_file(template_file,
     >>> isinstance(lt, jinja2.environment.Template)
     True
     """
-    template_Loader = jj2.FileSystemLoader(searchpath=searchpath)
-    template_Env = jj2.Environment(loader=template_Loader)
-    template = template_Env.get_template(template_file)
+    template_loader = jj2.FileSystemLoader(searchpath=searchpath)
+    template_env = jj2.Environment(loader=template_loader)
+    template = template_env.get_template(template_file)
     return template
 
 
@@ -215,12 +194,14 @@ def save_template(out_file_name,
         fout.write(template_rendered.encode("utf-8"))
 
 
-def read_info_shared(input_file_name,
+def read_info_shared(input_file_name,#pylint: disable=dangerous-default-value,too-many-locals
                      min_fold=5,
-                     label_col="label",
-                     group_col="Group",
-                     otu_col="Otu",
-                     num_col="numOtus",
+                     cols={
+                         'label': 'label',
+                         'group': "Group",
+                         'otu': "Otu",
+                         'num': "numOtus",
+                     },
                      sep="\t",
                      format_junk_grps=True):
     """
@@ -261,13 +242,13 @@ def read_info_shared(input_file_name,
     >>> shared_info["junk_grps"]
     'F3D141-F3D143-F3D144'
     """
-    dtypes = {label_col: "str"}
+    dtypes = {cols['label']: "str"}
     shared_df = pd.read_csv(input_file_name, sep=sep, dtype=dtypes)
-    otus_cols = [i for i in shared_df.columns if otu_col in i and i != num_col]
-    grps_sizes = shared_df[[group_col] + otus_cols].sum(axis=1)
-    label = shared_df[label_col][0]
-    grps_num = len(shared_df[group_col])
-    sizes_df = pd.DataFrame({"GROUPS": shared_df[group_col],
+    otus_cols = [i for i in shared_df.columns if cols['otu'] in i and i != cols['num']]
+    grps_sizes = shared_df[[cols['group']] + otus_cols].sum(axis=1)
+    label = shared_df[cols['label']][0]
+    grps_num = len(shared_df[cols['group']])
+    sizes_df = pd.DataFrame({"GROUPS": shared_df[cols['group']],
                              "GROUP_SIZES": grps_sizes})
     threshold = sizes_df.GROUP_SIZES.mean() / min_fold
     size_bool = (sizes_df.GROUP_SIZES < threshold)
@@ -280,7 +261,7 @@ def read_info_shared(input_file_name,
     return out_dict
 
 
-def parse_html(input_file_name,
+def parse_html(input_file_name,#pylint: disable=inconsistent-return-statements
                html_type,
                parser="html.parser",
                newline="\n"):
@@ -308,14 +289,14 @@ def parse_html(input_file_name,
                          "img_logo": body[2],
                          "noscript": body[3],
                          "div_krona": body[4]}}
-    elif html_type == "summary":
+    if html_type == "summary":
         tags = [str(i) for i in list(soup.children) if i != "\n"]
         return {"link": tags[0],
                 "table": tags[1],
                 "googleapis_script": tags[3],
                 "datatables_script": tags[4],
                 "script": tags[5]}
-    elif html_type == "nmds" or html_type == "rarefaction":
+    if html_type in ("nmds", "rarefaction"):
         return {"img": soup.img}
 
 
@@ -400,9 +381,15 @@ def left_n_right_generator(files_directory,
     for i in sample_names_list:
         for ii in files_list:
             if i == ii.split(split_sign)[0] and left_reads_sign in ii:
-                left_name_reads_list.append({"name": i, "left_reads": "{0}/{1}".format(files_directory, ii)})
+                left_name_reads_list.append({
+                    "name": i,
+                    "left_reads": "{0}/{1}".format(files_directory, ii)
+                })
             elif i == ii.split(split_sign)[0] and right_reads_sign in ii:
-                right_name_reads_list.append({"name": i, "right_reads": "{0}/{1}".format(files_directory, ii)})
+                right_name_reads_list.append({
+                    "name": i,
+                    "right_reads": "{0}/{1}".format(files_directory, ii)
+                })
             else:
                 pass
     name_reads = {"left": left_name_reads_list,
@@ -436,7 +423,6 @@ def get_db(url,
     True
     """
     res = rq.get(url, stream=True)
-    total_len = int(res.headers.get("content-length"))
     if res.status_code == 200:
         with open(save_path, "wb") as fout:
             for i in tqdm(res.iter_content(chunk_size=chunk)):
@@ -444,7 +430,7 @@ def get_db(url,
     return res.status_code
 
 
-def download(download_directory,
+def download(download_directory,#pylint: disable=too-many-arguments
              filename,
              url,
              command,
@@ -477,11 +463,11 @@ def download(download_directory,
             print("Unpacking done!")
         else:
             print("Failed to establish connection. Response code {}".format(res))
-    except Exception as e:
+    except rq.exceptions.ConnectionError:
         print("Failed to establish connection.")
 
 
-def draw_rarefaction(input_file_name,
+def draw_rarefaction(input_file_name,#pylint: disable=too-many-arguments,too-many-locals
                      output_file_name,
                      title="Rarefaction curve",
                      ylabel="OTU count",
@@ -517,7 +503,7 @@ def draw_rarefaction(input_file_name,
     cols = [i for i in df.columns if "lci" not in i]
     cols = [i for i in cols if "hci" not in i]
     df = df[cols]
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     df[cols].plot(ax=ax,
                   figsize=figsize)
     plt.grid(True)
@@ -528,7 +514,7 @@ def draw_rarefaction(input_file_name,
     buf = BytesIO()
     plt.savefig(buf, format="png")
     encoded = base64.b64encode(buf.getvalue()).decode('utf-8')
-    html ='<img src=\'data:image/png;base64,{}\'>'.format(encoded)
+    html = '<img src=\'data:image/png;base64,{}\'>'.format(encoded)
     with open(output_file_name, "w") as fout:
         fout.write(html)
 
@@ -603,7 +589,7 @@ def draw_scatter(input_file_name,
                  point_alpha=0.3,
                  grid_color="white",
                  grid_style="solid",
-                 backgroud_color="#EEEEEE",
+                 backgroud_color="#EEEEEE",#pylint: disable=unused-argument
                  sep="\t"):
     """
     Draw scatter plot from mothur's axes file and save figure to file.
@@ -638,19 +624,19 @@ def draw_scatter(input_file_name,
         Delimiter to use for reading-in axes file.
     """
     df = read_csv(input_file_name,
-                  sep=sep, 
+                  sep=sep,
                   index_col=group_col)
-    fig, ax = plt.subplots()
-    variants = set(df.index.values) 
+    _, ax = plt.subplots()
+    variants = set(df.index.values)
     for i, variant in enumerate(variants):
         x = np.array(df.loc[variant][axis1_col])
         y = np.array(df.loc[variant][axis2_col])
-        ax.scatter(x, 
-                   y, 
-                   s=point_size, 
-                   label=variant, 
-                   alpha=point_alpha, 
-                   cmap=plt.cm.jet(i))
+        ax.scatter(x,
+                   y,
+                   s=point_size,
+                   label=variant,
+                   alpha=point_alpha,
+                   cmap=plt.cm.jet(i))#pylint: disable=no-member
 
     ax.legend()
     ax.grid(color=grid_color, linestyle=grid_style)
@@ -659,12 +645,12 @@ def draw_scatter(input_file_name,
     buf = BytesIO()
     plt.savefig(buf, format="png")
     encoded = base64.b64encode(buf.getvalue()).decode('utf-8')
-    html ='<img src=\'data:image/png;base64,{}\'>'.format(encoded)
+    html = '<img src=\'data:image/png;base64,{}\'>'.format(encoded)
     with open(output_file_name, "w") as fout:
         fout.write(html)
 
 
-def summary2html(input_file_name,
+def summary2html(input_file_name,#pylint: disable=dangerous-default-value
                  output_file_name,
                  css_link,
                  js_input_file_name,
@@ -702,7 +688,7 @@ def summary2html(input_file_name,
         fout.write(html_str)
 
 
-def get_daughter_df(df,
+def get_daughter_df(df,#pylint: disable=inconsistent-return-statements
                     mother_taxon,
                     mother_rank,
                     tax_level):
@@ -731,7 +717,7 @@ def get_daughter_df(df,
     daughter_levels = int(sel_df.daughterlevels)
     if daughter_levels > 0:
         mother_rank = sel_df.rankID.to_string(index=False).strip()
-        daughter_df = df[df.rankID.str.contains('^{}\.\d+$'.format(mother_rank))]
+        daughter_df = df[df.rankID.str.contains('^{}\.\d+$'.format(mother_rank))]#pylint: disable=anomalous-backslash-in-string
         return daughter_df
 
 
@@ -841,7 +827,7 @@ def populate_count(df,
                 et.SubElement(count_elem, "val").text = str(ii)
 
 
-def constr_krona_xml(input_file_name,
+def constr_krona_xml(input_file_name,#pylint: disable=dangerous-default-value
                      output_file_name,
                      sep="\t",
                      root_tag="krona",

@@ -1,5 +1,11 @@
 #! /usr/bin/env python
 
+#pylint: disable=invalid-name
+
+"""
+Main mothulity CLI
+"""
+
 import sys
 import os
 from glob import glob
@@ -12,10 +18,12 @@ except ImportError:
     __version__ = "development"
 try:
     import mothulity.utilities as mut
+    import mothulity.messages as mmes
 except ImportError:
     import utilities as mut
+    import messages as mmes
 
-def main():
+def main():#pylint: disable=missing-function-docstring,too-many-locals,too-many-branches,too-many-statements
     parser = argparse.ArgumentParser(
         prog="mothulity",
         usage="mothulity [OPTION]",
@@ -201,13 +209,13 @@ def main():
         """
     )
     slurm.add_argument(
-    "--use-slurm-setting",
-    action="store",
-    dest="use_slurm_setting",
-    metavar="",
-    help="""
-    use previously set SLURM setting (with --add-slurm-setting).
-    """
+        "--use-slurm-setting",
+        action="store",
+        dest="use_slurm_setting",
+        metavar="",
+        help="""
+        use previously set SLURM setting (with --add-slurm-setting).
+        """
     )
     mothur.add_argument(
         "--max-ambig",
@@ -465,6 +473,10 @@ def main():
         """
     )
 
+    if len(sys.argv) == 1:
+        parser.print_help()
+        parser.exit()
+
     try:
         args = parser.parse_args()
     except SystemExit as error:
@@ -487,11 +499,12 @@ def main():
     if args.get_test_run_data:
         test_run_database_path_abs = mut.get_dir_path("../test_run_database")
         test_run_samples_path_abs = mut.get_dir_path("../test_run_samples")
-        print("Copying the test-run files into your CWD...")
+        print(mmes.info.FILES_COPIED)
         os.system("cp -r {} .".format(test_run_database_path_abs))
         os.system("cp -r {} .".format(test_run_samples_path_abs))
-        exit()
-# Define variables that can overridden by CLI, config or other function and should cause exit if None in a proper place in the decision tree.
+        sys.exit(0)
+# Define variables that can overridden by CLI, config or other function.
+# Should cause exit if <None> in a proper place in the decision tree.
     align_database_abs = None
     taxonomy_database_abs = None
     slurm_setting = None
@@ -506,19 +519,23 @@ def main():
     if args.set_main_config_path:
         if os.path.isfile(args.set_main_config_path):
             mothu_config_path_abs = os.path.abspath(args.set_main_config_path)
-            print("Using {} as config file.".format(mothu_config_path_abs))
+            print(mmes.info.CONFIG_USED.format(mothu_config_path_abs))
             time.sleep(2)
         else:
-            print("Failed to find or open {} config file. Using default.".format(args.set_main_config_path))
+            print(mmes.warnings.CONFIG_OPEN_FAIL.format(args.set_main_config_path))
             time.sleep(2)
             mothu_config_path_abs = mut.get_dir_path("../config/mothulity.config")
     if args.set_slurm_config_path:
         if os.path.isfile(args.set_slurm_config_path):
             slurm_config_path_abs = os.path.abspath(args.set_slurm_config_path)
-            print("Using {} as config file.".format(slurm_config_path_abs))
+            print(mmes.info.CONFIG_USED.format(slurm_config_path_abs))
             time.sleep(2)
         else:
-            print("Failed to find or open {} config file. Using default.".format(args.set_slurm_config_path))
+            print(
+                mmes.warnings.CONFIG_OPEN_FAIL.format(
+                    args.set_slurm_config_path,
+                ),
+            )
             time.sleep(2)
             slurm_config_path_abs = mut.get_dir_path("../config/mothulity.config")
     else:
@@ -531,23 +548,30 @@ def main():
 # List SLURM MD settings from the config file.
     if args.list_slurm_settings:
         if len(slurm_config.sections()) == 0:
-            print("No SLURM settings defined.")
-            exit()
+            print(mmes.errors.SLURM_SETTING_UNDEFINED)
+            sys.exit(1)
         for section in slurm_config.sections():
             print(section, end="\n-------\n")
             for k, v in slurm_config.items(section):
                 print(k, v, sep=': ')
-        exit()
+        sys.exit(0)
 # Set config file options.
     if any((args.set_align_database_path, args.set_taxonomy_database_path)):
-        if "databases" not in mothu_config.sections(): mothu_config.add_section("databases")
+        if "databases" not in mothu_config.sections():
+            mothu_config.add_section("databases")
         if args.set_align_database_path:
             mothu_config.set("databases", "align", os.path.abspath(args.set_align_database_path))
-            with open(mothu_config_path_abs, "w") as fout: mothu_config.write(fout)
+            with open(mothu_config_path_abs, "w") as fout:
+                mothu_config.write(fout)
         if args.set_taxonomy_database_path:
-            mothu_config.set("databases", "taxonomy", os.path.abspath(args.set_taxonomy_database_path))
-            with open(mothu_config_path_abs, "w") as fout: mothu_config.write(fout)
-        exit()
+            mothu_config.set(
+                "databases",
+                "taxonomy",
+                os.path.abspath(args.set_taxonomy_database_path),
+            )
+            with open(mothu_config_path_abs, "w") as fout:
+                mothu_config.write(fout)
+        sys.exit(0)
     if args.add_slurm_setting:
         slurm_setting = dict(
             i.split("=")
@@ -558,51 +582,50 @@ def main():
         section = slurm_setting['name']
         slurm_setting.pop('name')
         slurm_config.add_section(section)
-        for k, v in slurm_setting.items(): slurm_config.set(section, k, v)
-        with open(slurm_config_path_abs, "w") as fout: slurm_config.write(fout)
-        exit()
+        for k, v in slurm_setting.items():
+            slurm_config.set(section, k, v)
+        with open(slurm_config_path_abs, "w") as fout:
+            slurm_config.write(fout)
+        sys.exit(0)
 # Read options from config file and wrap them up into proper variables
 # If config file is the only source of the variable content and it is not found - quit from here.
     try:
         preproc_template = mothu_config.get("templates", "preproc")
         analysis_template = mothu_config.get("templates", "analysis")
         output_template = mothu_config.get("templates", "output")
-    except Exception as e:
-        print("Templates not found in config file! Quitting...")
+    except Exception:#pylint: disable=broad-except
+        print(mmes.errors.TEMPLATES_NOT_IN_CONFIG)
         time.sleep(2)
-        exit()
+        sys.exit(1)
     try:
         align_database_abs = mothu_config.get("databases", "align")
-    except Exception as e:
-        print("Align database path not found in config file.")
+    except Exception:#pylint: disable=broad-except
+        print(mmes.errors.ALIGN_DB_PATH_NOT_IN_CONFIG)
         time.sleep(2)
     try:
         taxonomy_database_abs = mothu_config.get("databases", "taxonomy")
-    except Exception as e:
-        print("Taxonomy database path not found in config file.")
+    except Exception:#pylint: disable=broad-except
+        print(mmes.errors.TAX_DB_PATH_NOT_IN_CONFIG)
         time.sleep(2)
     try:
         datatables_css = mothu_config.get("css", "datatables")
         w3_css = mothu_config.get("css", "w3")
-    except Exception as e:
-        print("CSS links not found in config file! Output will not display properly!")
+    except Exception:#pylint: disable=broad-except
+        print(mmes.errors.CSS_NOT_IN_CONFIG)
         time.sleep(2)
     try:
         datatables_js = mut.get_dir_path("../js/{}".format(mothu_config.get("js", "datatables")))
         slideshow_js = mut.get_dir_path("../js/{}".format(mothu_config.get("js", "slideshow")))
-    except Exception as e:
-        print("Javascript links not found in config file. Output will not display properly!")
+    except Exception:#pylint: disable=broad-except
+        print(mmes.errors.JS_NOT_IN_CONFIG)
         time.sleep(2)
     if args.use_slurm_setting:
         try:
-            slurm_setting = {
-                    k: v
-                    for k, v in slurm_config.items(args.use_slurm_setting)
-            }
-        except Exception as e:
-            print("SLURM setting not found in config file! Quitting...")
+            slurm_setting = dict(slurm_config.items(args.use_slurm_setting))
+        except Exception:#pylint: disable=broad-except
+            print(mmes.errors.SLURM_SETTINGS_NOT_CONFIG)
             time.sleep(2)
-            exit()
+            sys.exit(1)
 # Override databases paths from config file with CLI args if specified.
     if args.align_database:
         align_database_abs = os.path.abspath(os.path.expanduser(args.align_database))
@@ -612,63 +635,78 @@ def main():
 # Unless args.analysis_only or args.render_html are True - quit from here.
     if not args.analysis_only and not args.render_html:
         if not align_database_abs:
-            print("No align database path defined in config nor command-line. Quitting...")
-            exit()
+            print(mmes.errors.ALIGN_DB_PATH_NOT_ANY)
+            sys.exit(1)
         if not taxonomy_database_abs:
-            print("No taxonomy database path defined in config nor command-line. Quitting...")
-            exit()
+            print(mmes.errors.TAX_DB_PATH_NOT_ANY)
+            sys.exit(1)
     processors = mut.determine_cpus()
     if slurm_setting:
-        if slurm_setting['processors']: processors = slurm_setting.pop('processors')
-    if args.processors: processors = args.processors
-# Validate if input and output directories exist and do not contain dashes. Then make them absolute paths. If dashes - quit from here.
+        if slurm_setting['processors']:
+            processors = slurm_setting.pop('processors')
+    if args.processors:
+        processors = args.processors
+# Validate if input and output directories exist and do not contain dashes.
+# Then make them absolute paths. If dashes - quit from here.
     if os.path.exists(args.files_directory):
         files_directory_abs = "{}/".format(os.path.abspath(args.files_directory))
         if "-" in files_directory_abs:
-            print("Mothur does not accept dashes in the paths. Please rename:\n{}".format(files_directory_abs))
-            exit()
+            print(mmes.errors.DASHES_NOT_REJECTED.format(files_directory_abs))
+            sys.exit(1)
     else:
-        print("Input directory not found. Quitting...")
-        exit()
+        print(mmes.errors.INPUT_DIR_NOT_FOUND)
+        sys.exit(1)
     if os.path.exists(args.output_dir):
         output_dir_abs = "{}/".format(os.path.abspath(args.output_dir))
         if "-" in output_dir_abs:
-            print("Mothur does not accept dashes in the paths. Please rename:\n{}".format(output_dir_abs))
-            exit()
+            print(mmes.DASHES_NOT_REJECTED.format(output_dir_abs))
+            sys.exit(1)
     else:
-        print("Output directory not found. Quitting...")
-        exit()
+        print(mmes.errors.OUTPUT_DIR_NOT_FOUND)
+        sys.exit(1)
 # Read file globs from specified directories.
-    shared_files_list = glob("{}{}".format(files_directory_abs,
-                                           mothu_config.get("file_globs",
-                                                      "shared")))
-    tax_sum_files_list = glob("{}{}".format(files_directory_abs,
-                                            mothu_config.get("file_globs",
-                                                       "tax_sum")))
-    design_files_list = glob("{}{}".format(files_directory_abs,
-                                           mothu_config.get("file_globs",
-                                                      "design")))
+    shared_files_list = glob("{}{}".format(
+        files_directory_abs,
+        mothu_config.get(
+            "file_globs",
+            "shared",
+        ),
+    ))
+    tax_sum_files_list = glob("{}{}".format(
+        files_directory_abs,
+        mothu_config.get(
+            "file_globs",
+            "tax_sum",
+        ),
+    ))
+    design_files_list = glob("{}{}".format(
+        files_directory_abs,
+        mothu_config.get(
+            "file_globs",
+            "design",
+        ),
+    ))
 # Make decision what to do based on file globs.
     if len(shared_files_list) > 1:
         if args.render_html is True:
             pass
         else:
-            print("More than 1 shared files found. Quitting...")
+            print(mmes.errors.MULTIPLE_SHARED_FILES_FOUND)
             time.sleep(2)
-            exit()
+            sys.exit(1)
     elif len(shared_files_list) == 1:
         shared_file = shared_files_list[0]
-        print("Found {} shared file".format(shared_file))
+        print(mmes.info.SHARED_FILE_FOUND.format(shared_file))
         if len(tax_sum_files_list) != 1:
-            print("WARNING!!! No proper tax.summary file found. The analysis will be incomplete.")
+            print(mmes.warnings.NO_TAX_FILE_FOUND)
             time.sleep(2)
             tax_sum_file = None
         else:
             tax_sum_file = tax_sum_files_list[0]
-            print("Found {} tax.summary file".format(tax_sum_file))
+            print(mmes.info.TAX_FILE_FOUND.format(tax_sum_file))
         if len(design_files_list) != 0:
             if len(design_files_list) > 1:
-                print("More than 1 design files found. Will skip this part of analysis.")
+                print(mmes.info.MULTIPLE_DESIGN_FILES_FOUND)
                 time.sleep(2)
                 design_file = None
             else:
@@ -677,33 +715,33 @@ def main():
             design_file = None
         if any([args.analysis_only, args.render_html]) is True:
             shared_info = mut.read_info_shared(shared_file)
-            print("Found {} shared file".format(shared_file))
+            print(mmes.info.SHARED_FILE_FOUND.format(shared_file))
             time.sleep(2)
         elif any([args.analysis_only, args.render_html]) is False:
-            print("Found shared file but you do not want to run the analysis on it. Running preprocessing would overwrite it. Quitting...")
+            print(mmes.errors.SHARED_ALREADY_EXISTS)
             time.sleep(2)
-            exit()
+            sys.exit(1)
     elif len(shared_files_list) == 0:
         if any([args.analysis_only, args.render_html]) is True:
-            print("No shared file found. Quitting...")
+            print(mmes.errors.SHARED_NOT_FOUND)
             time.sleep(2)
-            exit()
+            sys.exit(1)
         else:
             if os.path.isfile(align_database_abs) is False:
-                print("No align database found in {}. Quitting...".format(align_database_abs))
+                print(mmes.errors.ALIGN_DB_NOT_FOUND.format(align_database_abs))
                 time.sleep(2)
-                exit()
+                sys.exit(1)
             if os.path.isfile(taxonomy_database_abs) is False:
-                print("No taxonomy database found in {}. Quitting...".format(taxonomy_database_abs))
+                print(mmes.errors.TAX_DB_NOT_FOUND.format(taxonomy_database_abs))
                 time.sleep(2)
-                exit()
+                sys.exit(1)
             shared_file = None
             tax_sum_file = None
             design_file = None
     else:
-        "I don't know what you what me to do!!! There are no files I can recognize in here!"
+        print(mmes.errors.COMPLETE_NONSENSE)
         time.sleep(2)
-        exit()
+        sys.exit(1)
 # Set up alignment region cutting (if option was specified).
 # Note that task must be done after original align_database_abs path check.
     if args.alignment_region:
@@ -714,26 +752,35 @@ def main():
                 if int(region[0]) < int(region[1]):
                     region_pos = region
                 else:
-                    print("Error: DB cut start position higher then the end one.")
-            except:
-                print("Error: DB alignment region coordinates contain both '-' and charaters different then numbers.")
+                    print(mmes.errors.DB_CUT_END_BEFORE_START)
+            except:#pylint: disable=bare-except
+                print(mmes.errors.DB_CUT_NON_ALPHA_CHARS)
         elif len(region) > 2:
-            print("Wrong alignment customization specification: {}.".format(args.alignment_region))
+            print(mmes.errors.DB_CUT_TOO_MANY_REGIONS.format(args.alignment_region))
         else: # len(region) == 1 case
             region_pos = mut.define_region_pos(args.alignment_region)
         if region_pos is False:
-            print("Type proper region name/coordinates for db cutting or use already existing database.")
+            print(mmes.errors.DB_CUT_FAILURE)
             time.sleep(2)
-            exit()
+            sys.exit(1)
         org_db_abs = align_database_abs
-        cutted_db_tmp, align_database_abs = mut.dbcut_get_db_names(align_database_abs, args.alignment_region)
+        cutted_db_tmp, align_database_abs = mut.dbcut_get_db_names(
+            align_database_abs,
+            args.alignment_region,
+        )
         region_start = region_pos[0]
         region_end = region_pos[1]
-        dbcut_settings = {"cut_out": cutted_db_tmp, "org_db": org_db_abs, "region_start": region_start, "region_end": region_end}
-        print("\nAlignment region custamization will be executed with",
-        "the following parameters: \n",
-        "original database: {},\n".format(org_db_abs),
-        "region coordinates: {}-{}".format(region_start, region_end, cutted_db_tmp))
+        dbcut_settings = {
+            "cut_out": cutted_db_tmp,
+            "org_db": org_db_abs,
+            "region_start": region_start,
+            "region_end": region_end,
+        }
+        print(mmes.info.DBCUT_PARAMS.format(
+            org_db_abs,
+            region_start,
+            region_end,
+        ))
     else:
         dbcut_settings = False
 # Get current time and create logfile.
@@ -756,53 +803,69 @@ def main():
 # Label must be from args.label.
 # Rest of the variables must explicitly set to None or zero.
     if all([args.analysis_only, args.render_html]) is False:
-        loaded_template = mut.load_template_file(preproc_template,
-                                             searchpath=mut.get_dir_path("../templates"))
+        loaded_template = mut.load_template_file(
+            preproc_template,
+            searchpath=mut.get_dir_path("../templates"),
+        )
         label = args.label
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 # Load analysis_template if args.analysis_only is True.
 # Label, number of samples and junk groups must be read from shared file.
     if args.analysis_only is True:
-        loaded_template = mut.load_template_file(analysis_template,
-                                             searchpath=mut.get_dir_path("../templates"))
+        loaded_template = mut.load_template_file(
+            analysis_template,
+            searchpath=mut.get_dir_path("../templates"),
+        )
         sampl_num = shared_info["samples_number"]
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
-        print("Detected {} groups with {} label".format(sampl_num, label))
+        print(mmes.info.GROUPS_LABEL_DETECTED.format(sampl_num, label))
         time.sleep(2)
         if len(junk_grps) > 0:
-            print("{} can distort the analysis due to size too small".format(junk_grps))
+            print(mmes.warnings.JUNK_GROUPS_DETECTED.format(junk_grps))
             time.sleep(2)
             if args.keep_all is True:
-                print("All groups will be kept due to --keep-all argument")
+                print(mmes.info.KEEP_ALL)
                 time.sleep(2)
                 junk_grps = 0
             else:
-                print("{} will be removed".format(junk_grps))
+                print(mmes.warnings.JUNK_REMOVED.format(junk_grps))
                 time.sleep(2)
         with open(logfile_name, "a") as fin:
-            fin.write("\nTemplate used:\n\n{}".format(loaded_template))
+            fin.write(mmes.info.TEMPLATE_USED.format(loaded_template))
 # Load output_template if args.render_html is True.
 # All non-output-html variables must be read from shared file.
 # Output-html varialbles must explicitly set.
     if args.render_html is True:
-        loaded_template = mut.load_template_file(output_template,
-                                             searchpath=mut.get_dir_path("../templates"))
+        loaded_template = mut.load_template_file(
+            output_template,
+            searchpath=mut.get_dir_path("../templates"),
+        )
         label = shared_info["label"]
         junk_grps = shared_info["junk_grps"]
         sampl_num = shared_info["samples_number"]
-        krona_html = mut.parse_html("alpha/{}.krona.html".format(args.job_name),
-                                html_type="krona")
-        sum_html = mut.parse_html("alpha/{}.sum.html".format(args.job_name),
-                              html_type="summary")
-        raref_html = mut.parse_html("alpha/{}.raref.html".format(args.job_name),
-                                html_type="rarefaction")
+        krona_html = mut.parse_html(
+            "alpha/{}.krona.html".format(args.job_name),
+            html_type="krona",
+        )
+        sum_html = mut.parse_html(
+            "alpha/{}.sum.html".format(args.job_name),
+            html_type="summary",
+        )
+        raref_html = mut.parse_html(
+            "alpha/{}.raref.html".format(args.job_name),
+            html_type="rarefaction",
+        )
         if sampl_num > 1:
-            nmds_jc_html = mut.parse_html("beta/{}.jclass.nmds.html".format(args.job_name),
-                                      html_type="nmds")
-            nmds_th_html = mut.parse_html("beta/{}.thetayc.nmds.html".format(args.job_name),
-                                      html_type="nmds")
+            nmds_jc_html = mut.parse_html(
+                "beta/{}.jclass.nmds.html".format(args.job_name),
+                html_type="nmds",
+            )
+            nmds_th_html = mut.parse_html(
+                "beta/{}.thetayc.nmds.html".format(args.job_name),
+                html_type="nmds",
+            )
         with open(logfile_name, "a") as fin:
             fin.write("\nTemplate used:\n\n{}".format(loaded_template))
 # Pass all the variables to template and render to str.
@@ -847,14 +910,21 @@ def main():
                      "nmds_jc_html": nmds_jc_html,
                      "nmds_th_html": nmds_th_html,
                      "exclude_krona": args.exclude_krona}
-    rendered_template = mut.render_template(loaded_template,
-                                        template_vars)
+    rendered_template = mut.render_template(
+        loaded_template,
+        template_vars,
+    )
 # Save template as bash script of HTML file depending on args.render_html value.
     if args.render_html is True:
-        mut.save_template("{}.html".format(args.job_name), rendered_template)
+        mut.save_template(
+            "{}.html".format(args.job_name),
+            rendered_template,
+        )
     else:
-        mut.save_template("{}{}.sh".format(output_dir_abs, args.job_name),
-                      rendered_template)
+        mut.save_template(
+            "{}{}.sh".format(output_dir_abs, args.job_name),
+            rendered_template,
+        )
 # Run outputted script or not depending on args.run and args.dry-run
     if args.run is not None and args.dry_run is not True:
         os.system("{} {}".format(args.run, "{}{}.sh".format(output_dir_abs,

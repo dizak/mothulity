@@ -155,38 +155,6 @@ class UtilitiesTests(unittest.TestCase):
         self.mother_rank = '0.1.1.1' 
         self.tax_level = 3
 
-    def test_set_config_new(self):
-        """
-        Test if configuration is properly set in the config file with complete
-        section replacement.
-        """
-        utilities.set_config(filename=self.cfg_file_name_1,
-                             section=self.section,
-                             options=self.options_1,
-                             values=self.values_1,
-                             clean=True)
-        self.test_values = []
-        for s in self.config_1.sections():
-            for o in self.config_1.options(s):
-                self.test_values.append((s, o, self.config_1.get(s, o)))
-        self.assertEqual(self.ref_values_1, self.test_values)
-
-    def test_set_config_append_and_overwrite(self):
-        """
-        Test if configuration is properly set in the config file with just
-        appending existing section with new options.
-        """
-        for i in range(2):
-            utilities.set_config(filename=self.cfg_file_name_2,
-                                 section=self.section,
-                                 options=self.options_2,
-                                 values=self.values_2)
-            self.test_values = []
-            for s in self.config_2.sections():
-                for o in self.config_2.options(s):
-                    self.test_values.append((s, o, self.config_2.get(s, o)))
-            self.assertEqual(self.ref_values_2, self.test_values)
-
     def test_get_daughter_df(self):
         """
         Test if daughter taxa are propely selected from the pandas.DataFrame
